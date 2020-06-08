@@ -1,5 +1,5 @@
 # Kuzi
-A work-in-progress open-source alternative to make a simple and reliable (high)school platform.**This software is still in alpha**, this might not work as expected or directly not work at all, in addition **it's not adviceable to use non-RFP** (Ready For Production) versions on production, since they can (and will) contain many bugs and/or security risks
+A work-in-progress open-source alternative to make a simple and reliable (high)school platform. **This software is still in alpha**, this might not work as expected or directly not work at all, in addition **it's not adviceable to use non-RFP** (Ready For Production) versions on production, since they can (and will) contain many bugs and/or security risks
 
 ## Installation 
 ### Install node.js and npm
