@@ -1,31 +1,18 @@
-// Import libraries, define everything and import the settings and localization
+// Import libraries, define everything, import the settings and localization and get the version
+console.log("Starting Kuzi...")
+
 const express = require('express')
 const server = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync } = require('fs')
 const { newUUID, importJSON, saveJSON, extensionToMime } = require('./utils')
 const middleware = require('./middleware')
-const settings = importJSON('settings.json', {
-	"__comment1": "For me, these are the optimal settings, you may want to",
-	"__comment2": "remove this comment or disable some sections of the web",
-	"serverPort": 80,
-	"language": "en",
-	"enableAnouncements": true,
-	"enableGoogleChat": true,
-	"enableMarks": true,
-	"enableTests": true,
-	"enableResources": true,
-	"enableLimits": true,
-	"teacherLimits": {
-		"onlyAddHomeworkOnTeachTime": true,
-		"maxExamsPerDay": 2
-	},
-	"studentLimits": {
-		"enableChatBetweenStudents": false,
-		"homeworkSubmittingMargin": 15
-	}
-})
-const localizationStrings = eval(`importJSON('localization.json').${settings.language}`)
+const settings = importJSON('settings.json', "Download the default settings from https://github.com/ezarcel/kuzi")
+var localizationStrings = eval(`importJSON('localization.json').${settings.language}`)
+var version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
+//version = "1.0" Hahaha, some day...
+console.log(`Using version ${version}`)
+localizationStrings.push(`global.version|${version}`)
 
 // Tell express to use the middleware I say
 server.use(express.json())
