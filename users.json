@@ -1,0 +1,34 @@
+[
+    {
+        "username": "admin.teacher",
+        "password": "kuzi",
+        "prettyName": "Admin Teacher",
+        "userID": 1,
+        "role": "teacher",
+        "isAdmin": true
+    },
+    {
+        "username": "nonadmin.teacher",
+        "password": "kuzi",
+        "prettyName": "Non-Admin Teacher",
+        "userID": 2,
+        "role": "teacher",
+        "isAdmin": false
+    },
+    {
+        "username": "admin.user",
+        "password": "kuzi",
+        "prettyName": "Admin Student",
+        "userID": 3,
+        "role": "student",
+        "isAdmin": true
+    },
+    {
+        "username": "nonadmin.student",
+        "password": "kuzi",
+        "prettyName": "Non-Admin Student",
+        "userID": 4,
+        "role": "student",
+        "isAdmin": false
+    }
+]

@@ -1,0 +1,131 @@
+{
+    "en": [
+        "langcode|en",
+
+        "error403.title|Error 403",
+        "error403.error|Forbidden",
+
+        "error404.title|Error 404",
+        "error404.error|File not found",
+
+        "errors.goback|Go back",
+
+        "login.title|Log in",
+        "login.username.hint|Username",
+        "login.password.hint|Password",
+        "login.button|Submit",
+        "login.error.notloggedin|You're not logged in",
+        "login.error.emptyFields|The text fields are empty",
+
+        "base.logoAlt|Logo",
+        "base.header.dashboard|Dashboard",
+        "base.header.announcements|Announcements",
+        "base.header.googleChat|Google Chat",
+        "base.header.marks|Marks",
+        "base.header.tests|Tests",
+        "base.header.resources|Resources",
+        "base.dropdown.changeProfilePhoto|Change profile picture",
+        "base.dropdown.changePassword|Change password (coming soon)",
+        "base.dropdown.thanks|Thanks",
+        "base.photoChange.chooseFile|Choose file",
+        "base.photoChange.filename|File name",
+        "base.photoChange.submit|Submit",
+
+        "dashboard.title|Dashboard",
+
+        "announcements.title|Announcements",
+
+        "marks.title|Marks",
+
+        "tests.title|Tests",
+
+        "resources.title|Resources"
+    ],
+    "es": [
+        "langcode|es",
+        
+        "error403.title|Error 403",
+        "error403.error|Prohibido",
+
+        "error404.title|Error 404",
+        "error404.error|Archivo no encontrado",
+
+        "errors.goback|Volver",
+
+        "login.title|Iniciar Sesión",
+        "login.username.hint|Nombre de usuario",
+        "login.password.hint|Contraseña",
+        "login.button|Enviar",
+        "login.error.notloggedin|No has iniciado la sesión",
+        "login.error.emptyFields|Los campos de texto estan vacíos",
+
+        "base.logoAlt|Logo",
+        "base.header.dashboard|Dashboard",
+        "base.header.announcements|Anuncios",
+        "base.header.googleChat|Google Chat",
+        "base.header.marks|Notas",
+        "base.header.tests|Tests",
+        "base.header.resources|Recursos",
+        "base.dropdown.changeProfilePhoto|Cambiar foto de perfil",
+        "base.dropdown.changePassword|Cambiar contraseña (próximamente)",
+        "base.dropdown.logout|Cerrar sesión",
+        "base.dropdown.thanks|Agradecimientos",
+        "base.photoChange.chooseFile|Examinar",
+        "base.photoChange.filename|Nombre del archivo",
+        "base.photoChange.submit|Enviar",
+
+        "dashboard.title|Dashboard",
+
+        "announcements.title|Anuncios",
+
+        "marks.title|Notas",
+
+        "tests.title|Tests",
+
+        "resources.title|Recursos"
+    ],
+    
+    "ca": [
+        "langcode|ca",
+        
+        "error403.title|Error 403",
+        "error403.error|Prohibit",
+
+        "error404.title|Error 404",
+        "error404.error|Fitxer no trobat",
+
+        "errors.goback|Torna",
+
+        "login.title|Iniciar Sessió",
+        "login.username.hint|Nom d'usuari",
+        "login.password.hint|Contrasenya",
+        "login.button|Envia",
+        "login.error.notloggedin|No has iniciat la sessió",
+        "login.error.emptyFields|Els camps de text són buits",
+
+        "base.logoAlt|Logo",
+        "base.header.dashboard|Dashboard",
+        "base.header.announcements|Anuncis",
+        "base.header.googleChat|Google Chat",
+        "base.header.marks|Notes",
+        "base.header.tests|Tests",
+        "base.header.resources|Recursos",
+        "base.dropdown.changeProfilePhoto|Canvia la foto de perfil",
+        "base.dropdown.changePassword|Canvia la contrasenya (pròximament)",
+        "base.dropdown.logout|Tanca la sessió",
+        "base.dropdown.thanks|Agraïments",
+        "base.photoChange.chooseFile|Explora",
+        "base.photoChange.filename|Nom de l'arxiu",
+        "base.photoChange.submit|Envia",
+
+        "dashboard.title|Dashboard",
+
+        "announcements.title|Anuncis",
+
+        "marks.title|Notes",
+
+        "tests.title|Tests",
+
+        "resources.title|Recursos"
+    ]
+}

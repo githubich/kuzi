@@ -1,0 +1,23 @@
+.announcements-container ul {
+    padding: 0; margin: 0;
+    list-style: none;
+}
+.announcement a {
+    display: flex;
+}
+.announcement:not(:nth-last-child(1)) {
+    margin: 0 0 10px 0;
+}
+.announcement .info-container p {
+    margin: 0;
+}
+.announcement i {
+    margin: auto 5px auto 0;
+    font-size: 20px;
+}
+.announcement .sender {
+    font-size: 14px;
+}
+.announcement .subject {
+    font-size: 18px;
+}

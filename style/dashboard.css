@@ -1,0 +1,44 @@
+@media (max-width: 875px) {
+    .dash-container {
+        grid-template-areas: "motivation"
+                             "events"
+                             "notifications"
+                             "marks" !important;
+    }
+}
+
+.dash-container {
+    display: grid;
+    gap: 20px;
+    grid-template-areas: "motivation motivation"
+                         "events notifications"
+                         "marks marks";
+}
+
+.motivation-dash-block {
+    grid-area: motivation;
+}
+.events-dash-block {
+    grid-area: events;
+}
+.notifications-dash-block {
+    grid-area: notifications;
+}
+.marks-dash-block {
+    grid-area: marks;
+}
+
+.dash-block {
+    display: inline-block;
+    padding: 5px;
+    border-radius: 12.5px;
+    background: linear-gradient(to bottom right, var(--accent-light), var(--accent-dark));
+}
+.dash-block-inner {
+    padding: 15px;
+    border-radius: 8.5px;
+    background-color: var(--bg);
+}
+.dash-block .dash-block-inner h2 i {
+    margin-right: 7.5px;
+}

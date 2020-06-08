@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="langcode">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>login.title - Kuzi</title>
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/style/theming.css">
+        <link rel="stylesheet" href="/style/main.css">
+        <link rel="stylesheet" href="/style/login.css">
+        <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css" media="all">
+        <script src="/lib/qTools.min.js"></script>
+        <script src="/scripts/login.js"></script>
+        <script src="/lib/qWebPiOS.min.js"></script>
+    </head>
+    <body>
+        <div id="login-form">
+            <div class="login-form-header">
+                <div id="login-form-logo"></div>
+            </div>
+            <div class="login-form-main">
+                <h1 class="login-form-title">login.title</h1>
+                <p class="username-hint hint"><i class="fad fa-user"></i>login.username.hint</p>
+                <input type="text" id="kuzi-username" tabindex="1">
+                <p class="password-hint hint"><i class="fad fa-key"></i>login.password.hint</p>
+                <input type="password" id="kuzi-password" tabindex="2">
+                <button id="login-button" onclick="send()">login.button</button>
+            </div>
+        </div>
+    </body>
+</html>
