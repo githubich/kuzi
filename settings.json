@@ -1,9 +1,8 @@
 {
-	"__comment1": "For me, these are the optimal settings, you may want to",
-	"__comment2": "remove this comment or disable some sections of the web",
+	"__comment1": "These are the optimal settings for me,",
 	"serverPort": 80,
 	"language": "en",
-	"__comment3": "From here to the end, nothing works",
+	"__comment2": "From here to the end, nothing works",
 	"enableAnouncements": true,
 	"enableGoogleChat": true,
 	"enableMarks": true,

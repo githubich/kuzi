@@ -23,9 +23,9 @@ saveJSON = (file, JSONobject) => writeFileSync(file, JSON.stringify(JSONobject, 
 // Function to convert the extension of a file to its Mime Type
 function extensionToMime(ext) {
 	if (ext.slice(0,1) != ".") ext = extname(ext)
-	if (ext === ".jpg" || ext === ".jpeg") return 'image/jpeg'
-	else if (ext === ".png") return 'image/png'
-	else if (ext === ".webp") return 'image/webp'
+	if (ext == ".jpg" || ext == ".jpeg") return 'image/jpeg'
+	else if (ext == ".png") return 'image/png'
+	else if (ext == ".webp") return 'image/webp'
 	else if (ext == '.js') return 'text/javascript'
 	else if (ext == '.css') return 'text/css'
 	else if (ext == '.webp') return 'image/webp'
@@ -33,5 +33,17 @@ function extensionToMime(ext) {
 	else return 'text/html'
 }
 
+// Parse localization.json and add the version
+function importLocale() {
+	let settings = importJSON('settings.json', "")
+	let localizationStrings = eval(`importJSON('localization.json').${settings.language}`)
+	try {
+		var version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
+	} catch {}
+	//version = "1.0" Hahaha, some day...
+	console.log(`Using version ${version}`)
+	return [`global.version|${version}`, ...localizationStrings]
+}
+
 // Export what I need
-module.exports = { importJSON, saveJSON, newUUID, extensionToMime }
+module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale }

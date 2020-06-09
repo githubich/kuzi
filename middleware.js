@@ -1,5 +1,11 @@
-const { importJSON, saveJSON } = require('./utils')
-function utils(req, res, next) {
+const { importJSON, saveJSON, importLocale } = require('./utils')
+const { readFileSync } = require('fs')
+const { extensionToMime } = require('./utils')
+const locales = importLocale()
+function kuziMiddleware(req, res, next) {
+
+    // Log everything
+    console.log(`[Kuzi|${req.connection.remoteAddress}] ${req.method} ${req.url}`)
 
     // Import some files and declare variables
     let activeCookies = importJSON('active.cookies.json')
@@ -57,15 +63,24 @@ function utils(req, res, next) {
 	})
 	if (modified) {
 		saveJSON('active.cookies.json', activeCookies)
-	}
-
-    next()
-}
-function log(req, res, next) {
-    // Log everything
-    console.log(`[Kuzi|${req.connection.remoteAddress}] ${req.method} ${req.url}`)
+    }
+    
+    // Create a respond function to make everything faster and easier
+    res.respond = (content, file, mime, statusCode) => {
+        if (!mime && file) mime = extensionToMime(file)
+        if (!mime && content) mime = 'text/html'
+        if (!content) content = readFileSync(file)
+        if ((mime == "text/html" || mime == "text/javascript") && !req.url.includes('/users/')) {
+            content = content.toString('utf8')
+            locales.forEach(locale => {
+                content = content.split(locale.split('|')[0]).join(locale.split('|')[1])
+            })
+        }
+        res.setHeader('Content-Type', mime)
+        res.status(statusCode).send(content)
+    }
     next()
 }
 
 // Export everything
-module.exports = { utils, log }
+module.exports = kuziMiddleware
