@@ -26,6 +26,7 @@
         "base.header.resources|Resources",
         "base.dropdown.changeProfilePhoto|Change profile picture",
         "base.dropdown.changePassword|Change password (coming soon)",
+        "base.dropdown.logout|Log out",
         "base.dropdown.thanks|Thanks",
         "base.photoChange.chooseFile|Choose file",
         "base.photoChange.filename|File name",
