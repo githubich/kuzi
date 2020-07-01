@@ -10,15 +10,13 @@ function newUUID() {try{return random(0,15).toString(16)+random(0,15).toString(1
 
 // Function to import JSON files and parse them
 importJSON = (location, createContent) => {
-	if (!createContent) createContent = []
-	if (!existsSync(location)) writeFileSync(location, JSON.parse(createContent))
 	let fileContent = readFileSync(location).toString('utf8')
 	if (fileContent == "") throw Error(`${location} is empty, try typing [] or {}`)
 	else return JSON.parse(fileContent)
 }
 
 // Function to save JSON files with the formatting I want
-saveJSON = (file, JSONobject) => writeFileSync(file, JSON.stringify(JSONobject, null, 4))
+saveJSON = (file, JSONobject) => {writeFileSync(file, JSON.stringify(JSONobject, null, 4))}
 
 // Function to convert the extension of a file to its Mime Type
 function extensionToMime(ext) {

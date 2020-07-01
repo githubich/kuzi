@@ -5,7 +5,7 @@ const app = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
-const settings = importJSON('settings.json', "Download the default settings from https://github.com/ezarcel/kuzi")
+const settings = importJSON('settings.json')
 
 /* Tell express to use the middleware I say */ app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware'))
 
@@ -40,7 +40,7 @@ app.get('*', (req, res) => { // Return the file the user wants
 
 app.post('/login', (req, res) => {
 	try {
-		let users = importJSON('users.json', []) // Declare things
+		let users = importJSON('users.json') // Declare things
 		let found = false
 		let userID = 0
 		users.forEach(userKey => {
@@ -52,7 +52,7 @@ app.post('/login', (req, res) => {
 		})
 		if (found) {
 			// Import the active cookies and create a new session UUID
-			let activeCookies = importJSON('active.cookies.json', [])
+			let activeCookies = importJSON('active.cookies.json')
 			let newSession = newUUID()
 
 			// Send the UUID to the user and save the UUID to active.cookies.json
@@ -69,7 +69,7 @@ app.post('/login', (req, res) => {
 	}
 })
 app.post('/logout', (req, res) => { // Delete the cookie from the file
-	let activeCookies = importJSON('active.cookies.json',[])
+	let activeCookies = importJSON('active.cookies.json')
 	let i = 0
 	activeCookies.forEach(cookie => {
 		if (cookie.cookie == req.cookies.session) {
@@ -103,8 +103,7 @@ app.post('/user/changeprofilepicture', (req, res) => { // Grab the given file an
 		}
 	} catch(e) {console.error(e); res.write('<script>alert("E500: Internal Server Error"); window.history.back()</script>')}
 })
-app.post('/user/changepassword', (req, res) => {
-	// NOT IMPLEMENTED!!!
+app.post('/user/changepassword', (req, res) => { // Not implemented, might not work
 	try {
 		let users = importJSON('users.json')
 		let changed = false
