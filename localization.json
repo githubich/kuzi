@@ -31,6 +31,7 @@
         "base.photoChange.chooseFile|Choose file",
         "base.photoChange.filename|File name",
         "base.photoChange.submit|Submit",
+        "base.teacher|Teacher",
 
         "dashboard.title|Dashboard",
 
@@ -74,6 +75,7 @@
         "base.photoChange.chooseFile|Examinar",
         "base.photoChange.filename|Nombre del archivo",
         "base.photoChange.submit|Enviar",
+        "base.teacher|Profesor",
 
         "dashboard.title|Dashboard",
 
@@ -118,6 +120,7 @@
         "base.photoChange.chooseFile|Explora",
         "base.photoChange.filename|Nom de l'arxiu",
         "base.photoChange.submit|Envia",
+        "base.teacher|Professor",
 
         "dashboard.title|Dashboard",
 

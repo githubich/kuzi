@@ -9,6 +9,7 @@ function kuziMiddleware(req, res, next) {
 
     // Import some files and declare variables
     let activeCookies = importJSON('active.cookies.json')
+    let classes = importJSON('classes.json')
     let users = importJSON('users.json')
     let userIDfromCookie = 0
     let i = 0
@@ -40,7 +41,21 @@ function kuziMiddleware(req, res, next) {
 		if (user.userID == userIDfromCookie) {
 			req.userInfo = { username: user.username, password: user.password, prettyName: user.prettyName, userID: user.userID, role: user.role, isAdmin: user.isAdmin }
 		}
-	})
+    })
+    if (req.userInfo.role == "student") {
+        req.userInfo.classID = "Report this bug to your school"
+        classes.forEach(clas => { // I use clas because class is a reserved word
+            clas.students.forEach(student => {
+                if (req.userInfo.userID == student) {
+                    req.userInfo.classID = clas.classID
+                    req.userInfo.prettyClassName = clas.prettyName
+                }
+            })
+        })
+    } else {
+
+    }
+    
 
     // Shortcut, I'm lazy
     req.file = req.url.slice(1,req.url.length)

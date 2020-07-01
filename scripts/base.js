@@ -16,10 +16,16 @@ function correctDropdown(top) {
     headerDropdown.style.width = ($("header>:nth-child(4)").offsetLeft-$("header>:nth-child(2)").offsetLeft + 1) + "px"
 }
 function load() {
-    headerDropdownVisible=false
-    headerDropdownArrow=$("#dropdown-arrow")
+    headerDropdownVisible = false
+    headerDropdownArrow = $("#dropdown-arrow")
     if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
-    $('.student-name').innerText = userInfo.prettyName
+    $('.student-info .name').innerText = userInfo.prettyName
+    if (userInfo.role == "teacher") {
+        $('.student-info .status').innerText = "base.teacher"
+    } else {
+        $('.student-info .status').innerText = userInfo.prettyClassName
+    }
+    if (userInfo.isAdmin) $('.student-info .status').innerText = `[Admin] ${$('.student-info .status').innerText}`
     $('.student-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
     correctDropdown(59.5)
 }

@@ -18,7 +18,6 @@ fetch('/user/getevents')
 fetch('/user/getnotifications')
     .then(res => res.json())
     .then(res => {
-        notifications
     })
 
 fetch('/user/getmarks')

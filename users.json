@@ -16,7 +16,7 @@
         "isAdmin": false
     },
     {
-        "username": "admin.user",
+        "username": "admin.student",
         "password": "kuzi",
         "prettyName": "Admin Student",
         "userID": 3,

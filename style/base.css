@@ -3,7 +3,7 @@
 @keyframes circle-out { 0% { clip-path: circle(100% at 50% 50%) } 100% { clip-path: circle(0% at 50% 0) } }*/
 @keyframes circle-in { 0% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } 100% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } }
 @keyframes circle-out { 0% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } 100% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } }
-@keyframes page-load { 0% { opacity: 0; } 100% {} }
+@keyframes page-load { 0% {} 100% {} }
 @media (max-width: 875px) {
 	@keyframes circle-in { 0% { opacity: 0 } 100% {opacity: 1 } }
 	@keyframes circle-out { 0% { opacity: 1 } 100% { opacity: 0 } }
@@ -73,7 +73,7 @@ header#main-header > *, .dropdown-link > * {margin-top: auto; margin-bottom: aut
 	border-radius: 7.5px;
 	max-height: 40px; min-height: 40px; max-width: 40px; min-width: 40px;
 }
-.student-photo, .student-name { display: inline-block; }
+.student-photo, .student-info { display: inline-block; }
 #dropdown {
 	background: var(--bg);
     border-radius: 0 0 10px 10px;
@@ -99,7 +99,9 @@ header#main-header > *, .dropdown-link > * {margin-top: auto; margin-bottom: aut
     list-style: none;
 }
 .dropdown-action:not(:nth-last-child(1)) { margin-bottom: 20px; }
-.header--actions, .subheader--actions, .dropdown-actions, .student-name { font-size: 14.5px; }
+.student-info * { margin: 0; }
+.header--actions, .subheader--actions, .dropdown-actions, .student-info .name { font-size: 14.5px; }
+.student-info .status { font-size: 13px; position: relative; top: -2px; }
 .header--actions, .subheader--actions, .hamburger-actions {
 	margin: 0; padding: 0;
     display: inline-flex;

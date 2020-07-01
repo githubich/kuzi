@@ -19,7 +19,10 @@
 			<div class="header--vertical-separator"></div>
 			<a style="color:var(--bg)" class="dropdown-link" onclick='toggleDropdown()'>
 				<div class="student-photo" style="background-image: url()"></div>
-				<p class="student-name"></p>
+				<div class="student-info">
+					<p class="name"></p>
+					<p class="status"></p>
+				</div>
 				<i id="dropdown-arrow" class="fas fa-chevron-down"></i>
 			</a>
 			<div class="header--vertical-separator"></div>
@@ -44,13 +47,13 @@
 				<li class="dropdown-action"><a onclick="toggleDropdown()"><i class="fad fa-key"></i><span>base.dropdown.changePassword</span></a></li>
 				<li class="dropdown-action"><a onclick='fetch("/logout",{method:"POST"}).then(() => { document.cookie="session=;max-age=0";window.location="/" })'><i class="fad fa-times-circle"></i><span>base.dropdown.logout</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown();$('#thanks-modal').style.opacity=1;$('#thanks-modal').style.pointerEvents='all'"><i class="fas fa-heart"></i><span>base.dropdown.thanks</span></a></li>
-				
+
 			</ul>
 		</div>
 		<div id="hamburger-menu-modal" class="modal" style="opacity: 0; pointer-events: none;">
 			<a class="hamburger-menu-close close" onclick="$('#hamburger-menu-modal').style.opacity=0;$('#hamburger-menu-modal').style.pointerEvents='none'"><i class="fas fa-times"></i></a>
 			<ul class="hamburger--actions">
-				
+
 			</ul>
 		</div>
 		<div id="photo-change-modal" class="modal" style="opacity: 0; pointer-events: none;">
