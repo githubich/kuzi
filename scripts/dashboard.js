@@ -7,7 +7,7 @@ fetch('https://gist.githubusercontent.com/ezarcel/5749f919b44cc4291d59bcc8e41691
     .then(res => res.json())
     .then(res => {
         quoteIndex = random(0,res.length)
-        $(".motivationQuote").innerText = `${res[quoteIndex].text} ~ ${res[quoteIndex].from}`
+        $(".motivation-dash-block .title").innerText = `${res[quoteIndex].text} ~ ${res[quoteIndex].from}`
     })
 
 fetch('/user/getevents')

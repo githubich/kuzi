@@ -6,7 +6,6 @@
                              "marks" !important;
     }
 }
-
 .dash-container {
     display: grid;
     gap: 20px;
@@ -14,20 +13,10 @@
                          "events notifications"
                          "marks marks";
 }
-
-.motivation-dash-block {
-    grid-area: motivation;
-}
-.events-dash-block {
-    grid-area: events;
-}
-.notifications-dash-block {
-    grid-area: notifications;
-}
-.marks-dash-block {
-    grid-area: marks;
-}
-
+.motivation-dash-block { grid-area: motivation; }
+.events-dash-block { grid-area: events; }
+.notifications-dash-block { grid-area: notifications; }
+.marks-dash-block { grid-area: marks; }
 .dash-block {
     display: inline-block;
     padding: 5px;
@@ -39,6 +28,6 @@
     border-radius: 8.5px;
     background-color: var(--bg);
 }
-.dash-block .dash-block-inner h2 i {
+.dash-block .dash-block-inner h3 i {
     margin-right: 7.5px;
 }
