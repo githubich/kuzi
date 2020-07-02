@@ -9,9 +9,9 @@ fetch('/user/getinfo', { method: 'POST' })
             window.location = '/'
     })
 })
-function correctDropdown(top) {
+function correctDropdown() {
     headerDropdown=$("#dropdown")
-    if (top) headerDropdown.style.top = top + "px"
+    headerDropdown.style.top = ( $('main').offsetTop - 1 ) + "px"
     headerDropdown.style.left = document.querySelector('#main-header>div:nth-child(2)').offsetLeft + "px"
     headerDropdown.style.width = ($("header>:nth-child(4)").offsetLeft-$("header>:nth-child(2)").offsetLeft + 1) + "px"
 }
@@ -19,15 +19,15 @@ function load() {
     headerDropdownVisible = false
     headerDropdownArrow = $("#dropdown-arrow")
     if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
-    $('.student-info .name').innerText = userInfo.prettyName
+    $('.user-info .name').innerText = userInfo.prettyName
     if (userInfo.role == "teacher") {
-        $('.student-info .status').innerText = "base.teacher"
+        $('.user-info .status').innerText = "base.teacher"
     } else {
-        $('.student-info .status').innerText = userInfo.prettyClassName
+        $('.user-info .status').innerText = userInfo.prettyClassName
     }
-    if (userInfo.isAdmin) $('.student-info .status').innerText = `[Admin] ${$('.student-info .status').innerText}`
-    $('.student-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
-    correctDropdown(59.5)
+    if (userInfo.isAdmin) $('.user-info .status').innerText = `[Admin] ${$('.user-info .status').innerText}`
+    $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+    correctDropdown()
 }
 function addSubheaderAction(icon, text, url, onclick) {
     $('.subheader--actions').innerHTML = `${$('.subheader--actions').innerHTML}
@@ -36,7 +36,7 @@ function addSubheaderAction(icon, text, url, onclick) {
         </li>`
     $("#subheader").style.display="block"
     window.scrollY=0
-    correctDropdown(108.5)
+    correctDropdown()
 }
 function setPageTitle(icon, title) {
     $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}`
@@ -79,11 +79,56 @@ window.onscroll = () => {
     }
 }
 function uploadProfilePhoto() {
-    let maxSize = parseInt($('.photo-change-input').getAttribute('max-size'))
-    if ($('.photo-change-input').files[0] !== null) {
-        let fileSize = $('.photo-change-input').files[0].size
+    let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
+    if ($('.picture-input').files[0] !== null) {
+        let fileSize = $('.picture-input').files[0].size
         if (fileSize > maxSize || fileSize == 0) return false; return true
     } else {
         return false
     }
+}
+
+function toggleModal(modalName) {
+    let modal = $(`#${modalName}-modal`)
+    if (modal.style.opacity == 1 && modal.style.pointerEvents == "all") {
+        modal.style.opacity = 0
+        modal.style.pointerEvents = 'none'
+    } else {
+        modal.style.opacity = 1
+        modal.style.pointerEvents = 'all'
+    }
+}
+
+function verifyAndChangePassword() {
+
+    let old = $('.password-modal--input.password-modal--oldPassword').value
+    let new1 = $('.password-modal--input.password-modal--newPassword').value
+    let new2 = $('.password-modal--input.password-modal--newPassword2').value
+
+    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return alert('base.changePassword.error.emptyFields')
+    if (old == new1) return alert("base.changePassword.error.old=new")
+    if (new1 != new2) return alert("base.changePassword.error.new1!=new2")
+    if (new1.length < 6) return alert("base.changePassword.error.length")
+
+    fetch('/user/changepassword',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userID: userInfo.userID,
+                oldPassword: $('.password-modal--input.password-modal--oldPassword').value,
+                newPassword: $('.password-modal--input.password-modal--newPassword').value
+            })
+        })
+        .then(res => res.json()
+            .then(res => {
+                console.log(res)
+                if (res.message == 'ok') { alert('base.changePassword.success'); toggleModal('password') }
+                else alert('base.changePassword.error.oldPasswordNotCorrect')
+            })
+            .catch(e => console.error(e))
+        )
+        .catch(e => console.error(e))
 }

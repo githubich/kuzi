@@ -14,12 +14,12 @@
 		<script src="/lib/qWebPiOS.min.js"></script>
     </head>
     <body>
-		<header id="main-header">
+		<header id="main-header" class="blurry-bg">
 			<img class="header--logo" onclick="window.location='/dashboard.html'" src="/imgs/webp/favicon.big.webp" alt="base.logoalt">
 			<div class="header--vertical-separator"></div>
 			<a style="color:var(--bg)" class="dropdown-link" onclick='toggleDropdown()'>
-				<div class="student-photo" style="background-image: url()"></div>
-				<div class="student-info">
+				<div class="user-photo" style="background-image: url()"></div>
+				<div class="user-info">
 					<p class="name"></p>
 					<p class="status"></p>
 				</div>
@@ -34,50 +34,67 @@
 				<li class="header--action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>base.header.tests</span><span class="notify-dot tests-notify-dot"></span></a></li>
 				<li class="header--action"><a href="/resources.html"><i class="fad fa-folders"></i><span>base.header.resources</span><span class="notify-dot resources-notify-dot"></span></a></li>
 			</ul>
-			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML=$('.header--actions').innerHTML;$('#hamburger-menu-modal').style.opacity=1;$('#hamburger-menu-modal').style.pointerEvents='all'"><i class="fas fa-bars"></i></a>
+			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML=$('.header--actions').innerHTML;toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
-		<header id="subheader" style="display: none;">
+		<header id="subheader" class="blurry-bg" style="display: none;">
 			<ul class="subheader--actions">
 			</ul>
 		</header>
-		<div id="dropdown">
+		<div id="dropdown" class="blurry-bg">
 			<a class="dropdown-close close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
-				<li class="dropdown-action"><a onclick="toggleDropdown();$('#photo-change-modal').style.opacity=1;$('#photo-change-modal').style.pointerEvents='all'"><i class="fad fa-portrait"></i><span>base.dropdown.changeProfilePhoto</span></a></li>
-				<li class="dropdown-action"><a onclick="toggleDropdown()"><i class="fad fa-key"></i><span>base.dropdown.changePassword</span></a></li>
-				<li class="dropdown-action"><a onclick='fetch("/logout",{method:"POST"}).then(() => { document.cookie="session=;max-age=0";window.location="/" })'><i class="fad fa-times-circle"></i><span>base.dropdown.logout</span></a></li>
-				<li class="dropdown-action"><a onclick="toggleDropdown();$('#thanks-modal').style.opacity=1;$('#thanks-modal').style.pointerEvents='all'"><i class="fas fa-heart"></i><span>base.dropdown.thanks</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>base.dropdown.changePicture</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('password')"><i class="fad fa-key"></i><span>base.dropdown.changePassword</span></a></li>
+				<li class="dropdown-action"><a onclick='fetch("/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>base.dropdown.logout</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>base.dropdown.thanks</span></a></li>
 
 			</ul>
 		</div>
-		<div id="hamburger-menu-modal" class="modal" style="opacity: 0; pointer-events: none;">
-			<a class="hamburger-menu-close close" onclick="$('#hamburger-menu-modal').style.opacity=0;$('#hamburger-menu-modal').style.pointerEvents='none'"><i class="fas fa-times"></i></a>
+		<div id="hamburger-menu-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+			<a class="hamburger-menu-close close" onclick="toggleModal('hamburger-menu')"><i class="fas fa-times"></i></a>
 			<ul class="hamburger--actions">
 
 			</ul>
 		</div>
-		<div id="photo-change-modal" class="modal" style="opacity: 0; pointer-events: none;">
-			<a class="photo-change-modal-close close" onclick="$('#photo-change-modal').style.opacity=0;$('#photo-change-modal').style.pointerEvents='none'"><i class="fas fa-times"></i></a>
-			<div class="photo-change-modal-inner">
-				<img id="photo-change-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
-				<form action="/changestudentphoto" method="POST" enctype="multipart/form-data">
-					<input max-size=500000 type="file" name="photo" class="photo-change-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".photo-change-file-name").innerText=this.files[0].name'>
-					<label for="photo" class="photo-change-label" onclick="$('.photo-change-input').click()">base.photoChange.chooseFile</label>
-					<p class="photo-change-file-name">base.photoChange.filename</p>
-					<button onclick="if (checkProfilePhotoSize()) this.parentElement.submit(); else alert('L\'arxiu sel·leccionat és massa gran o no existeix')" id="photo-change-submit">base.photoChange.submit</button>
+		<div id="picture-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+			<a class="picture-modal-close close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
+			<div class="center picture-modal-inner">
+				<img class="big-logo" id="picture-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+				<form action="/user/changepicture" method="POST" enctype="multipart/form-data">
+					<input max-size=500000 type="file" name="photo" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText=this.files[0].name'>
+					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">base.picture.chooseFile</label>
+					<p class="picture-file-name">base.picture.filename</p>
+					<button onclick="if (checkProfilePhotoSize()) this.parentElement.submit(); else alert('L\'arxiu sel·leccionat és massa gran o no existeix')" id="picture-submit">base.picture.submit</button>
 				</form>
 			</div>
 		</div>
-		<div id="thanks-modal" class="modal" style="opacity: 0; pointer-events: none;">
-			<a class="thanks-modal-close close" onclick="$('#thanks-modal').style.opacity=0;$('#thanks-modal').style.pointerEvents='none'"><i class="fas fa-times"></i></a>
-			<div class="thanks-modal-inner center" style="text-align: center; width: 100%">
-				<img id="photo-change-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
-				<p>Kuzi VERSION, by ezarcel<br>
-				Powered by HTML5, node.js and Express.js<br><br>
+		<div id="password-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+			<a class="password-modal-close close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
+			<div class="center password-modal-inner">
+				<img class="big-logo" id="password-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+				<div>
+					<p class="hint"><i class="fad fa-key"></i>base.changePassword.oldPassword</p><br>
+					<input id="kuzi-password" class="password-modal--input password-modal--oldPassword" type="password" name="oldPassword"><br>
+					<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPassword</p><br>
+					<input class="password-modal--input password-modal--newPassword" type="password" name="newPassword"><br>
+					<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPasswordConfirmation</p><br>
+					<input class="password-modal--input password-modal--newPassword2" type="password" name="newPassword2">
+					<button onclick='verifyAndChangePassword()' id="picture-submit">base.changePassword.submit</button>
+				</div>
+			</div>
+		</div>
+		<div id="thanks-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+			<a class="thanks-modal-close close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
+			<div class="center thanks-modal-inner" style="text-align: center; width: 100%">
+				<img class="big-logo" id="thanks-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+				<p>Kuzi global.version, by ezarcel<br>
+				Powered by HTML5 & node.js<br><br>
 
-				<p>Thanks to:<br>
+				Thanks to:<br>
 				The Express.js project (<a style="color: var(--accent);" href="https://github.com/expressjs/express">repo</a>)<br>
 				b1nary for quotes repo (<a style="color: var(--accent);" href="https://gist.github.com/b1nary/ea8fff806095bcedacce">repo</a>) (<a style="color: var(--accent);" href="https://gist.github.com/ezarcel/5749f919b44cc4291d59bcc8e4169147">my fork</a>)
+
+				
 			</p>
 			</div>
 		</div>

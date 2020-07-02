@@ -33,7 +33,7 @@ function extensionToMime(ext) {
 
 // Parse localization.json and add the version
 function importLocale() {
-	let settings = importJSON('settings.json', "")
+	let settings = importJSON('settings.json')
 	let localizationStrings = eval(`importJSON('localization.json').${settings.language}`)
 	try {
 		var version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`

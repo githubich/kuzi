@@ -88,7 +88,7 @@ app.post('/user/getinfo', (req, res) => { // Respond with the user info
 		res.status(401).send(JSON.stringify({ message: 'logout' })) // If the user is not found, tell the client to log out
 	}
 })
-app.post('/user/changeprofilepicture', (req, res) => { // Grab the given file and save it to the 'users' directory
+app.post('/user/changepicture', (req, res) => { // Grab the given file and save it to the 'users' directory
 	try {
 		if (req.files == undefined || req.files.photo == undefined) {
 			res.write('<script>alert("E500: Internal Server Error"); window.history.back()</script>')
@@ -103,24 +103,25 @@ app.post('/user/changeprofilepicture', (req, res) => { // Grab the given file an
 		}
 	} catch(e) {console.error(e); res.write('<script>alert("E500: Internal Server Error"); window.history.back()</script>')}
 })
-app.post('/user/changepassword', (req, res) => { // Not implemented, might not work
+app.post('/user/changepassword', (req, res) => {
 	try {
 		let users = importJSON('users.json')
 		let changed = false
 		let i = 0
 		users.forEach((userKey) => {
-			if (userKey.userID == req.body.userID && userKey.password == req.body.oldpassword) {
+			if (userKey.userID == req.body.userID && userKey.password == req.body.oldPassword) {
 				changed = true
 				userID = userKey.userID
-				users[i].password = req.body.newpassword
+				users[i].password = req.body.newPassword
 			}
 			i++
 		})
 		if (changed) {
-			res.status(200).send(JSON.stringify({ do: `alert('Contrasenya canviada correctament');document.querySelector("#kuzi-password").value="";document.querySelector("#kuzi-newpassword").value="";document.querySelector("#kuzi-newpassword2").value=""` }))
+			res.status(200).send(JSON.stringify({ message: 'ok' }))
 		} else {
-			res.status(401).send(JSON.stringify({ do: 'alert("Contrasenya incorrecte");document.querySelector("#kuzi-password").value="";document.querySelector("#kuzi-newpassword").value="";document.querySelector("#kuzi-newpassword2").value=""' }))
+			res.status(401).send(JSON.stringify({ message: 'not ok' }))
 		}
+		saveJSON('users.json', users)
 	} catch(e) {
 		console.error(e)
 		res.status(500).send()

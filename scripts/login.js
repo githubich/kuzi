@@ -25,5 +25,6 @@ function send() {
                 if (res.session) document.cookie=`session=${res.session}`
                 if (res.do) eval(res.do)
             })
-        }) } else alert("login.error.emptyFields")
+        })
+    } else alert("login.error.emptyFields")
 }
