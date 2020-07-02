@@ -4,9 +4,13 @@ A work-in-progress open-source alternative to make a simple and reliable (high)s
 ## Installation 
 ### Install node.js and npm
 For Archlinux and its derivatives: `sudo pacman -S nodejs npm`
+
 For Debian and Ubuntu and their derivatives: `sudo apt install nodejs npm`
+
 For macOS 10.10+: [Click here](https://nodejs.org/es/download/package-manager/#macos)
+
 For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/es/download/package-manager/#windows)
+
 For other GNU/Linux distributions: [Click here](https://nodejs.org/en/download/package-manager/)
 
 ### Install the dependencies
@@ -19,7 +23,7 @@ There are some pre-made users, but if you want you can add yours [here](#creatin
 Open `settings.json` and change the values you considering modifying. There are 3 available languages: English, Catalan and Castillian Spanish
 
 ### Run the server and test
-Run `sudo node server.js` (without `sudo` for Windows) and open `http://localhost/` on a web browser or click [here](http://localhost/). Log in with the most powerful pre-made user to test everything, Username: `admin.teacher`, Password: `kuzi`
+Run `sudo node server.js` (without `sudo` for Windows) and open `http://localhost/` on a web browser or click [here](http://localhost/). Log in with the most powerful pre-made user to test everything, username: `admin.teacher`, password: `kuzi`
 
 ## Setting up
 ### Creating the users
@@ -43,7 +47,7 @@ Users go in the `users.json` file. All users must follow this syntax:
         "isAdmin": false
     },
     {
-        "username": "admin.user",
+        "username": "admin.student",
         "password": "kuzi",
         "prettyName": "Admin Student",
         "userID": 3,
@@ -71,17 +75,12 @@ Classes go in the `classes.json` file. All classes must follow this syntax:
     {
         "classID": 1,
         "prettyName": "1st",
-        "students": [ 1, 2, 3 ]
+        "students": [ 3 ]
     },
     {
         "classID": 2,
         "prettyName": "2nd",
-        "students": [ 4, 5, 6 ]
-    },
-    {
-        "classID": 3,
-        "prettyName": "3rd",
-        "students": [ 7, 8, 9 ]
+        "students": [ 4 ]
     }
 ]
 ```
