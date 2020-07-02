@@ -100,15 +100,14 @@ function toggleModal(modalName) {
 }
 
 function verifyAndChangePassword() {
-
     let old = $('.password-modal--input.password-modal--oldPassword').value
     let new1 = $('.password-modal--input.password-modal--newPassword').value
     let new2 = $('.password-modal--input.password-modal--newPassword2').value
 
-    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return alert('base.changePassword.error.emptyFields')
-    if (old == new1) return alert("base.changePassword.error.old=new")
-    if (new1 != new2) return alert("base.changePassword.error.new1!=new2")
-    if (new1.length < 6) return alert("base.changePassword.error.length")
+    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qAlert({ message: "base.changePassword.error.emptyFields", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (old == new1) return qAlert({ message: "base.changePassword.error.old=new", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (new1 != new2) return qAlert({ message: "base.changePassword.error.new1!=new2", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (new1.length < 6) return qAlert({ message: "base.changePassword.error.length", mode: "error" , buttons: { cancel: { invisible: true } } })
 
     fetch('/user/changepassword',
         {
@@ -125,8 +124,8 @@ function verifyAndChangePassword() {
         .then(res => res.json()
             .then(res => {
                 console.log(res)
-                if (res.message == 'ok') { alert('base.changePassword.success'); toggleModal('password') }
-                else alert('base.changePassword.error.oldPasswordNotCorrect')
+                if (res.message == 'ok') { qAlert({ message: "base.changePassword.success", mode: "ok" , buttons: { cancel: { invisible: true } } }); toggleModal('password') }
+                else qAlert({ message: "base.changePassword.error.oldPasswordNotCorrect", mode: "error" , buttons: { cancel: { invisible: true } } })
             })
             .catch(e => console.error(e))
         )

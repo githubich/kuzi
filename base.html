@@ -8,10 +8,12 @@
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/style/theming.css">
         <link rel="stylesheet" href="/style/base.css">
-        <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css" media="all">
+		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css" media="all">
 		<script src="/lib/qTools.min.js"></script>
 		<script src="/scripts/base.js"></script>
 		<script src="/lib/qWebPiOS.min.js"></script>
+		<script src="/lib/qAlert.js"></script>
+		<link rel="stylesheet" href="/lib/qAlert.css">
     </head>
     <body>
 		<header id="main-header" class="blurry-bg">
@@ -44,7 +46,7 @@
 			<a class="dropdown-close close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>base.dropdown.changePicture</span></a></li>
-				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('password')"><i class="fad fa-key"></i><span>base.dropdown.changePassword</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>base.dropdown.changePassword</span></a></li>
 				<li class="dropdown-action"><a onclick='fetch("/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>base.dropdown.logout</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>base.dropdown.thanks</span></a></li>
 
@@ -64,7 +66,7 @@
 					<input max-size=500000 type="file" name="photo" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText=this.files[0].name'>
 					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">base.picture.chooseFile</label>
 					<p class="picture-file-name">base.picture.filename</p>
-					<button onclick="if (checkProfilePhotoSize()) this.parentElement.submit(); else alert('L\'arxiu sel·leccionat és massa gran o no existeix')" id="picture-submit">base.picture.submit</button>
+					<button onclick='this.parentElement.submit()' id="picture-submit">base.picture.submit</button>
 				</form>
 			</div>
 		</div>
@@ -72,15 +74,13 @@
 			<a class="password-modal-close close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
 			<div class="center password-modal-inner">
 				<img class="big-logo" id="password-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
-				<div>
-					<p class="hint"><i class="fad fa-key"></i>base.changePassword.oldPassword</p><br>
-					<input id="kuzi-password" class="password-modal--input password-modal--oldPassword" type="password" name="oldPassword"><br>
-					<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPassword</p><br>
-					<input class="password-modal--input password-modal--newPassword" type="password" name="newPassword"><br>
-					<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPasswordConfirmation</p><br>
-					<input class="password-modal--input password-modal--newPassword2" type="password" name="newPassword2">
-					<button onclick='verifyAndChangePassword()' id="picture-submit">base.changePassword.submit</button>
-				</div>
+				<p class="hint"><i class="fad fa-key"></i>base.changePassword.oldPassword</p>
+				<input id="kuzi-password" class="password-modal--input password-modal--oldPassword" type="password" name="oldPassword">
+				<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPassword</p>
+				<input class="password-modal--input password-modal--newPassword" type="password" name="newPassword">
+				<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPasswordConfirmation</p>
+				<input class="password-modal--input password-modal--newPassword2" type="password" name="newPassword2">
+				<button onclick='verifyAndChangePassword()'>base.changePassword.submit</button>
 			</div>
 		</div>
 		<div id="thanks-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">

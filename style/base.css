@@ -131,13 +131,13 @@ header#main-header > *, .dropdown-link > * {margin-top: auto; margin-bottom: aut
     position: absolute;
     right: 11px; top: 12px;
 }
-#picture-modal > div :not(:nth-last-child(1)), #password-modal > div :not(:nth-last-child(1)) { margin-bottom: 15px; }
-#picture-submit { position: relative; top: -1px; margin: auto; }
+#picture-modal > div :not(:nth-last-child(1)), #password-modal > div :not(:nth-last-child(1)) { margin-bottom: 20px; }
+button { position: relative; top: -1px; margin: auto; }
 .picture-label { width: fit-content; }
-.picture-label, #picture-submit {
-	background: #fff;
-	border: solid #000 1px;
-	color: #000 !important;
+.picture-label, button {
+	background: #0000;
+	border: solid var(--bg-alt) 1px;
+	color: var(--bg-alt) !important;
 	padding: 5px 10px; margin: auto;
 	display: block;
 	font-size: 16px;
