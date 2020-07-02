@@ -40,6 +40,7 @@
         "base.changePassword.error.new1!=new2|The new passwords don't match",
         "base.changePassword.error.length|The new password must be 6 characters long or more",
         "base.changePassword.error.oldPasswordNotCorrect|The old password is incorrect",
+        "base.changePassword.success|Password updated successfully",
         "base.teacher|Teacher",
 
         "dashboard.title|Dashboard",
@@ -93,6 +94,7 @@
         "base.changePassword.error.new1!=new2|Las contraseñas nuevas con coinciden",
         "base.changePassword.error.length|La contraseña nueva debe tener 6 carácteres o más",
         "base.changePassword.error.oldPasswordNotCorrect|La contraseña actual es incorrecta",
+        "base.changePassword.success|Contraseña actualizada con éxito",
         "base.teacher|Profesor",
 
         "dashboard.title|Dashboard",
@@ -147,6 +149,7 @@
         "base.changePassword.error.new1!=new2|Les contrasenyes novas no coincideixen",
         "base.changePassword.error.length|La contrasenya nova ha de tenir 6 caràcters o més",
         "base.changePassword.error.oldPasswordNotCorrect|La contrasenya actual és incorrecta",
+        "base.changePassword.success|Contrasenya actualitzada amb èxit",
         "base.teacher|Professor",
 
         "dashboard.title|Dashboard",

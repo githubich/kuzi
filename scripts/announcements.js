@@ -1,7 +1,7 @@
-setPageTitle("comment-exclamation", "announcements.title")
-setActiveTab(1)
-
-if (userInfo.role == "teacher") addSubheaderAction("edit", "Escriu", "/announcements.html?view=write" , "")
+window.addEventListener('load', () => {
+    setPageTitle("comment-exclamation", "announcements.title")
+    setActiveTab(1)
+})
 
 /*let urlArgs = new URL(window.location.href).search
 urlArgs = $parseURLArgs(urlArgs)

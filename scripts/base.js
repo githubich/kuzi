@@ -90,12 +90,10 @@ function uploadProfilePhoto() {
 
 function toggleModal(modalName) {
     let modal = $(`#${modalName}-modal`)
-    if (modal.style.opacity == 1 && modal.style.pointerEvents == "all") {
-        modal.style.opacity = 0
-        modal.style.pointerEvents = 'none'
+    if (modal.style.display == "block") {
+        modal.style.display = "none"
     } else {
-        modal.style.opacity = 1
-        modal.style.pointerEvents = 'all'
+        modal.style.display = "block"
     }
 }
 

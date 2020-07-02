@@ -34,7 +34,8 @@
     background-color: var(--qAlert-accent);
     border: none;
     border-radius: 999px;
-    color: var(--qAlert-button-text-color);
+    color: #fff !important;
+    cursor: pointer;
 }
 #qAlert .qAlert-inner .fas { font-size: 55px; color: var(--qAlert-accent); }
 #qAlert .text-input { margin: 0 0 12px 0; text-align: left; }

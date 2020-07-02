@@ -38,10 +38,6 @@
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML=$('.header--actions').innerHTML;toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
-		<header id="subheader" class="blurry-bg" style="display: none;">
-			<ul class="subheader--actions">
-			</ul>
-		</header>
 		<div id="dropdown" class="blurry-bg">
 			<a class="dropdown-close close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
@@ -52,13 +48,13 @@
 
 			</ul>
 		</div>
-		<div id="hamburger-menu-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+		<div id="hamburger-menu-modal" class="modal blurry-bg" style="display: none;">
 			<a class="hamburger-menu-close close" onclick="toggleModal('hamburger-menu')"><i class="fas fa-times"></i></a>
 			<ul class="hamburger--actions">
 
 			</ul>
 		</div>
-		<div id="picture-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+		<div id="picture-modal" class="modal blurry-bg" style="display: none;">
 			<a class="picture-modal-close close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
 			<div class="center picture-modal-inner">
 				<img class="big-logo" id="picture-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
@@ -70,7 +66,7 @@
 				</form>
 			</div>
 		</div>
-		<div id="password-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+		<div id="password-modal" class="modal blurry-bg" style="display: none;">
 			<a class="password-modal-close close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
 			<div class="center password-modal-inner">
 				<img class="big-logo" id="password-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
@@ -83,7 +79,7 @@
 				<button onclick='verifyAndChangePassword()'>base.changePassword.submit</button>
 			</div>
 		</div>
-		<div id="thanks-modal" class="modal blurry-bg" style="opacity: 0; pointer-events: none;">
+		<div id="thanks-modal" class="modal blurry-bg" style="display: none;">
 			<a class="thanks-modal-close close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
 			<div class="center thanks-modal-inner" style="text-align: center; width: 100%">
 				<img class="big-logo" id="thanks-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
