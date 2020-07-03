@@ -17,7 +17,7 @@
 		<link rel="stylesheet" href="/remove_menus.css"></link>
     </head>
     <body>
-		<header id="main-header" class="blurry-bg">
+		<header class="blurry-bg">
 			<img class="header--logo" onclick="window.location='/dashboard.html'" src="/imgs/webp/favicon.big.webp" alt="base.logoalt">
 			<div class="header--vertical-separator"></div>
 			<a style="color:var(--bg)" class="dropdown-link" onclick='toggleDropdown()'>
@@ -51,16 +51,14 @@
 		</div>
 		<div id="hamburger-menu-modal" class="modal blurry-bg" style="display: none;">
 			<a class="hamburger-menu-close close" onclick="toggleModal('hamburger-menu')"><i class="fas fa-times"></i></a>
-			<ul class="hamburger--actions">
-
-			</ul>
+			<ul class="hamburger--actions"></ul>
 		</div>
 		<div id="picture-modal" class="modal blurry-bg" style="display: none;">
 			<a class="picture-modal-close close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
 			<div class="center picture-modal-inner">
 				<img class="big-logo" id="picture-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
 				<form action="/user/changepicture" method="POST" enctype="multipart/form-data">
-					<input max-size=500000 type="file" name="photo" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText=this.files[0].name'>
+					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
 					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">base.picture.chooseFile</label>
 					<p class="picture-file-name">base.picture.filename</p>
 					<button onclick='this.parentElement.submit()' id="picture-submit">base.picture.submit</button>
@@ -88,8 +86,8 @@
 				Powered by HTML5 & node.js<br><br>
 
 				Thanks to:<br>
-				The Express.js project (<a style="color: var(--accent);" href="https://github.com/expressjs/express">repo</a>)<br>
-				b1nary for quotes repo (<a style="color: var(--accent);" href="https://gist.github.com/b1nary/ea8fff806095bcedacce">repo</a>) (<a style="color: var(--accent);" href="https://gist.github.com/ezarcel/5749f919b44cc4291d59bcc8e4169147">my fork</a>)
+				The Express.js project (<a href="https://github.com/expressjs/express">repo</a>)<br>
+				b1nary for quotes repo (<a href="https://gist.github.com/b1nary/ea8fff806095bcedacce">repo</a>) (<a href="https://gist.github.com/ezarcel/5749f919b44cc4291d59bcc8e4169147">my fork</a>)
 
 				
 			</p>

@@ -1,7 +1,7 @@
 function correctDropdown() {
     headerDropdown = $("#dropdown")
-    headerDropdown.style.top = ( $('main').offsetTop - 1 ) + "px"
-    headerDropdown.style.left = $('#main-header > div:nth-child(2)').offsetLeft + "px"
+    headerDropdown.style.top = ( $('main').offsetTop ) + "px"
+    headerDropdown.style.left = $('header > div:nth-child(2)').offsetLeft + "px"
     headerDropdown.style.width = ($("header > :nth-child(4)").offsetLeft-$("header > :nth-child(2)").offsetLeft + 1) + "px"
 }
 function setPageTitle(icon, title) { $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
