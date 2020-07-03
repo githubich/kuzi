@@ -1,0 +1,38 @@
+[
+    {
+        "subjectID": 0,
+        "prettyName": "Catalan"
+    },
+    {
+        "subjectID": 1,
+        "prettyName": "Spanish"
+    },
+    {
+        "subjectID": 2,
+        "prettyName": "Math"
+    },
+    {
+        "subjectID": 3,
+        "prettyName": "Science"
+    },
+    {
+        "subjectID": 4,
+        "prettyName": "Lab"
+    },
+    {
+        "subjectID": 5,
+        "prettyName": "English"
+    },
+    {
+        "subjectID": 6,
+        "prettyName": "French"
+    },
+    {
+        "subjectID": 7,
+        "prettyName": "Biology"
+    },
+    {
+        "subjectID": 8,
+        "prettyName": "Physics & Chemistry"
+    }
+]
