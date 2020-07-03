@@ -3,11 +3,13 @@ console.log("Starting Kuzi...")
 const express = require('express') // Import, define and import everything
 const app = express()
 const { extname } = require('path')
-const { readFileSync, existsSync, unlinkSync } = require('fs')
+const { readFileSync, existsSync, unlinkSync, writeFileSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
 /* Tell express to use the middleware I say */ app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware'))
+
+/* If the file active.cookies.json does not exist, create it */ if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json',JSON.stringify([]))
 
 app.get('/users/:id', (req, res) => { // Search for the photo and return it, if not found, return the noone.png
 	id = req.params.id
