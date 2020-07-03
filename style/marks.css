@@ -1,0 +1,44 @@
+@media (min-width: 500px) {
+    .period-content {
+        display: grid;
+        grid-template-areas: "a a";
+        gap: 10px;
+    }
+}
+@media (min-width: 750px) {
+    .period-content {
+        display: grid;
+        grid-template-areas: "a a a";
+        gap: 10px;
+    }
+}
+@media (min-width: 1000px) {
+    .period-content {
+        display: grid;
+        grid-template-areas: "a a a";
+        gap: 10px;
+    }
+}
+.period:not(:nth-last-child(1)) { margin-bottom: 20px; }
+.period, .subject { border-radius: 10px; border: solid .5px var(--bg-alt-super-alpha) }
+.period-title {
+    background-color: var(--bg-darker3);
+    padding: 12.5px;
+    border-radius: 10px 10px 0 0;
+}
+.period-content {
+    background-color: var(--bg-darker1);
+    padding: 12.5px;
+    border-radius: 0 0 10px 10px;
+}
+.subject-title {
+    background-color: var(--bg-darker2);
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+}
+.subject-content {
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+}
+.mark * { display: inline-block; }
+.mark-content { float: right; }

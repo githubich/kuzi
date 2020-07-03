@@ -29,7 +29,6 @@
 	.dropdown-link { min-width: 100%; padding-right: 130px; }
 	#dropdown.showing, #dropdown.hiding, #dropdown.hidden { animation: none !important; }
 	#dropdown.hidden { display: none; }
-	#hamburger-menu-modal { display: block !important; }
 	.page-title { text-align: center; }
 	#main-header .header--action a span { display: block; }
 }

@@ -1,4 +1,4 @@
-console.log("Starting Kuzi...")
+console.log("[Kuzi] Starting...")
 
 const express = require('express') // Import, define and import everything
 const app = express()
@@ -19,6 +19,16 @@ app.get('/users/:id', (req, res) => { // Search for the photo and return it, if 
 		else if (existsSync(id+'.webp')) res.respond('', id+'.webp', 'image/webp', 200)
 		else res.respond('', 'users/noone.png', 'image/png', 200)
 	} catch(e) { console.error(e) }
+})
+app.get('/remove_menus.css', (req, res) => {
+	let content = "body {}"
+	if (settings.disableAnnouncements) content = `${content}\n.announcements-action { display: none !important; }`
+	if (settings.disableGoogleChat) content = `${content}\n.googleChat-action { display: none !important; }`
+	if (settings.disableMarks) content = `${content}\n.marks-action { display: none !important; }`
+	if (settings.disableTests) content = `${content}\n.tests-action { display: none !important; }`
+	if (settings.disableResources) content = `${content}\n.resources-action { display: none !important; }`
+	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block { display: none !important; } .dash-container { grid-template-areas: "events notifications" "marks marks" !important; }`
+	res.respond(content, '', 'text/css', 200)
 })
 app.get('/', (req, res) => res.redirect("/login.html")) // Show the login if path = /
 app.get('*', (req, res) => { // Return the file the user wants
@@ -125,4 +135,138 @@ app.post('/user/changepassword', (req, res) => { // Change the password of the u
 		saveJSON('users.json', users)
 	} catch(e) { console.error(e) }
 })
+
+app.post('/marks/get', (req, res) => {
+	res.respond(JSON.stringify(
+		[
+			{
+				"periodName": "1r Trimestre",
+				"periodID": 1,
+				"subjects": [
+					{
+						"subjectName": "Català",
+						"subjectID": 1,
+						"marks": [
+							{
+								"item": "Test 1",
+								"mark": 90
+							},
+							{
+								"item": "Test 2",
+								"mark": 100
+							},
+							{
+								"item": "Test 3",
+								"mark": 75
+							}
+						]
+					},
+					{
+						"subjectName": "Math",
+						"subjectID": 2,
+						"marks": [
+							{
+								"item": "Test 1",
+								"mark": 100
+							},
+							{
+								"item": "Test 2",
+								"mark": 95
+							},
+							{
+								"item": "Test 3",
+								"mark": 85
+							}
+						]
+					}
+				]
+			},
+			{
+				"periodName": "2n Trimestre",
+				"periodID": 2,
+				"subjects": [
+					{
+						"subjectName": "Català",
+						"subjectID": 1,
+						"marks": [
+							{
+								"item": "Test 1",
+								"mark": 90
+							},
+							{
+								"item": "Test 2",
+								"mark": 100
+							},
+							{
+								"item": "Test 3",
+								"mark": 75
+							}
+						]
+					},
+					{
+						"subjectName": "Math",
+						"subjectID": 2,
+						"marks": [
+							{
+								"item": "Test 1",
+								"mark": 100
+							},
+							{
+								"item": "Test 2",
+								"mark": 95
+							},
+							{
+								"item": "Test 3",
+								"mark": 85
+							}
+						]
+					}
+				]
+			},
+			{
+				"periodName": "3r Trimestre",
+				"periodID": 3,
+				"subjects": [
+					{
+						"subjectName": "Català",
+						"subjectID": 1,
+						"marks": [
+							{
+								"item": "Test 1",
+								"mark": 90
+							},
+							{
+								"item": "Test 2",
+								"mark": 100
+							},
+							{
+								"item": "Test 3",
+								"mark": 75
+							}
+						]
+					},
+					{
+						"subjectName": "Math",
+						"subjectID": 2,
+						"marks": [
+							{
+								"item": "Test 1",
+								"mark": 100
+							},
+							{
+								"item": "Test 2",
+								"mark": 95
+							},
+							{
+								"item": "Test 3",
+								"mark": 85
+							}
+						]
+					}
+				]
+			}
+		]
+	), '', 'application/json', 200)
+})
+
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`)) // Listen on the specified port

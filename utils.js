@@ -39,7 +39,7 @@ function importLocale() {
 		var version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
 	} catch {}
 	//version = "1.0" Hahaha, some day...
-	console.log(`Using version ${version}`)
+	console.log(`[Kuzi] Using version ${version}`)
 	return [`global.version|${version}`, ...localizationStrings]
 }
 

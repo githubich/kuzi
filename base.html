@@ -14,6 +14,7 @@
 		<script src="/lib/qWebPiOS.min.js"></script>
 		<script src="/lib/qAlert.js"></script>
 		<link rel="stylesheet" href="/lib/qAlert.css">
+		<link rel="stylesheet" href="/remove_menus.css"></link>
     </head>
     <body>
 		<header id="main-header" class="blurry-bg">
@@ -29,12 +30,12 @@
 			</a>
 			<div class="header--vertical-separator"></div>
 			<ul class="header--actions">
-				<li class="header--action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>base.header.dashboard</span></a></li>
-				<li class="header--action"><a href="/announcements.html"><i class="fad fa-comment-exclamation"></i><span>base.header.announcements</span><span class="notify-dot announcements-notify-dot"></span></a></li>
-				<li class="header--action"><a href="https://chat.google.com"><i class="fad fa-comments"></i><span>base.header.googleChat</span><i class="fad fa-external-link"></i></a></li>
-				<li class="header--action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>base.header.marks</span><span class="notify-dot marks-notify-dot"></span></a></li>
-				<li class="header--action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>base.header.tests</span><span class="notify-dot tests-notify-dot"></span></a></li>
-				<li class="header--action"><a href="/resources.html"><i class="fad fa-folders"></i><span>base.header.resources</span><span class="notify-dot resources-notify-dot"></span></a></li>
+				<li class="header--action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>base.header.dashboard</span></a></li>
+				<li class="header--action announcements-action"><a href="/announcements.html"><i class="fad fa-comment-exclamation"></i><span>base.header.announcements</span><span class="notify-dot announcements-notify-dot"></span></a></li>
+				<li class="header--action googleChat-action"><a href="https://chat.google.com"><i class="fad fa-comments"></i><span>base.header.googleChat</span><i class="fad fa-external-link"></i></a></li>
+				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>base.header.marks</span><span class="notify-dot marks-notify-dot"></span></a></li>
+				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>base.header.tests</span><span class="notify-dot tests-notify-dot"></span></a></li>
+				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>base.header.resources</span><span class="notify-dot resources-notify-dot"></span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML=$('.header--actions').innerHTML;toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>

@@ -1,20 +1,20 @@
 {
-	"__comment1": "These are the optimal settings for me,",
+	"__comment": "These are the optimal settings for me",
 	"serverPort": 80,
 	"language": "en",
-	"__comment2": "From here to the end, nothing works",
-	"enableAnouncements": true,
-	"enableGoogleChat": true,
-	"enableMarks": true,
-	"enableTests": true,
-	"enableResources": true,
-	"enableLimits": true,
-	"teacherLimits": {
+	"disableAnnouncements": false,
+	"disableGoogleChat": false,
+	"disableMarks": false,
+	"disableTests": false,
+	"disableResources": false,
+	"disableMotivationalQuotes": true,
+	"teacherRules": {
+		"enabled": true,
 		"onlyAddHomeworkOnTeachTime": true,
 		"maxExamsPerDay": 2
 	},
-	"studentLimits": {
-		"enableChatBetweenStudents": false,
+	"studentRules": {
+		"enabled": true,
 		"homeworkSubmittingMargin": 15
 	}
 }

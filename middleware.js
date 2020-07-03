@@ -32,7 +32,6 @@ function kuziMiddleware(req, res, next) {
 	})
 	users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = { username: user.username, password: user.password, prettyName: user.prettyName, userID: user.userID, role: user.role, isAdmin: user.isAdmin } })
     if (req.userInfo.role == "student") {
-        req.userInfo.classID = "Report this bug to your school"
         classes.forEach(clas => { // I use clas because class is a reserved word
             clas.students.forEach(student => {
                 if (req.userInfo.userID == student) {
@@ -42,7 +41,7 @@ function kuziMiddleware(req, res, next) {
             })
         })
     }    
-    req.file = req.url.slice(1,req.url.length) // Shortcut, I'm lazy
+    req.file = req.url.slice(1, req.url.length) // Shortcut, I'm lazy
 	activeCookies.forEach(cookie => { // Clear the expired cookies and refresh the cookie
 		if (cookie.expireTime <= Date.now()) {
 			activeCookies.splice(i,1)
@@ -59,15 +58,13 @@ function kuziMiddleware(req, res, next) {
 		i++
 	})
 	if (modified) saveJSON('active.cookies.json', activeCookies)
-    res.respond = (content, file, mime, statusCode) => { // Create a respond function to make everything faster and easier
+    res.respond = (content, file, mime, statusCode) => { // Create a respond function
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
         if (!content) content = readFileSync(file)
         if ((mime == "text/html" || mime == "text/javascript") && !req.url.includes('/users/')) {
             content = content.toString('utf8')
-            locales.forEach(locale => {
-                content = content.split(locale.split('|')[0]).join(locale.split('|')[1])
-            })
+            locales.forEach(locale => content = content.split(locale.split('|')[0]).join(locale.split('|')[1]))
         }
         res.setHeader('Content-Type', mime)
         res.status(statusCode).send(content)

@@ -1,46 +1,10 @@
-fetch('/user/getinfo', { method: 'POST' })
-    .then(res => {
-        res.json().then(res => {
-            if (res.message == "logout") window.location = '/'
-            userInfo = res.userInfo
-            load()
-        })
-        .catch(e => {
-            window.location = '/'
-    })
-})
 function correctDropdown() {
-    headerDropdown=$("#dropdown")
+    headerDropdown = $("#dropdown")
     headerDropdown.style.top = ( $('main').offsetTop - 1 ) + "px"
-    headerDropdown.style.left = document.querySelector('#main-header>div:nth-child(2)').offsetLeft + "px"
-    headerDropdown.style.width = ($("header>:nth-child(4)").offsetLeft-$("header>:nth-child(2)").offsetLeft + 1) + "px"
+    headerDropdown.style.left = $('#main-header > div:nth-child(2)').offsetLeft + "px"
+    headerDropdown.style.width = ($("header > :nth-child(4)").offsetLeft-$("header > :nth-child(2)").offsetLeft + 1) + "px"
 }
-function load() {
-    headerDropdownVisible = false
-    headerDropdownArrow = $("#dropdown-arrow")
-    if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
-    $('.user-info .name').innerText = userInfo.prettyName
-    if (userInfo.role == "teacher") {
-        $('.user-info .status').innerText = "base.teacher"
-    } else {
-        $('.user-info .status').innerText = userInfo.prettyClassName
-    }
-    if (userInfo.isAdmin) $('.user-info .status').innerText = `[Admin] ${$('.user-info .status').innerText}`
-    $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
-    correctDropdown()
-}
-function addSubheaderAction(icon, text, url, onclick) {
-    $('.subheader--actions').innerHTML = `${$('.subheader--actions').innerHTML}
-        <li class="subheader--action">
-            <a href="${url}" onclick="${onclick}"><i class="fas fa-${icon}"></i><span>${text}</span></a>
-        </li>`
-    $("#subheader").style.display="block"
-    window.scrollY=0
-    correctDropdown()
-}
-function setPageTitle(icon, title) {
-    $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}`
-}
+function setPageTitle(icon, title) { $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
 function setActiveTab(index) {
     $$('.header--action')[index].style.fontWeight = "bold"
     $$('.header--action a')[index].removeAttribute('href')
@@ -53,50 +17,37 @@ function toggleDropdown() {
             headerDropdownVisible = false
             headerDropdown.classList.add("hiding")
             headerDropdownArrow.style.transform = ""
-            setTimeout(()=>{headerDropdown.classList.remove("hiding"); headerDropdown.classList.add("hidden")},200)
+            setTimeout(() => { headerDropdown.classList.remove("hiding"); headerDropdown.classList.add("hidden") }, 200)
         } else {
             headerDropdownVisible = true
             headerDropdown.classList.add("showing")
             headerDropdownArrow.style.transform = "rotateX(180deg)"
-            setTimeout(()=>{headerDropdown.classList.remove("showing"); headerDropdown.classList.add("showed")},200)
+            setTimeout(() => { headerDropdown.classList.remove("showing"); headerDropdown.classList.add("showed") }, 200)
         }
     }
 }
 window.onclick = e => {
-    if (e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown) {
-        if (headerDropdownVisible && $('#dropdown.showed') !== null){
-            headerDropdown.classList.remove("showed","hidden","showing","hiding");
-            headerDropdownVisible=false;
-            headerDropdownArrow.style.transform=""
-            headerDropdown.classList.add("hiding");
-            setTimeout(function(){headerDropdown.classList.remove("hiding");headerDropdown.classList.add("hidden")},250)
-        }
+    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && $('#dropdown.showed') !== null) {
+        headerDropdown.classList.remove("showed","hidden","showing","hiding");
+        headerDropdownVisible=false;
+        headerDropdownArrow.style.transform=""
+        headerDropdown.classList.add("hiding");
+        setTimeout(() => { headerDropdown.classList.remove("hiding");headerDropdown.classList.add("hidden") }, 250)
     }
 }
-window.onscroll = () => {
-    if ($("#dropdown.hidden") == null) {
-        $("#dropdown").style.top=`${window.scrollY+headerDropdownOffset}px`
-    }
-}
+window.onscroll = () => correctDropdown()
 function uploadProfilePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
-    if ($('.picture-input').files[0] !== null) {
+    if ($('.picture-input').files[0] != null) {
         let fileSize = $('.picture-input').files[0].size
         if (fileSize > maxSize || fileSize == 0) return false; return true
-    } else {
-        return false
-    }
+    } else return false
 }
-
 function toggleModal(modalName) {
     let modal = $(`#${modalName}-modal`)
-    if (modal.style.display == "block") {
-        modal.style.display = "none"
-    } else {
-        modal.style.display = "block"
-    }
+    if (modal.style.display == "block") modal.style.display = "none"
+    else modal.style.display = "block"
 }
-
 function verifyAndChangePassword() {
     let old = $('.password-modal--input.password-modal--oldPassword').value
     let new1 = $('.password-modal--input.password-modal--newPassword').value
@@ -129,3 +80,22 @@ function verifyAndChangePassword() {
         )
         .catch(e => console.error(e))
 }
+fetch('/user/getinfo', { method: 'POST' })
+    .then(res => {
+        res.json().then(res => {
+            if (res.message == "logout") window.location = '/'
+            userInfo = res.userInfo
+            headerDropdownVisible = false
+            headerDropdownArrow = $("#dropdown-arrow")
+            if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
+            $('.user-info .name').innerText = userInfo.prettyName
+            if (userInfo.role == "teacher") {
+                $('.user-info .status').innerText = "base.teacher"
+            } else {
+                $('.user-info .status').innerText = userInfo.prettyClassName
+            }
+            if (userInfo.isAdmin) $('.user-info .status').innerText = `[Admin] ${$('.user-info .status').innerText}`
+            $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+        })
+        .catch(e => window.location = '/')
+})
