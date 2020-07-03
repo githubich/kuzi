@@ -20,9 +20,7 @@ app.get('/users/:id', (req, res) => { // Search for the photo and return it, if 
 		else res.respond('', 'users/noone.png', 'image/png', 200)
 	} catch(e) { console.error(e) }
 })
-app.get('/', (req, res) => { // Show the login if path = /
-	res.redirect("/login.html")
-})
+app.get('/', (req, res) => res.redirect("/login.html")) // Show the login if path = /
 app.get('*', (req, res) => { // Return the file the user wants
 	try {
 		if (req.userInfo != {} || req.url === "/" || req.url === "/login.html" || extname(req.url) !== ".html") { // If the user is logged or if they want to log in proceed, else, alert the user
@@ -56,12 +54,10 @@ app.post('/login', (req, res) => {
 		if (found) {
 			let activeCookies = importJSON('active.cookies.json') // Import the active cookies and create a new session UUID
 			let newSession = newUUID()
-
 			/* Send the UUID to the user and save the UUID to active.cookies.json */ res.status(200).send(JSON.stringify({ session: newSession, do: 'window.location = "/dashboard.html"' }))
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
 			saveJSON('active.cookies.json', activeCookies)
 		} else {
-			
 			/* If after all of that, the user wasn't found, alert them */ res.status(401).send(JSON.stringify({ do: 'alert("Usuari i/o contrasenya incorrectes");document.querySelector("#kuzi-password").value=""' }))
 		}
 	} catch(e) { // Catch any errors and print them
@@ -86,7 +82,7 @@ app.post('/logout', (req, res) => { // Delete the cookie from the file (log out)
 app.post('/user/getinfo', (req, res) => { // Respond with the user info
 	try {
 		if (req.userInfo.userID) {
-			req.userInfo.password = "Nice Try!" // Security Patch: replace the password with a little message ;)
+			delete req.userInfo.password // Security Patch: delete the password
 			res.status(200).send(JSON.stringify({ userInfo: req.userInfo }))
 		} else {
 			res.status(401).send(JSON.stringify({ message: 'logout' })) // If the user is not found, tell the client to log out

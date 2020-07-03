@@ -4,30 +4,23 @@ const { extensionToMime } = require('./utils')
 const locales = importLocale()
 function kuziMiddleware(req, res, next) {
 
-    // Log everything
-    console.log(`[Kuzi|${req.connection.remoteAddress}] ${req.method} ${req.url}`)
+    console.log(`[Kuzi|${req.connection.remoteAddress}] ${req.method} ${req.url}`) // Log everything
 
-    // Import some files and declare variables
-    let activeCookies = importJSON('active.cookies.json')
+    let activeCookies = importJSON('active.cookies.json') // Import some files and declare variables
     let classes = importJSON('classes.json')
     let users = importJSON('users.json')
     let userIDfromCookie = 0
     let i = 0
 	let modified = false
 
-    // Parse the cookies to req.cookies
-    if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') {
+    /* Parse the cookies to req.cookies */ if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') {
         let cookies = {}
         req.headers.cookie.split('&').forEach(cookie => {
             eval(`cookies.${cookie.split('=')[0]}='${cookie.split('=')[1]}'`)
         })
         req.cookies = cookies
-    } else {
-        req.cookies = {}
-    }
-    
-    // Look for the user performing the action and put their information in req.userInfo and update the expire time
-    req.userInfo = {}
+    } else req.cookies = {}
+    req.userInfo = {} // Look for the user performing the action and put their information in req.userInfo and update the expire time
     activeCookies.forEach(cookie => {
 		if (cookie.cookie == req.cookies.session) {
             userIDfromCookie = cookie.userID
@@ -37,11 +30,7 @@ function kuziMiddleware(req, res, next) {
             }
 		}
 	})
-	users.forEach(user => {
-		if (user.userID == userIDfromCookie) {
-			req.userInfo = { username: user.username, password: user.password, prettyName: user.prettyName, userID: user.userID, role: user.role, isAdmin: user.isAdmin }
-		}
-    })
+	users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = { username: user.username, password: user.password, prettyName: user.prettyName, userID: user.userID, role: user.role, isAdmin: user.isAdmin } })
     if (req.userInfo.role == "student") {
         req.userInfo.classID = "Report this bug to your school"
         classes.forEach(clas => { // I use clas because class is a reserved word
@@ -52,16 +41,9 @@ function kuziMiddleware(req, res, next) {
                 }
             })
         })
-    } else {
-
-    }
-    
-
-    // Shortcut, I'm lazy
-    req.file = req.url.slice(1,req.url.length)
-
-    // Clear the expired cookies and refresh the cookie
-	activeCookies.forEach(cookie => {
+    }    
+    req.file = req.url.slice(1,req.url.length) // Shortcut, I'm lazy
+	activeCookies.forEach(cookie => { // Clear the expired cookies and refresh the cookie
 		if (cookie.expireTime <= Date.now()) {
 			activeCookies.splice(i,1)
 			modified = true
@@ -76,12 +58,8 @@ function kuziMiddleware(req, res, next) {
 		}
 		i++
 	})
-	if (modified) {
-		saveJSON('active.cookies.json', activeCookies)
-    }
-    
-    // Create a respond function to make everything faster and easier
-    res.respond = (content, file, mime, statusCode) => {
+	if (modified) saveJSON('active.cookies.json', activeCookies)
+    res.respond = (content, file, mime, statusCode) => { // Create a respond function to make everything faster and easier
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
         if (!content) content = readFileSync(file)
@@ -96,6 +74,4 @@ function kuziMiddleware(req, res, next) {
     }
     next()
 }
-
-// Export everything
-module.exports = kuziMiddleware
+module.exports = kuziMiddleware // Export everything
