@@ -1,0 +1,54 @@
+[
+    {
+        "subjectID": 1,
+        "classID": 1,
+        "teacherID": 1,
+        "time": {
+            "hours": 9,
+            "minutes": 0,
+            "duration": {
+                "hours": 1,
+                "minutes": 0
+            }
+        }
+    },
+    {
+        "subjectID": 2,
+        "classID": 1,
+        "teacherID": 1,
+        "time": {
+            "hours": 10,
+            "minutes": 0,
+            "duration": {
+                "hours": 1,
+                "minutes": 0
+            }
+        }
+    },
+    {
+        "subjectID": 1,
+        "classID": 2,
+        "teacherID": 2,
+        "time": {
+            "hours": 9,
+            "minutes": 0,
+            "duration": {
+                "hours": 1,
+                "minutes": 0
+            }
+        }
+    },
+    {
+        "subjectID": 2,
+        "classID": 2,
+        "teacherID": 2,
+        "time": {
+            "hours": 15,
+            "minutes": 0,
+            "duration": {
+                "hours": 1,
+                "minutes": 0
+            }
+        }
+    }
+]

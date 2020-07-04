@@ -76,9 +76,7 @@ function verifyAndChangePassword() {
                 if (res.message == 'ok') { qAlert({ message: "base.changePassword.success", mode: "ok" , buttons: { cancel: { invisible: true } } }); toggleModal('password') }
                 else qAlert({ message: "base.changePassword.error.oldPasswordNotCorrect", mode: "error" , buttons: { cancel: { invisible: true } } })
             })
-            .catch(e => console.error(e))
         )
-        .catch(e => console.error(e))
 }
 fetch('/user/getinfo', { method: 'POST' })
     .then(res => {
@@ -89,13 +87,9 @@ fetch('/user/getinfo', { method: 'POST' })
             headerDropdownArrow = $("#dropdown-arrow")
             if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
             $('.user-info .name').innerText = userInfo.prettyName
-            if (userInfo.role == "teacher") {
-                $('.user-info .status').innerText = "base.teacher"
-            } else {
-                $('.user-info .status').innerText = userInfo.prettyClassName
-            }
-            if (userInfo.isAdmin) $('.user-info .status').innerText = `[Admin] ${$('.user-info .status').innerText}`
+            if (userInfo.role == "teacher") $('.user-info .status').innerText = "base.teacher"
+            else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
+            else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
             $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
         })
-        .catch(e => window.location = '/')
 })

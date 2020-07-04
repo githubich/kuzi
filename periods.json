@@ -1,0 +1,14 @@
+[
+    {
+        "periodID": 1,
+        "prettyName": "1r Trimester"
+    },
+    {
+        "periodID": 2,
+        "prettyName": "2r Trimester"
+    },
+    {
+        "periodID": 3,
+        "prettyName": "3r Trimester"
+    }
+]
