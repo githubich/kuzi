@@ -1,5 +1,6 @@
 {
     "subject": "Hey!",
     "body": "Hi, this is a test announcement",
-    "recieverClasses": [1, 2, 3]
+    "from": 1,
+    "classIDs": [ 1 ]
 }

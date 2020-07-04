@@ -19,8 +19,7 @@
 
         "base.logoAlt|Logo",
         "base.header.dashboard|Dashboard",
-        "base.header.announcements|Announcements",
-        "base.header.googleChat|Google Chat",
+        "base.header.news|News",
         "base.header.marks|Marks",
         "base.header.tests|Tests",
         "base.header.resources|Resources",
@@ -45,7 +44,7 @@
 
         "dashboard.title|Dashboard",
 
-        "announcements.title|Announcements",
+        "news.title|News",
 
         "marks.title|Marks",
 
@@ -73,8 +72,7 @@
 
         "base.logoAlt|Logo",
         "base.header.dashboard|Dashboard",
-        "base.header.announcements|Anuncios",
-        "base.header.googleChat|Google Chat",
+        "base.header.news|Noticias",
         "base.header.marks|Notas",
         "base.header.tests|Tests",
         "base.header.resources|Recursos",
@@ -99,7 +97,7 @@
 
         "dashboard.title|Dashboard",
 
-        "announcements.title|Anuncios",
+        "news.title|Noticias",
 
         "marks.title|Notas",
 
@@ -128,7 +126,7 @@
 
         "base.logoAlt|Logo",
         "base.header.dashboard|Dashboard",
-        "base.header.announcements|Anuncis",
+        "base.header.news|Notícies",
         "base.header.googleChat|Google Chat",
         "base.header.marks|Notes",
         "base.header.tests|Tests",
@@ -154,7 +152,7 @@
 
         "dashboard.title|Dashboard",
 
-        "announcements.title|Anuncis",
+        "news.title|Notícies",
 
         "marks.title|Notes",
 

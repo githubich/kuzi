@@ -2,26 +2,22 @@
 @media (min-width: 1150px) { .period-content { grid-template-areas: "a a a"; } }
 .period:not(:nth-last-child(1)) { margin-bottom: 20px; }
 .period, .subject { border-radius: 10px; border: solid .5px var(--bg-alt-super-alpha) }
+.period > * { padding: 12.5px; }
+.subject > * { padding: 10px; }
 .period-title {
     background-color: var(--bg-darker3);
-    padding: 12.5px;
     border-radius: 10px 10px 0 0;
 }
 .period-content {
     background-color: var(--bg-darker1);
-    padding: 12.5px;
     border-radius: 0 0 10px 10px;
     display: grid;
     gap: 10px;
 }
 .subject-title {
     background-color: var(--bg-darker2);
-    padding: 10px;
     border-radius: 10px 10px 0 0;
 }
-.subject-content {
-    padding: 10px;
-    border-radius: 0 0 10px 10px;
-}
+.subject-content { border-radius: 0 0 10px 10px; }
 .mark * { display: inline-block; }
 .mark-content { float: right; }

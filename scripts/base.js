@@ -6,12 +6,11 @@ function correctDropdown() {
 }
 function setPageTitle(icon, title) { $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
 function setActiveTab(index) {
-    $$('.header--action')[index].style.fontWeight = "bold"
+    $$('.header--action')[index].classList.add('selected')
     $$('.header--action a')[index].removeAttribute('href')
 }
 function toggleDropdown() {
     if (!$("#dropdown.hiding") && !$("#dropdown.showing")) {
-        correctDropdown()
         headerDropdown.classList.remove("showed","hidden")
         if (headerDropdownVisible) {
             headerDropdownVisible = false
@@ -19,6 +18,7 @@ function toggleDropdown() {
             headerDropdownArrow.style.transform = ""
             setTimeout(() => { headerDropdown.classList.remove("hiding"); headerDropdown.classList.add("hidden") }, 200)
         } else {
+            correctDropdown()
             headerDropdownVisible = true
             headerDropdown.classList.add("showing")
             headerDropdownArrow.style.transform = "rotateX(180deg)"
@@ -26,16 +26,6 @@ function toggleDropdown() {
         }
     }
 }
-window.onclick = e => {
-    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && $('#dropdown.showed') !== null) {
-        headerDropdown.classList.remove("showed","hidden","showing","hiding");
-        headerDropdownVisible=false;
-        headerDropdownArrow.style.transform=""
-        headerDropdown.classList.add("hiding");
-        setTimeout(() => { headerDropdown.classList.remove("hiding");headerDropdown.classList.add("hidden") }, 250)
-    }
-}
-window.onscroll = () => correctDropdown()
 function uploadProfilePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
     if ($('.picture-input').files[0] != null) {
@@ -49,9 +39,9 @@ function toggleModal(modalName) {
     else modal.style.display = "block"
 }
 function verifyAndChangePassword() {
-    let old = $('.password-modal--input.password-modal--oldPassword').value
-    let new1 = $('.password-modal--input.password-modal--newPassword').value
-    let new2 = $('.password-modal--input.password-modal--newPassword2').value
+    let old = $('.password-modal--oldPassword').value,
+        new1 = $('.password-modal--newPassword').value,
+        new2 = $('.password-modal--newPassword2').value
 
     if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qAlert({ message: "base.changePassword.error.emptyFields", mode: "error" , buttons: { cancel: { invisible: true } } })
     if (old == new1) return qAlert({ message: "base.changePassword.error.old=new", mode: "error" , buttons: { cancel: { invisible: true } } })
@@ -93,3 +83,6 @@ fetch('/user/getinfo', { method: 'POST' })
             $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
         })
 })
+window.addEventListener('load', () => correctDropdown())
+window.addEventListener('scroll', () => correctDropdown())
+window.addEventListener('click', e => { if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown() })

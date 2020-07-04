@@ -1,7 +1,6 @@
 const { importJSON, saveJSON, importLocale } = require('./utils')
 const { readFileSync } = require('fs')
 const { extensionToMime } = require('./utils')
-const { userInfo } = require('os')
 const locales = importLocale()
 function kuziMiddleware(req, res, next) {
 
@@ -17,7 +16,7 @@ function kuziMiddleware(req, res, next) {
     let modified = false
     let currentTime = new Date()
 
-    /* Parse the cookies to req.cookies */ if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') {
+    if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') { // Parse the cookies to req.cookies
         let cookies = {}
         req.headers.cookie.split('&').forEach(cookie => {
             eval(`cookies.${cookie.split('=')[0]}='${cookie.split('=')[1]}'`)
@@ -34,16 +33,12 @@ function kuziMiddleware(req, res, next) {
             }
 		}
     })
+	users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = user })
     req.userInfo.class = {}
-	users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = { username: user.username, password: user.password, prettyName: user.prettyName, userID: user.userID, role: user.role, isAdmin: user.isAdmin } })
     if (req.userInfo.role == "student") {
-        classes.forEach(clas => { // I use clas because class is a reserved word
-            clas.students.forEach(student => {
-                if (req.userInfo.userID == student) {
-                    req.userInfo.class = clas
-                }
-            })
-        })
+        classes.forEach(clas => clas.students.forEach(student => { // I use clas because class is a reserved word
+            if (req.userInfo.userID == student) req.userInfo.class = clas
+        }))
     }
     req.userInfo.currentSubject = {} // Error proofing
     subjectUserConnections.forEach(connection => { // Set userInfo.currentSubject to the current subject
@@ -64,7 +59,7 @@ function kuziMiddleware(req, res, next) {
     req.file = req.url.slice(1, req.url.length) // Shortcut, I'm lazy
 	activeCookies.forEach(cookie => { // Clear the expired cookies
 		if (cookie.expireTime <= Date.now()) {
-			activeCookies.splice(i,1)
+			activeCookies.splice(i, 1)
 			modified = true
 		}
 		i++
@@ -72,7 +67,7 @@ function kuziMiddleware(req, res, next) {
 	i = 0
 	activeCookies.forEach(cookie => { // Update the cookie expireTime
 		if (cookie.expireTime <= Date.now()) {
-			activeCookies.splice(i,1)
+			activeCookies.splice(i, 1)
 			modified = true
 		}
 		i++

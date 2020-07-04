@@ -1,2 +1,2 @@
 setPageTitle("folders", "resources.title")
-setActiveTab(5)
+setActiveTab(4)

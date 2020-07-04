@@ -1,5 +1,5 @@
 window.addEventListener('load', () => {
-    setPageTitle("comment-exclamation", "announcements.title")
+    setPageTitle("comment-exclamation", "news.title")
     setActiveTab(1)
 })
 

@@ -1,5 +1,5 @@
 setPageTitle("calendar-check", "marks.title")
-setActiveTab(3)
+setActiveTab(2)
 
 window.addEventListener('load', () => {
     fetch('/marks/get', { method: "POST" })
