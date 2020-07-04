@@ -7,8 +7,8 @@ const { readFileSync, existsSync, unlinkSync, writeFileSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
-/* Tell express to use the middleware I say */ app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware'))
-/* If the file active.cookies.json does not exist, create it */ if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
+app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware')) // Tell express to use the middleware I say
+if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([])) // If the file active.cookies.json does not exist, create it
 
 app.get('/users/:id', (req, res) => { // Search for the photo and return it, if not found, return the noone.png
 	try {
@@ -34,20 +34,15 @@ app.get('/', (req, res) => res.redirect("/login.html")) // Show the login if pat
 app.get('*', (req, res) => { // Return the file the user wants
 	try {
 		if (req.userInfo != {} || req.url === "/" || req.url === "/login.html" || extname(req.url) !== ".html") { // If the user is logged or if they want to log in proceed, else, alert the user
-			if (!existsSync(req.file)) {
-				res.respond('', '404.html', 'text/html', 200) // If the file doesn't exists, tell the user
-			} else if (extname(req.url) == '.json' || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') {
-				res.respond('', '403.html', 'text/html', 200) // If they don't have permission to see the file, do not allow the user to do that
-			} else if (existsSync(req.file)) {
-				if (extname(req.url) == '.html' && req.url != '/login.html') { // If the file exists, respond that, but if it's an html file and it's not the login, add the base to it
-					res.respond(readFileSync('base.html')+'\n'+readFileSync(req.file)+'\n</div></main></body></html>', '', 'text/html', 200)
-				} else res.respond('', req.file, '', 200)
+		  	if (extname(req.url) == '.json' || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200) // If they don't have permission, don't show it
+			else if (!existsSync(req.file)) res.respond('', '404.html', 'text/html', 200) // If the file doesn't exists, tell the user
+			else if (existsSync(req.file)) {
+				if (extname(req.url) == '.html' && req.url != '/login.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(req.file)}\n</div></main></body></html>`, '', 'text/html', 200) // If the file exists, respond that, but if it's an html file and it's not the login, add the base to it
+				else res.respond('', req.file, '', 200)
 			} else {
 				res.respond('', '404.html', 'text/html', 404) // If nothing matched, respond a 404
 			}
-		} else {
-			res.respond('<script>alert("login.error.notloggedin"); window.location = "/"</script>', '', 'text/html', 200) // If the user wasn't logged in, alert them
-		}
+		} else res.respond('<script>alert("login.error.notloggedin"); window.location = "/"</script>', '', 'text/html', 200) // If the user wasn't logged in, alert them
 	} catch(e) { console.error(e) }
 })
 app.post('/login', (req, res) => {
@@ -64,11 +59,11 @@ app.post('/login', (req, res) => {
 		if (found) {
 			let activeCookies = importJSON('active.cookies.json') // Import the active cookies and create a new session UUID
 			let newSession = newUUID()
-			/* Send the UUID to the user and save the UUID to active.cookies.json */ res.status(200).send(JSON.stringify({ session: newSession, do: 'window.location = "/dashboard.html"' }))
+			res.status(200).send(JSON.stringify({ session: newSession, do: 'window.location = "/dashboard.html"' })) // Send the UUID to the user and save it to active.cookies.json
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
 			saveJSON('active.cookies.json', activeCookies)
 		} else {
-			/* If after all of that, the user wasn't found, alert them */ res.status(401).send(JSON.stringify({ do: 'alert("Usuari i/o contrasenya incorrectes");document.querySelector("#kuzi-password").value=""' }))
+			res.status(401).send(JSON.stringify({ do: 'alert("Usuari i/o contrasenya incorrectes");document.querySelector("#kuzi-password").value=""' })) // If after all of that, the user wasn't found, alert them
 		}
 	} catch(e) { // Catch any errors and print them
 		console.error(e)
@@ -136,7 +131,7 @@ app.post('/user/changepassword', (req, res) => { // Change the password of the u
 	} catch(e) { console.error(e) }
 })
 
-app.post('/marks/get', (req, res) => {
+app.post('/marks/get', (req, res) => { // Return placeholder JSON
 	res.respond(JSON.stringify(
 		[
 			{
