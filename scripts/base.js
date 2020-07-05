@@ -68,21 +68,24 @@ function verifyAndChangePassword() {
             })
         )
 }
-fetch('/user/getinfo', { method: 'POST' })
-    .then(res => {
-        res.json().then(res => {
-            if (res.message == "logout") window.location = '/'
-            userInfo = res.userInfo
-            headerDropdownVisible = false
-            headerDropdownArrow = $("#dropdown-arrow")
-            if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
-            $('.user-info .name').innerText = userInfo.prettyName
-            if (userInfo.role == "teacher") $('.user-info .status').innerText = "base.teacher"
-            else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
-            else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
-            $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+window.addEventListener('load', () => {
+    correctDropdown()
+    fetch('/user/getinfo', { method: 'POST' })
+        .then(res => {
+            res.json().then(res => {
+                if (res.message == "logout") window.location = '/'
+                userInfo = res.userInfo
+                if (typeof load == "function") load()
+                headerDropdownVisible = false
+                headerDropdownArrow = $("#dropdown-arrow")
+                if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
+                $('.user-info .name').innerText = userInfo.prettyName
+                if (userInfo.role == "teacher") $('.user-info .status').innerText = "base.teacher"
+                else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
+                else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
+                $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+            })
         })
 })
-window.addEventListener('load', () => correctDropdown())
 window.addEventListener('scroll', () => correctDropdown())
 window.addEventListener('click', e => { if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown() })

@@ -246,5 +246,61 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 		]
 	), '', 'application/json', 200)
 })
-
+app.post('/class/listmine', (req, res) => {
+	try {
+		if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: 'nice try' }), '', 'application/json', 200)
+		let classes = importJSON('classes.json') // Declare things
+		let exists = false
+		let i = 0
+		let j = 0
+		let k = 0
+		let subjects = importJSON('subjects.json')
+		let subjectUserConnections = importJSON('subject-user.json')
+		let resClasses = []
+		let users = importJSON('users.json')
+		subjectUserConnections.forEach(connection => {
+			if (connection.teacherID == req.userInfo.userID) {
+				exists = false
+				i = 0
+				resClasses.forEach(resClass => {
+					if (resClass.classID == connection.classID) {
+						exists = true
+						resClasses[i].subjects.push({ subjectID: connection.subjectID })
+					}
+					i++
+				})
+				if (!exists) {
+					classes.forEach(clas => {
+						if (clas.classID == connection.classID) {
+							resClasses.push({ classID: connection.classID, classStudents: [], subjects: [ { subjectID: connection.subjectID } ] })
+							clas.students.forEach(student => {
+								resClasses[resClasses.length - 1].classStudents.push({ studentID: student })
+							})
+						}
+					})
+				}
+			}
+		})
+		i = 0
+		resClasses.forEach(resClass => {
+			j = 0
+			k = 0
+			resClass.classStudents.forEach(student => {
+				users.forEach(user => {
+					if (user.userID == student.studentID) resClasses[i].classStudents[k].studentName = user.prettyName
+				})
+				k++
+			})
+			classes.forEach(clas => { if (clas.classID == resClass.classID) resClasses[i].className = clas.prettyName })
+			resClass.subjects.forEach(subjectFromRawClasses => {
+				subjects.forEach(subject => {
+					if (subject.subjectID == subjectFromRawClasses.subjectID) resClasses[i].subjects[j].subjectName = subject.prettyName
+				})
+				j++
+			})
+			i++
+		})
+		res.respond(JSON.stringify(resClasses), '', 'application/json', 200) // Send the result to the client
+	} catch(e) { console.error(e) } // Catch any errors and print them
+})
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`)) // Listen on the specified port

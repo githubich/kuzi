@@ -56,13 +56,14 @@ body { margin: 0; }
     font-style: normal;
 }
 #login-button {
-    display: block;
-    margin: 20px auto auto;
-    background: none;
+    background: #0000;
     border: solid var(--bg-alt) 1px;
+    color: var(--bg-alt) !important;
     padding: 5px 10px;
+    margin: 20px auto auto;
+    display: block;
     font-size: 16px;
-    color: var(--bg-alt);
+    border-radius: 99px;
 }
 form { display: none !important; }
 .fad { margin-right: 5px; }

@@ -1,3 +1,51 @@
 <title>marks.title - Kuzi</title>
 <link rel="stylesheet" href="/style/marks.css">
 <script src="/scripts/marks.js"></script>
+
+<div id="manager" style="display: none;">
+    <div class="tabs">
+        <a class="tab selected">
+            <div>
+                <i class="fad fa-edit"></i><span>Submit marks</span>
+            </div>
+        </a>
+        <a class="tab">
+            <div>
+                <i class="fad fa-eye"></i><span>View submitted marks</span>
+            </div>
+        </a>
+    </div>
+    <div class="content submit-marks">
+        <div class="myclasses-block">
+            <h3><i class="fad fa-th-large"></i>My classes</h3>
+            <ul id="myClasses">
+                
+            </ul>
+        </div>
+        <div class="students-block">
+            <h3><i class="fad fa-users"></i>Choose a class first</h3>
+            <div class="title-controls">
+                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = true; e.setAttribute('is-checked', true) })"><i class="fad fa-user-check"></i><span>Check all</span></a>
+                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = false; e.setAttribute('is-checked', false) })"><i class="fad fa-user-times"></i><span>Uncheck all</span></a>
+            </div>
+            <ul id="studentsInClass">
+            
+            </ul>
+        </div>
+        <div class="markinfo-block">
+            <h3><i class="fad fa-calendar-check"></i>Mark details</h3><br>
+            <div class="itemname">
+                <p class="hint"><i class="fad fa-i-cursor"></i>Item name</p>
+                <input type="text">
+            </div>
+            <div class="subject-chooser-div">
+                <p class="hint"><i class="fad fa-calendar-check"></i>Item subject</p><br>
+                <select name="subject" id="subject-chooser">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" class="content view-submitted-marks">
+        
+    </div>
+</div>
