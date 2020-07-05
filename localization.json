@@ -47,6 +47,16 @@
         "news.title|News",
 
         "marks.title|Marks",
+        "marks.teacher.writeAMark|Write a mark",
+        "marks.teacher.viewMarks|View marks",
+        "marks.teacher.myClasses|My classes",
+        "marks.teacher.noClassSelected|No class selected",
+        "marks.teacher.checkAll|Check all",
+        "marks.teacher.uncheckAll|Uncheck all",
+        "marks.teacher.details|Details",
+        "marks.teacher.name|Name",
+        "marks.teacher.subject|Subject",
+        "marks.teacher.studentsIn|Students in",
 
         "tests.title|Tests",
 
@@ -100,6 +110,16 @@
         "news.title|Noticias",
 
         "marks.title|Notas",
+        "marks.teacher.writeAMark|Crear nota",
+        "marks.teacher.viewMarks|Ver notas",
+        "marks.teacher.myClasses|Mis clases",
+        "marks.teacher.noClassSelected|Ninguna clase seleccionada",
+        "marks.teacher.checkAll|Marcar todos",
+        "marks.teacher.uncheckAll|Desmarcar todos",
+        "marks.teacher.details|Detalles",
+        "marks.teacher.name|Nombre",
+        "marks.teacher.subject|Asignatura",
+        "marks.teacher.studentsIn|Alumnes en",
 
         "tests.title|Tests",
 
@@ -155,6 +175,16 @@
         "news.title|Notícies",
 
         "marks.title|Notes",
+        "marks.teacher.writeAMark|Crear nota",
+        "marks.teacher.viewMarks|Veure notes",
+        "marks.teacher.myClasses|Les meves classes",
+        "marks.teacher.noClassSelected|Cap classe seleccionada",
+        "marks.teacher.checkAll|Selecciona tots",
+        "marks.teacher.uncheckAll|Deselecciona tots",
+        "marks.teacher.details|Detalls",
+        "marks.teacher.name|Nom",
+        "marks.teacher.subject|Assignatura",
+        "marks.teacher.studentsIn|Alumnes a",
 
         "tests.title|Tests",
 

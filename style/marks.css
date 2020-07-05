@@ -37,11 +37,13 @@
                                              "markinfo markinfo"; }
 .myclasses-block { grid-area: myclasses }
 .students-block { grid-area: students }
-.markinfo-block { grid-area: markinfo; display: grid; grid-template-areas: "a a"; gap: 10px; }
+.markinfo-block { grid-area: markinfo; }
+.markinfo-block > div { display: grid; grid-template-areas: "a a"; gap: 10px; }
+.content.submit-marks h3 { margin-bottom: 10px; }
 .content.submit-marks h3 i { margin-right: 5px; }
 .content.submit-marks ul {
     background-color: var(--bg-darker2);
-    margin: 10px 0 0 0;
+    margin: 0;
     border-radius: 10px;
     list-style-type: none;
     padding: 10px 0;
@@ -70,7 +72,7 @@
 .markInput input[type=number]::-webkit-outer-spin-button, .markInput input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .markInput input[type=number] { -moz-appearance: textfield; }
 h3, .title-controls { display: inline-block; }
-.title-controls { margin-left: 5px; }
+.title-controls { margin-left: 5px; margin-bottom: 10px; }
 .control i { margin-right: 5px; }
 .control:not(:nth-last-child(1)) { margin-right: 10px; }
 .markinfo-block input { width: -webkit-fill-available; }
@@ -98,4 +100,5 @@ h3, .title-controls { display: inline-block; }
     .title-controls span { display: none; }
     .control i { margin-right: 0; }
     .control:not(:nth-last-child(1)) { margin-right: 5px; }
+    .markinfo-block > div { grid-template-areas: "a"; }
 }

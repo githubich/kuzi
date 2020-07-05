@@ -90,7 +90,7 @@ function update(updateID) {
         if (clas.classID == updateID) {
             studentsInClass.innerHTML = ''
             subjectChooser.innerHTML = ''
-            $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>Students in ${clas.className}`
+            $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>marks.teacher.studentsIn ${clas.className}`
             clas.classStudents.forEach(student => {
                 studentE = document.createElement('li')
                 studentsInClass.appendChild(studentE)
