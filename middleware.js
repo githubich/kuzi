@@ -9,7 +9,7 @@ function kuziMiddleware(req, res, next) {
     let activeCookies = importJSON('active.cookies.json') // Import some files and declare variables
     let classes = importJSON('classes.json')
     let subjects = importJSON('subjects.json')
-    let subjectUserConnections = importJSON('subject-user.json')
+    let scheduling = importJSON('scheduling.json')
     let users = importJSON('users.json')
     let userIDfromCookie = 0
     let i = 0
@@ -41,7 +41,7 @@ function kuziMiddleware(req, res, next) {
         }))
     }
     req.userInfo.currentSubject = {} // Error proofing
-    subjectUserConnections.forEach(connection => { // Set userInfo.currentSubject to the current subject
+    scheduling.forEach(connection => { // Set userInfo.currentSubject to the current subject
         let start = new Date()
         let end = new Date()
         start.setHours(connection.time.hours)

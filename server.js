@@ -255,10 +255,10 @@ app.post('/class/listmine', (req, res) => {
 		let j = 0
 		let k = 0
 		let subjects = importJSON('subjects.json')
-		let subjectUserConnections = importJSON('subject-user.json')
+		let scheduling = importJSON('scheduling.json')
 		let resClasses = []
 		let users = importJSON('users.json')
-		subjectUserConnections.forEach(connection => {
+		scheduling.forEach(connection => {
 			if (connection.teacherID == req.userInfo.userID) {
 				exists = false
 				i = 0
