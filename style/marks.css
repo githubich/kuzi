@@ -34,10 +34,12 @@
 .tabs a div { margin: auto; }
 .content { gap: 10px; background-color: var(--bg-darker1); padding: 20px; border-radius: 0 0 10px 10px; display: grid; }
 .content.submit-marks { grid-template-areas: "myclasses students"
-                                             "markinfo markinfo"; }
+                                             "markinfo markinfo"
+                                             "submit submit"; }
 .myclasses-block { grid-area: myclasses }
 .students-block { grid-area: students }
 .markinfo-block { grid-area: markinfo; }
+.submit-block { grid-area: submit; }
 .markinfo-block > div { display: grid; grid-template-areas: "a a"; gap: 10px; }
 .content.submit-marks h3 { margin-bottom: 10px; }
 .content.submit-marks h3 i { margin-right: 5px; }
@@ -88,6 +90,7 @@ h3, .title-controls { display: inline-block; }
     box-sizing: content-box !important;
     height: 22px;
 }
+.submit-block button.submit { margin-top: 10px; }
 
 @media (max-width: 600px) {
     .tabs { grid-template-areas: "a"; }
@@ -96,9 +99,11 @@ h3, .title-controls { display: inline-block; }
     .tab:nth-last-child(1) { border-radius: 0 0 0 0; }
     .content.submit-marks { grid-template-areas: "myclasses"
                                                  "students"
-                                                 "markinfo"; gap: 25px; }
+                                                 "markinfo"
+                                                 "submit"; gap: 25px; }
     .title-controls span { display: none; }
     .control i { margin-right: 0; }
     .control:not(:nth-last-child(1)) { margin-right: 5px; }
     .markinfo-block > div { grid-template-areas: "a"; }
+    .submit-block button.submit { margin-top: 0; }
 }

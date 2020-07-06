@@ -74,33 +74,32 @@ function load() {
                         clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
                     })
                 }))
-        $('#manager').style.display = ""
-    }
-}
-
-function update(updateID) {
-    if (!updateID) return
-    updateID = parseInt(updateID)
-    console.log(updateID)
-
-    let studentsInClass = $('#studentsInClass')
-    let subjectChooser = $('#subject-chooser')
-
-    data.forEach(clas => {
-        if (clas.classID == updateID) {
-            studentsInClass.innerHTML = ''
-            subjectChooser.innerHTML = ''
-            $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>marks.teacher.studentsIn ${clas.className}`
-            clas.classStudents.forEach(student => {
-                studentE = document.createElement('li')
-                studentsInClass.appendChild(studentE)
-                studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label><div class="markInput"><input class="percent" id="markInput-${student.studentID}" type="number" min="0" max="100">%</div></li>`
-            })
-            clas.subjects.forEach(subject => {
-                subjectE = document.createElement('option')
-                subjectChooser.appendChild(subjectE)
-                subjectE.outerHTML = `<option value="${subject.subjectID}">${subject.subjectName}</option>`
+        update = (updateID) => {
+            if (!updateID) return
+            updateID = parseInt(updateID)
+            console.log(updateID)
+        
+            let studentsInClass = $('#studentsInClass')
+            let subjectChooser = $('#subject-chooser')
+        
+            data.forEach(clas => {
+                if (clas.classID == updateID) {
+                    studentsInClass.innerHTML = ''
+                    subjectChooser.innerHTML = ''
+                    $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>marks.teacher.studentsIn ${clas.className}`
+                    clas.classStudents.forEach(student => {
+                        studentE = document.createElement('li')
+                        studentsInClass.appendChild(studentE)
+                        studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label><div class="markInput"><input class="percent" id="markInput-${student.studentID}" type="number" min="0" max="100">%</div></li>`
+                    })
+                    clas.subjects.forEach(subject => {
+                        subjectE = document.createElement('option')
+                        subjectChooser.appendChild(subjectE)
+                        subjectE.outerHTML = `<option value="${subject.subjectID}">${subject.subjectName}</option>`
+                    })
+                }
             })
         }
-    })
+        $('#manager').style.display = ""
+    }
 }
