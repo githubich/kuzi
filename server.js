@@ -29,10 +29,10 @@ app.get('/remove_menus.css', (req, res) => {
 	if (settings.disableMarks) content = `${content}\n.marks-action { display: none !important; }`
 	if (settings.disableTests) content = `${content}\n.tests-action { display: none !important; }`
 	if (settings.disableResources) content = `${content}\n.resources-action { display: none !important; }`
-	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block { display: none !important; } .dash-container { grid-template-areas: "events notifications" "marks marks" !important; }`
+	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block {	display: none !important; }	.dash-container { display: grid; gap: 20px; grid-template-areas: "marks marks events notifications" !important; } @media (max-width: 800px) { .dash-container { grid-template-areas: "events notifications" "marks marks" !important; } } @media (max-width: 600px) { .dash-container { grid-template-areas: "events" "notifications" "marks" !important; } }`
 	res.respond(content, '', 'text/css', 200)
 })
-app.get('/', (r, res) => res.redirect("/login.html"))
+app.get('/', (req, res) => res.redirect("/login.html"))
 app.get('*', (req, res) => {
 	try {
 		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") {
@@ -165,138 +165,6 @@ app.post('/marks/get', (req, res) => {
 		
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 	} catch(e) { console.log(e) }
-})
-app.post('/marks/getPlaceholder', (req, res) => {
-	res.respond(JSON.stringify(
-		[
-			{
-				"periodName": "1r Trimestre",
-				"periodID": 1,
-				"subjects": [
-					{
-						"subjectName": "Català",
-						"subjectID": 1,
-						"marks": [
-							{
-								"name": "Test 1",
-								"mark": 90
-							},
-							{
-								"name": "Test 2",
-								"mark": 100
-							},
-							{
-								"name": "Test 3",
-								"mark": 75
-							}
-						]
-					},
-					{
-						"subjectName": "Math",
-						"subjectID": 2,
-						"marks": [
-							{
-								"name": "Test 1",
-								"mark": 100
-							},
-							{
-								"name": "Test 2",
-								"mark": 95
-							},
-							{
-								"name": "Test 3",
-								"mark": 85
-							}
-						]
-					}
-				]
-			},
-			{
-				"periodName": "2n Trimestre",
-				"periodID": 2,
-				"subjects": [
-					{
-						"subjectName": "Català",
-						"subjectID": 1,
-						"marks": [
-							{
-								"name": "Test 1",
-								"mark": 90
-							},
-							{
-								"name": "Test 2",
-								"mark": 100
-							},
-							{
-								"name": "Test 3",
-								"mark": 75
-							}
-						]
-					},
-					{
-						"subjectName": "Math",
-						"subjectID": 2,
-						"marks": [
-							{
-								"name": "Test 1",
-								"mark": 100
-							},
-							{
-								"name": "Test 2",
-								"mark": 95
-							},
-							{
-								"name": "Test 3",
-								"mark": 85
-							}
-						]
-					}
-				]
-			},
-			{
-				"periodName": "3r Trimestre",
-				"periodID": 3,
-				"subjects": [
-					{
-						"subjectName": "Català",
-						"subjectID": 1,
-						"marks": [
-							{
-								"name": "Test 1",
-								"mark": 90
-							},
-							{
-								"name": "Test 2",
-								"mark": 100
-							},
-							{
-								"name": "Test 3",
-								"mark": 75
-							}
-						]
-					},
-					{
-						"subjectName": "Math",
-						"subjectID": 2,
-						"marks": [
-							{
-								"name": "Test 1",
-								"mark": 100
-							},
-							{
-								"name": "Test 2",
-								"mark": 95
-							},
-							{
-								"name": "Test 3",
-								"mark": 85
-							}
-						]
-					}
-				]
-			}
-		]
-	), '', 'application/json', 200)
 })
 app.post('/teachers/marks/getInfo', (req, res) => {
 	try {

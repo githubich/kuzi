@@ -3,7 +3,7 @@
 	"language": "en",
 	"disableMarks": false,
 	"disableNews": false,
-	"disableMotivationalQuotes": false,
+	"disableMotivationalQuotes": true,
 	"disableTests": false,
 	"disableResources": false,
 	"teacherRules": {

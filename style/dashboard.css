@@ -24,7 +24,8 @@
 .notifications-dash-block { grid-area: notifications; }
 .marks-dash-block { grid-area: marks; }
 .dash-block {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     padding: 5px;
     border-radius: 12.5px;
     background: linear-gradient(to bottom right, var(--accent-light), var(--accent-dark));
@@ -34,6 +35,14 @@
     border-radius: 8.5px;
     background-color: var(--bg);
 }
-.dash-block .dash-block-inner h3 i {
+.dash-block .dash-block-title h3 i {
     margin-right: 7.5px;
+}
+.dash-block-content {
+    margin: 5px 0 0 0;
+    flex: 1 1 auto;
+}
+#markGraph {
+    width: 100%;
+    height: 200px;
 }

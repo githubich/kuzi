@@ -13,3 +13,7 @@ window.addEventListener('load', () => {
             })
     }
 })
+window.addEventListener('onresize', () => {
+    $('#markGraph').width = $('#markGraph').offsetWidth
+    $('#markGraph').height = $('#markGraph').offsetHeight
+})

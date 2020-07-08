@@ -1,26 +1,33 @@
 <title>[{(dashboard)}] - Kuzi</title>
 <link rel="stylesheet" href="/style/dashboard.css">
 <script src="/scripts/dashboard.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
 
 <div class="dash-container">
     <div class="dash-block motivation-dash-block">
-        <div class="dash-block-inner">
+        <div class="dash-block-inner dash-block-title">
             <h3 class="title"></h3>
         </div>
     </div>
-    <div class="dash-block events-dash-block">
-        <div class="dash-block-inner">
-            <h3 class="title"><i class="fad fa-calendar-exclamation"></i>[{(events)}]</h2>
-        </div>
-    </div>
-    <div class="dash-block notifications-dash-block">
-        <div class="dash-block-inner">
-            <h3 class="title"><i class="fad fa-bells"></i>[{(notifications)}]</h3>
-        </div>
-    </div>
     <div class="dash-block marks-dash-block">
-        <div class="dash-block-inner">
+        <div class="dash-block-inner dash-block-title">
             <h3 class="title"><i class="fad fa-calendar-check"></i>[{(markGraph)}]</h3>
         </div>
+        <div class="dash-block-inner dash-block-content">
+            <canvas id="markGraph" height=200></canvas>
+        </div>
+    </div>
+    <div class="dash-block events-dash-block">
+        <div class="dash-block-inner dash-block-title">
+            <h3 class="title"><i class="fad fa-calendar-exclamation"></i>[{(events)}]</h2>
+        </div>
+        <div class="dash-block-inner dash-block-content"></div>
+    </div>
+    <div class="dash-block notifications-dash-block">
+        <div class="dash-block-inner dash-block-title">
+            <h3 class="title"><i class="fad fa-bells"></i>[{(notifications)}]</h3>
+        </div>
+        <div class="dash-block-inner dash-block-content"></div>
     </div>
 </div>
