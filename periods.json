@@ -1,14 +1,38 @@
 [
     {
         "periodID": 1,
-        "prettyName": "1r Trimester"
+        "periodName": "1r Trimester",
+        "startDate": {
+            "day": 13,
+            "month": 9
+        },
+        "endDate": {
+            "day": 21,
+            "month": 12
+        }
     },
     {
         "periodID": 2,
-        "prettyName": "2r Trimester"
+        "periodName": "2r Trimester",
+        "startDate": {
+            "day": 9,
+            "month": 1
+        },
+        "endDate": {
+            "day": 2,
+            "month": 4
+        }
     },
     {
         "periodID": 3,
-        "prettyName": "3r Trimester"
+        "periodName": "3r Trimester",
+        "startDate": {
+            "day": 12,
+            "month": 4
+        },
+        "endDate": {
+            "day": 21,
+            "month": 8
+        }
     }
 ]

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
-@media (max-width: 750px) {
+@media (max-width: 600px) {
     body { background: linear-gradient(to bottom, var(--bg-darker2) 49%, var(--bg-darker1) 51%) !important; }
     #login-form { width: 100% !important; margin: 0 !important; }
     input { width: 100% !important; }

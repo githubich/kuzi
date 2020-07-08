@@ -2,11 +2,11 @@
     {
         "classID": 1,
         "prettyName": "1st",
-        "students": [ 3 ]
+        "students": [ 3, 4 ]
     },
     {
         "classID": 2,
         "prettyName": "2nd",
-        "students": [ 4 ]
+        "students": [ ]
     }
 ]

@@ -2,11 +2,12 @@ const { importJSON, saveJSON, importLocale } = require('./utils')
 const { readFileSync } = require('fs')
 const { extensionToMime } = require('./utils')
 const locales = importLocale()
+function verbose(req, r, next) {
+    console.log(`[Kuzi|${req.connection.remoteAddress.replace('::ffff:','')}] ${req.method} ${req.url}`)
+    next()
+}
 function kuziMiddleware(req, res, next) {
-
-    console.log(`[Kuzi|${req.connection.remoteAddress}] ${req.method} ${req.url}`) // Log everything
-
-    let activeCookies = importJSON('active.cookies.json') // Import some files and declare variables
+    let activeCookies = importJSON('active.cookies.json')
     let classes = importJSON('classes.json')
     let subjects = importJSON('subjects.json')
     let scheduling = importJSON('scheduling.json')
@@ -16,14 +17,14 @@ function kuziMiddleware(req, res, next) {
     let modified = false
     let currentTime = new Date()
 
-    if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') { // Parse the cookies to req.cookies
+    if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') {
         let cookies = {}
         req.headers.cookie.split('&').forEach(cookie => {
             eval(`cookies.${cookie.split('=')[0]}='${cookie.split('=')[1]}'`)
         })
         req.cookies = cookies
     } else req.cookies = {}
-    req.userInfo = {} // Look for the user performing the action and put their information in req.userInfo and update the expire time
+    req.userInfo = {}
     activeCookies.forEach(cookie => {
 		if (cookie.cookie == req.cookies.session) {
             userIDfromCookie = cookie.userID
@@ -36,12 +37,12 @@ function kuziMiddleware(req, res, next) {
 	users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = user })
     req.userInfo.class = {}
     if (req.userInfo.role == "student") {
-        classes.forEach(clas => clas.students.forEach(student => { // I use clas because class is a reserved word
+        classes.forEach(clas => clas.students.forEach(student => {
             if (req.userInfo.userID == student) req.userInfo.class = clas
         }))
     }
-    req.userInfo.currentSubject = {} // Error proofing
-    scheduling.forEach(connection => { // Set userInfo.currentSubject to the current subject
+    req.userInfo.currentSubject = {}
+    scheduling.forEach(connection => {
         let start = new Date()
         let end = new Date()
         start.setHours(connection.time.hours)
@@ -56,8 +57,7 @@ function kuziMiddleware(req, res, next) {
             if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
         })
     })
-    req.file = req.url.slice(1, req.url.length) // Shortcut, I'm lazy
-	activeCookies.forEach(cookie => { // Clear the expired cookies
+	activeCookies.forEach(cookie => {
 		if (cookie.expireTime <= Date.now()) {
 			activeCookies.splice(i, 1)
 			modified = true
@@ -65,25 +65,25 @@ function kuziMiddleware(req, res, next) {
 		i++
     })
 	i = 0
-	activeCookies.forEach(cookie => { // Update the cookie expireTime
+	activeCookies.forEach(cookie => {
 		if (cookie.expireTime <= Date.now()) {
 			activeCookies.splice(i, 1)
 			modified = true
 		}
 		i++
 	})
-	if (modified) saveJSON('active.cookies.json', activeCookies) // Save the file if it was modified
-    res.respond = (content, file, mime, statusCode) => { // Create a respond function
+	if (modified) saveJSON('active.cookies.json', activeCookies)
+    res.respond = (content, file, mime, statusCode) => {
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
         if (!content) content = readFileSync(file)
         if ((mime == "text/html" || mime == "text/javascript") && !req.url.includes('/users/')) {
             content = content.toString('utf8')
-            locales.forEach(locale => content = content.split(locale.split('|')[0]).join(locale.split('|')[1]))
+            locales.forEach(locale => content = content.split(`${locale.split('|')[0]}`).join(locale.split('|')[1]))
         }
         res.setHeader('Content-Type', mime)
         res.status(statusCode).send(content)
     }
     next()
 }
-module.exports = kuziMiddleware // Export everything
+module.exports = { verbose, kuziMiddleware }

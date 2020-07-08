@@ -1,7 +1,7 @@
 {
 	"__comment": "These are the optimal settings for me",
 	"serverPort": 80,
-	"language": "en",
+	"language": "es",
 	"disableAnnouncements": false,
 	"disableMarks": false,
 	"disableTests": false,

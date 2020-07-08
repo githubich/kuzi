@@ -29,7 +29,7 @@
 	#dropdown.hiding { display: none !important; }
 	#dropdown-arrow { transform: none !important; }
 }
-@media (max-width: 800px) { header .header--action:not(.selected) span { display: none; } }
+@media (max-width: 800px) { header .header--action:not(.selected) i { margin-right: 0px; } header .header--action:not(.selected) span:nth-child(2) { display: none; }  }
 * { box-sizing: border-box; }
 *:not(a) { color: var(--bg-alt); }
 [onclick] { cursor: pointer; }
@@ -104,8 +104,6 @@ header > *, .dropdown-link * { margin-top: auto; margin-bottom: auto; }
 .dropdown-action a i, .header--action a i {
 	margin-right: 5px;
 	font-size: 16px;
-	position: relative;
-	top: 1px;
 }
 .modal {
 	position: absolute;
@@ -121,7 +119,8 @@ header > *, .dropdown-link * { margin-top: auto; margin-bottom: auto; }
     height: fit-content;
     line-height: 17.19px;
     position: absolute;
-    right: 11px; top: 12px;
+	right: 11px; top: 12px;
+	color: var(--bg-alt) !important;
 }
 #picture-modal > div :not(:nth-last-child(1)), #password-modal > div :not(:nth-last-child(1)) { margin-bottom: 20px; }
 button { position: relative; top: -1px; margin: auto; }
@@ -177,6 +176,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: normal; margin: 0; }
 .hint .fad { margin-right: 5px; }
 .password-modal--input { min-width: 100%; }
 .blurry-bg { background-color: var(--bg-semi-alpha); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+input, select { border-radius: 0; /* Patch for Safari */ }
 input[type=text], input[type=password] {
     display: block;
     padding: 5px 10px;

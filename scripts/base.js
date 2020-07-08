@@ -48,7 +48,7 @@ function verifyAndChangePassword() {
     if (new1 != new2) return qAlert({ message: "base.changePassword.error.new1!=new2", mode: "error" , buttons: { cancel: { invisible: true } } })
     if (new1.length < 6) return qAlert({ message: "base.changePassword.error.length", mode: "error" , buttons: { cancel: { invisible: true } } })
 
-    fetch('/user/changepassword',
+    fetch('/user/changePassword',
         {
             method: 'POST',
             headers: {
@@ -69,8 +69,7 @@ function verifyAndChangePassword() {
         )
 }
 window.addEventListener('load', () => {
-    correctDropdown()
-    fetch('/user/getinfo', { method: 'POST' })
+    fetch('/user/getInfo', { method: 'POST' })
         .then(res => {
             res.json().then(res => {
                 if (res.message == "logout") window.location = '/'
@@ -84,6 +83,7 @@ window.addEventListener('load', () => {
                 else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
                 $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+                correctDropdown()
             })
         })
 })

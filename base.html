@@ -2,12 +2,14 @@
 <html lang="langcode">
     <head>
         <meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+		<meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<meta name="mobile-web-app-capable" content="no">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/style/theming.css">
-        <link rel="stylesheet" href="/style/base.css">
-		<link defer rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+		<link rel="stylesheet" href="/style/base.css">
+		<link rel="preconnect" href="https://kit-pro.fontawesome.com/">
+		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 		<script src="/lib/qTools.min.js"></script>
 		<script src="/scripts/base.js"></script>
 		<script defer src="/lib/qAlert.js"></script>
@@ -54,7 +56,7 @@
 			<a class="picture-modal-close close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
 			<div class="center picture-modal-inner">
 				<img class="big-logo" id="picture-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
-				<form action="/user/changepicture" method="POST" enctype="multipart/form-data">
+				<form action="/user/changePicture" method="POST" enctype="multipart/form-data">
 					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
 					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">base.picture.chooseFile</label>
 					<p class="picture-file-name">base.picture.filename</p>

@@ -1,22 +1,27 @@
-console.log("[Kuzi] Starting...")
+const verbose = (process.argv[2] == "-v")
+if (verbose) console.log(`[Kuzi] Starting in verbose mode... (${require('os').platform} ${require('os').release()})`)
+else console.log(`[Kuzi] Starting... (${require('os').platform} ${require('os').release()})`)
 
-const express = require('express') // Import & define everything
+const express = require('express')
 const app = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
+const { isNullOrUndefined } = require('util')
 const settings = importJSON('settings.json')
 
-app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware')) // Tell express to use the middleware I say
-if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([])) // If the file active.cookies.json does not exist, create it
 
-app.get('/users/:id', (req, res) => { // Search for the photo & return it, if not found, return the noone.png
+app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); if (verbose) app.use(require('./middleware').verbose); app.use(require('./middleware').kuziMiddleware)
+if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
+if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
+
+app.get('/users/:id', (req, res) => {
 	try {
 		let id = req.params.id
-		if (existsSync(id+'.png')) res.respond('', id+'.png', 'image/png', 200)
-		else if (existsSync(id+'.jpg')) res.respond('', id+'.jpg', 'image/jpeg', 200)
-		else if (existsSync(id+'.jpeg')) res.respond('', id+'.jpeg', 'image/jpeg', 200)
-		else if (existsSync(id+'.webp')) res.respond('', id+'.webp', 'image/webp', 200)
+		if (existsSync(`${id}.png`)) res.respond('', `${id}.png`, 'image/png', 200)
+		else if (existsSync(`${id}.jpg`)) res.respond('', `${id}.jpg`, 'image/jpeg', 200)
+		else if (existsSync(`${id}.jpeg`)) res.respond('', `${id}.jpeg`, 'image/jpeg', 200)
+		else if (existsSync(`${id}.webp`)) res.respond('', `${id}.webp`, 'image/webp', 200)
 		else res.respond('', 'users/noone.png', 'image/png', 200)
 	} catch(e) { console.error(e) }
 })
@@ -29,40 +34,39 @@ app.get('/remove_menus.css', (req, res) => {
 	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block { display: none !important; } .dash-container { grid-template-areas: "events notifications" "marks marks" !important; }`
 	res.respond(content, '', 'text/css', 200)
 })
-app.get('/', (req, res) => res.redirect("/login.html")) // Show the login if path = /
-app.get('*', (req, res) => { // Return the file the user wants
+app.get('/', (r, res) => res.redirect("/login.html"))
+app.get('*', (req, res) => {
 	try {
-		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") { // If the user is logged or if they want to log in proceed, else, alert the user
-		  	if (extname(req.url) == '.json' || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200) // If they don't have permission, don't show it
-			else if (!existsSync(req.file)) res.respond('', '404.html', 'text/html', 200) // If the file doesn't exists, tell the user
-			else if (existsSync(req.file)) {
-				if (extname(req.url) == '.html' && req.url != '/login.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(req.file)}\n</div></main></body></html>`, '', 'text/html', 200) // If the file exists, respond that, but if it's an html file and it's not the login, add the base to it
-				else res.respond('', req.file, '', 200)
-			} else res.respond('', '404.html', 'text/html', 404) // If nothing matched, respond a 404
-		} else res.respond('<script>window.location = "/"</script>', '', 'text/html', 200) // If the user wasn't logged in, alert them
+		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") {
+		  	if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
+			else if (existsSync(`.${req.url}`)) {
+				if (extname(req.url) == '.html' && req.url != '/login.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
+				else res.respond('', `.${req.url}`, '', 200)
+			} else res.respond('', '404.html', 'text/html', 404)
+		} else res.respond('<script>window.location = "/"</script>', '', 'text/html', 200)
 	} catch(e) { console.error(e) }
 })
 app.post('/login', (req, res) => {
 	try {
-		let users = importJSON('users.json') // Declare things
+		let users = importJSON('users.json')
 		let found = false
 		let userID = 0
 		users.forEach(userKey => {
-			if (userKey.username == req.body.username && userKey.password == req.body.password) { // If the credentials match, found = true and userID = userKey.userID
+			if (userKey.username == req.body.username && userKey.password == req.body.password) {
 				found = true
 				userID = userKey.userID
 			}
 		})
 		if (found) {
-			let activeCookies = importJSON('active.cookies.json') // Import the active cookies and create a new session UUID
+			let activeCookies = importJSON('active.cookies.json')
 			let newSession = newUUID()
-			res.respond(JSON.stringify({ session: newSession, do: 'window.location = "/dashboard.html"' }), '', 'application/json', 401) // Send the UUID to the user and save it to active.cookies.json
+			res.respond(JSON.stringify({ session: newSession, do: 'window.location = "/dashboard.html"' }), '', 'application/json', 401)
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
 			saveJSON('active.cookies.json', activeCookies)
-		} else res.respond(JSON.stringify({ do: 'alert("Usuari i/o contrasenya incorrectes"); document.querySelector("#kuzi-password").value = ""' }), '', 'application/json', 401) // If after all of that, the user wasn't found, alert them
-	} catch(e) { console.error(e) } // Catch any errors and print them
+		} else res.respond(JSON.stringify({ do: 'alert("Usuari i/o contrasenya incorrectes"); document.querySelector("#kuzi-password").value = ""' }), '', 'application/json', 401)
+	} catch(e) { console.error(e) }
 })
-app.post('/logout', (req, res) => { // Delete the cookie from the file (log out)
+app.post('/logout', (req, res) => {
 	try {
 		let activeCookies = importJSON('active.cookies.json')
 		let i = 0
@@ -76,15 +80,15 @@ app.post('/logout', (req, res) => { // Delete the cookie from the file (log out)
 		res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
 	} catch(e) { console.error(e) }
 })
-app.post('/user/getinfo', (req, res) => { // Respond with the user info
+app.post('/user/getInfo', (req, res) => {
 	try {
 		if (req.userInfo.userID) {
-			delete req.userInfo.password // Security Patch: delete the password
+			delete req.userInfo.password
 			res.respond(JSON.stringify({ userInfo: req.userInfo }), '', 'application/json', 200)
-		} else res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401) // If the user is not found, tell the client to log out
+		} else res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	} catch(e) { console.error(e) }
 })
-app.post('/user/changepicture', (req, res) => { // Grab the given file and save it to the 'users' directory
+app.post('/user/changePicture', (req, res) => {
 	try {
 		if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
 		else if (existsSync(`./users/${req.userInfo.userID}.jpg`)) unlinkSync(`./users/${req.userInfo.userID}.jpg`)
@@ -94,7 +98,7 @@ app.post('/user/changepicture', (req, res) => { // Grab the given file and save 
 		res.respond('<script>alert("Foto de perfil canviada existosament"); window.history.back()</script>', '', 'text/html', 200)
 	} catch(e) { console.error(e) }
 })
-app.post('/user/changepassword', (req, res) => { // Change the password of the user
+app.post('/user/changePassword', (req, res) => {
 	try {
 		let users = importJSON('users.json')
 		let changed = false
@@ -113,8 +117,57 @@ app.post('/user/changepassword', (req, res) => { // Change the password of the u
 		} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
 	} catch(e) { console.error(e) }
 })
+app.post('/marks/get', (req, res) => {
+	try {
+		let exists = false
+		let marks = importJSON('marks.json')
+		let resContent = importJSON('periods.json')
+		let subjects = importJSON('subjects.json')
+		let i = 0
+		let j = 0
 
-app.post('/marks/get', (req, res) => { // Return placeholder JSON
+		resContent.forEach(a => {
+			delete resContent[i].startDate
+			delete resContent[i].endDate
+			resContent[i].subjects = []
+			let usefulSubjects = []
+			marks.forEach(mark => {
+				exists = false
+				if (mark.periodID == a.periodID && mark.marks.findIndex(i => i.studentID == req.userInfo.userID) != -1) {
+					usefulSubjects.forEach(usefulSubject => {
+						if (mark.subjectID == usefulSubject) exists = true
+					})
+					if (!exists) usefulSubjects.push(mark.subjectID)
+				}
+			})
+			j = 0
+			usefulSubjects.forEach(usefulSubject => {
+				resContent[i].subjects.push({ subjectID: usefulSubject, marks: [] })
+				marks.forEach(mark => {
+					if (mark.periodID == a.periodID && mark.subjectID == usefulSubject && mark.marks.findIndex(i => i.studentID == req.userInfo.userID) != -1) {
+						let pMark = mark.marks.find(i => i.studentID == req.userInfo.userID)
+						delete pMark.studentID
+						pMark.name = mark.name
+						resContent[i].subjects[j].marks.push(pMark)
+					}
+				})
+				j++
+			})
+			j = 0
+			resContent[i].subjects.forEach(subjectResContent => {
+				subjects.forEach(subjectJSON => {
+					if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjects[j].subjectName = subjectJSON.prettyName
+				})
+				j++
+			})
+			i++
+		})
+		i = 0
+		
+		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
+	} catch(e) { console.log(e) }
+})
+app.post('/marks/getPlaceholder', (req, res) => {
 	res.respond(JSON.stringify(
 		[
 			{
@@ -126,15 +179,15 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 						"subjectID": 1,
 						"marks": [
 							{
-								"item": "Test 1",
+								"name": "Test 1",
 								"mark": 90
 							},
 							{
-								"item": "Test 2",
+								"name": "Test 2",
 								"mark": 100
 							},
 							{
-								"item": "Test 3",
+								"name": "Test 3",
 								"mark": 75
 							}
 						]
@@ -144,15 +197,15 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 						"subjectID": 2,
 						"marks": [
 							{
-								"item": "Test 1",
+								"name": "Test 1",
 								"mark": 100
 							},
 							{
-								"item": "Test 2",
+								"name": "Test 2",
 								"mark": 95
 							},
 							{
-								"item": "Test 3",
+								"name": "Test 3",
 								"mark": 85
 							}
 						]
@@ -168,15 +221,15 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 						"subjectID": 1,
 						"marks": [
 							{
-								"item": "Test 1",
+								"name": "Test 1",
 								"mark": 90
 							},
 							{
-								"item": "Test 2",
+								"name": "Test 2",
 								"mark": 100
 							},
 							{
-								"item": "Test 3",
+								"name": "Test 3",
 								"mark": 75
 							}
 						]
@@ -186,15 +239,15 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 						"subjectID": 2,
 						"marks": [
 							{
-								"item": "Test 1",
+								"name": "Test 1",
 								"mark": 100
 							},
 							{
-								"item": "Test 2",
+								"name": "Test 2",
 								"mark": 95
 							},
 							{
-								"item": "Test 3",
+								"name": "Test 3",
 								"mark": 85
 							}
 						]
@@ -210,15 +263,15 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 						"subjectID": 1,
 						"marks": [
 							{
-								"item": "Test 1",
+								"name": "Test 1",
 								"mark": 90
 							},
 							{
-								"item": "Test 2",
+								"name": "Test 2",
 								"mark": 100
 							},
 							{
-								"item": "Test 3",
+								"name": "Test 3",
 								"mark": 75
 							}
 						]
@@ -228,15 +281,15 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 						"subjectID": 2,
 						"marks": [
 							{
-								"item": "Test 1",
+								"name": "Test 1",
 								"mark": 100
 							},
 							{
-								"item": "Test 2",
+								"name": "Test 2",
 								"mark": 95
 							},
 							{
-								"item": "Test 3",
+								"name": "Test 3",
 								"mark": 85
 							}
 						]
@@ -246,10 +299,10 @@ app.post('/marks/get', (req, res) => { // Return placeholder JSON
 		]
 	), '', 'application/json', 200)
 })
-app.post('/class/listmine', (req, res) => {
+app.post('/teachers/marks/getInfo', (req, res) => {
 	try {
 		if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: 'nice try' }), '', 'application/json', 200)
-		let classes = importJSON('classes.json') // Declare things
+		let classes = importJSON('classes.json')
 		let exists = false
 		let i = 0
 		let j = 0
@@ -269,16 +322,12 @@ app.post('/class/listmine', (req, res) => {
 					}
 					i++
 				})
-				if (!exists) {
-					classes.forEach(clas => {
-						if (clas.classID == connection.classID) {
-							resClasses.push({ classID: connection.classID, classStudents: [], subjects: [ { subjectID: connection.subjectID } ] })
-							clas.students.forEach(student => {
-								resClasses[resClasses.length - 1].classStudents.push({ studentID: student })
-							})
-						}
-					})
-				}
+				if (!exists) classes.forEach(clas => {
+					if (clas.classID == connection.classID) {
+						resClasses.push({ classID: connection.classID, classStudents: [], subjects: [ { subjectID: connection.subjectID } ] })
+						clas.students.forEach(student => resClasses[resClasses.length - 1].classStudents.push({ studentID: student }))
+					}
+				})
 			}
 		})
 		i = 0
@@ -300,7 +349,31 @@ app.post('/class/listmine', (req, res) => {
 			})
 			i++
 		})
-		res.respond(JSON.stringify(resClasses), '', 'application/json', 200) // Send the result to the client
-	} catch(e) { console.error(e) } // Catch any errors and print them
+		res.respond(JSON.stringify(resClasses), '', 'application/json', 200)
+	} catch(e) { console.error(e) }
 })
-app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`)) // Listen on the specified port
+app.post('/periods/list', (req, res) => {
+	try {
+		let periods = importJSON('periods.json')
+		let i = 0
+		periods.forEach(period => {
+			let startDate = new Date(); startDate.setMonth(period.startDate.month); startDate.setDate(period.startDate.day); startDate.setHours(0); startDate.setMinutes(0); startDate.setSeconds(0); startDate.setMilliseconds(0)
+			let now = new Date()
+			let endDate = new Date(); endDate.setMonth(period.endDate.month); endDate.setDate(period.endDate.day); endDate.setHours(0); endDate.setMinutes(0); endDate.setSeconds(0); endDate.setMilliseconds(0)
+			if (startDate.getTime() <= now.getTime() && now.getTime() <= endDate.getTime()) { periods[i].current = true }
+			i++
+		})
+		res.respond(JSON.stringify(periods), '', 'application/json', 200)
+	} catch(e) { console.error(e) }
+})
+app.post('/marks/create', (req, res) => {
+	try {
+		if (req.userInfo.role == "teacher") {
+			let marks = importJSON('marks.json')
+			marks.push(req.body)
+			saveJSON('marks.json', marks)
+			res.respond({ message: 'ok' }, '', 'application/json', 200)
+		} else { res.respond({ message: 'not ok' }, '', 'application/json', 200) }
+	} catch(e) { console.error(e) }
+})
+app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`))

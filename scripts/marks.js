@@ -47,7 +47,7 @@ function load() {
                                 let markEName = document.createElement('div')
                                 markE.appendChild(markEName)
                                 markEName.classList.add("mark-title")
-                                markEName.innerHTML = `${mark.item}`
+                                markEName.innerHTML = `${mark.name}`
 
                                 let markEContent = document.createElement('div')
                                 markE.appendChild(markEContent)
@@ -60,26 +60,35 @@ function load() {
             )
     } else {
         $$('.tab').forEach(tab => tab.setAttribute('onclick', `$('.tab.selected').classList.remove('selected'); this.classList.add('selected')`))
-        fetch('/class/listmine', { method: "POST" })
+        fetch('/teachers/marks/getInfo', { method: "POST" })
             .then(res => res.json()
                 .then(res => {
                     data = res
-                    console.log(data)
-
-                    let myClasses = $('#myClasses')
-
+                    let myClasses = $('#my-classes')
                     data.forEach(clas => {
                         let clasE = document.createElement('li')
                         myClasses.appendChild(clasE)
                         clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
                     })
                 }))
+        fetch('/periods/list', { method: "POST" })
+            .then(res => res.json()
+                .then(res => {
+                    let periodChooser = $('#period-chooser')
+                    res.forEach(period => {
+                        let periodE = document.createElement('option')
+                        periodChooser.appendChild(periodE)
+                        let periodDisplayName = period.periodName
+                        if (period.current === true) { periodDisplayName = `${periodDisplayName} marks.teacher.currentPeriod` }
+                        periodE.outerHTML = `<option value="${period.periodID}">${periodDisplayName}</option>`
+                        if (period.current === true) { periodChooser.value = period.periodID }
+                    })
+                }))
         update = (updateID) => {
             if (!updateID) return
             updateID = parseInt(updateID)
-            console.log(updateID)
         
-            let studentsInClass = $('#studentsInClass')
+            let studentsInClass = $('#students-in-class')
             let subjectChooser = $('#subject-chooser')
         
             data.forEach(clas => {
@@ -90,7 +99,7 @@ function load() {
                     clas.classStudents.forEach(student => {
                         studentE = document.createElement('li')
                         studentsInClass.appendChild(studentE)
-                        studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label><div class="markInput"><input class="percent" id="markInput-${student.studentID}" type="number" min="0" max="100">%</div></li>`
+                        studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label><div class="markInput"><input class="percent" studentID="${student.studentID}" id="markInput-${student.studentID}" type="number" min="0" max="100">%</div></li>`
                     })
                     clas.subjects.forEach(subject => {
                         subjectE = document.createElement('option')
@@ -99,7 +108,40 @@ function load() {
                     })
                 }
             })
+            $$('.markInput input[type=number]').forEach(e => e.addEventListener('input', () => {
+                let value = parseInt(e.value)
+                let min = parseInt(e.getAttribute('min'))
+                let max = parseInt(e.getAttribute('max'))
+                if (value < min) e.value = min
+                if (value > max) e.value = max
+            }))
         }
         $('#manager').style.display = ""
+        submit = () => {
+            let sendData = { name: $('#mark-name').value, subjectID: parseInt($('#subject-chooser').value), periodID: parseInt($('#period-chooser').value), marks: [] }
+            $$('#students-in-class .markInput input').forEach(e => {
+                if (getComputedStyle(e.parentElement).display != "none" && parseInt(e.value).toString() != 'NaN') {
+                    let mark = parseInt(e.value)
+                    let min = parseInt(e.getAttribute('min'))
+                    let max = parseInt(e.getAttribute('max'))
+                    if (mark < min) mark = min
+                    if (mark > max) mark = max
+                    sendData.marks.push({ studentID: parseInt(e.getAttribute('studentID')), mark: mark })
+                }
+            })
+            if (sendData.name && sendData.subjectID && sendData.marks.length > 0) {
+                fetch('marks/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(sendData)
+                })
+                    .then(res => res.json()
+                        .then(res => {
+                            if (res.message == 'ok') qAlert({ message: "marks.teacher.submitSuccess", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) location.reload() })
+                            if (res.message == 'not ok') qAlert({ message: "marks.teacher.unknownError", mode: 'error', buttons: { ok: { text: 'marks.teacher.retry' }, cancel: { text: "marks.teacher.donNotRetry" } } }).then(ans => { if (ans) submit() })
+                        }))
+                    .catch(() => { qAlert({ message: "marks.teacher.unknownError", mode: 'error', buttons: { ok: { text: 'marks.teacher.retry' }, cancel: { text: "marks.teacher.donNotRetry" } } }).then(ans => { if (ans) submit() })})
+            } else { qAlert({ message: "marks.teacher.invalidInfo", mode: 'error', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) submit() }) }
+        }
     }
 }
