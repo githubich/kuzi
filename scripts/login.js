@@ -1,14 +1,11 @@
 document.cookie='session=;max-age=0'
-window.onkeypress = (e) => {
-    if (e.keyCode == 13) {
-        if (document.activeElement === document.querySelector('#kuzi-username')) {
-            document.querySelector('#kuzi-password').focus()
-        } else if (document.activeElement === document.querySelector('#kuzi-password')) {
-            document.querySelector('#login-button').click()
-        }
-        return false;
+window.addEventListener('keypress', e => {
+    if (e.key == "Enter") {
+        if (document.activeElement === document.querySelector('#kuzi-username')) document.querySelector('#kuzi-password').focus()
+        else if (document.activeElement === document.querySelector('#kuzi-password')) document.querySelector('#login-button').click()
+        return false
     }
-}
+})
 function send() {
     if ($('#kuzi-username').value != "" || $('#kuzi-password').value != "") {
         fetch('/login', {
@@ -22,8 +19,8 @@ function send() {
             })
         }).then(res => {
             res.json().then(res => {
-                if (res.session) document.cookie=`session=${res.session}`
-                if (res.do) eval(res.do)
+                if (res.session) { document.cookie=`session=${res.session}`; window.location = "/dashboard.html" }
+                if (res.message == 'not ok') qAlert({ message: "[{(error.badUsernameOrPassword)}]", mode: "error", buttons: { cancel: { invisible: true } } }).then( $('#kuzi-password').value = "" )
             })
         })
     } else alert("[{(error.invalidInput)}]")

@@ -89,3 +89,11 @@ window.addEventListener('load', () => {
 })
 window.addEventListener('scroll', () => correctDropdown())
 window.addEventListener('click', e => { if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown() })
+window.addEventListener('keypress', e => {
+    if (e.key == "Enter") {
+        if (document.activeElement === $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
+        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
+        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
+        return false
+    }
+})

@@ -7,9 +7,7 @@ const app = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
-const { isNullOrUndefined } = require('util')
 const settings = importJSON('settings.json')
-
 
 app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); if (verbose) app.use(require('./middleware').verbose); app.use(require('./middleware').kuziMiddleware)
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
@@ -40,8 +38,9 @@ app.get('*', (req, res) => {
 		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") {
 		  	if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
 			else if (existsSync(`.${req.url}`)) {
-				if (extname(req.url) == '.html' && req.url != '/login.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
-				else res.respond('', `.${req.url}`, '', 200)
+				if (extname(req.url) == '.html' && req.url != '/login.html') {
+					res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
+				} else res.respond('', `.${req.url}`, '', 200)
 			} else res.respond('', '404.html', 'text/html', 404)
 		} else res.respond('<script>window.location = "/"</script>', '', 'text/html', 200)
 	} catch(e) { console.error(e) }
@@ -60,10 +59,10 @@ app.post('/login', (req, res) => {
 		if (found) {
 			let activeCookies = importJSON('active.cookies.json')
 			let newSession = newUUID()
-			res.respond(JSON.stringify({ session: newSession, do: 'window.location = "/dashboard.html"' }), '', 'application/json', 401)
+			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 401)
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
 			saveJSON('active.cookies.json', activeCookies)
-		} else res.respond(JSON.stringify({ do: 'alert("Usuari i/o contrasenya incorrectes"); document.querySelector("#kuzi-password").value = ""' }), '', 'application/json', 401)
+		} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
 	} catch(e) { console.error(e) }
 })
 app.post('/logout', (req, res) => {

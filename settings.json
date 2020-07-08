@@ -1,12 +1,11 @@
 {
-	"__comment": "These are the optimal settings for me",
 	"serverPort": 80,
 	"language": "en",
-	"disableAnnouncements": false,
 	"disableMarks": false,
+	"disableNews": false,
+	"disableMotivationalQuotes": false,
 	"disableTests": false,
 	"disableResources": false,
-	"disableMotivationalQuotes": false,
 	"teacherRules": {
 		"enabled": true,
 		"onlyAddHomeworkOnTeachTime": true,
