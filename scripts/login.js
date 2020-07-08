@@ -26,5 +26,5 @@ function send() {
                 if (res.do) eval(res.do)
             })
         })
-    } else alert("login.error.emptyFields")
+    } else alert("[{(error.invalidInput)}]")
 }

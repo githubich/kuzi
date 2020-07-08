@@ -1,2 +1,2 @@
-setPageTitle("folders", "resources.title")
+setPageTitle("folders", "[{(resources)}]")
 setActiveTab(4)

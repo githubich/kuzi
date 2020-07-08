@@ -79,7 +79,7 @@ function kuziMiddleware(req, res, next) {
         if (!content) content = readFileSync(file)
         if ((mime == "text/html" || mime == "text/javascript") && !req.url.includes('/users/')) {
             content = content.toString('utf8')
-            locales.forEach(locale => content = content.split(`${locale.split('|')[0]}`).join(locale.split('|')[1]))
+            locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
         }
         res.setHeader('Content-Type', mime)
         res.status(statusCode).send(content)

@@ -1,4 +1,4 @@
-setPageTitle("calendar-check", "marks.title")
+setPageTitle("calendar-check", "[{(marks)}]")
 setActiveTab(2)
 
 function load() {
@@ -79,7 +79,7 @@ function load() {
                         let periodE = document.createElement('option')
                         periodChooser.appendChild(periodE)
                         let periodDisplayName = period.periodName
-                        if (period.current === true) { periodDisplayName = `${periodDisplayName} marks.teacher.currentPeriod` }
+                        if (period.current === true) { periodDisplayName = `${periodDisplayName} ([{(current)}])` }
                         periodE.outerHTML = `<option value="${period.periodID}">${periodDisplayName}</option>`
                         if (period.current === true) { periodChooser.value = period.periodID }
                     })
@@ -95,7 +95,7 @@ function load() {
                 if (clas.classID == updateID) {
                     studentsInClass.innerHTML = ''
                     subjectChooser.innerHTML = ''
-                    $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>marks.teacher.studentsIn ${clas.className}`
+                    $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>[{(studentsIn)}] ${clas.className}`
                     clas.classStudents.forEach(student => {
                         studentE = document.createElement('li')
                         studentsInClass.appendChild(studentE)
@@ -137,11 +137,11 @@ function load() {
                 })
                     .then(res => res.json()
                         .then(res => {
-                            if (res.message == 'ok') qAlert({ message: "marks.teacher.submitSuccess", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) location.reload() })
-                            if (res.message == 'not ok') qAlert({ message: "marks.teacher.unknownError", mode: 'error', buttons: { ok: { text: 'marks.teacher.retry' }, cancel: { text: "marks.teacher.donNotRetry" } } }).then(ans => { if (ans) submit() })
+                            if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) location.reload() })
+                            if (res.message == 'not ok') qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans) submit() })
                         }))
-                    .catch(() => { qAlert({ message: "marks.teacher.unknownError", mode: 'error', buttons: { ok: { text: 'marks.teacher.retry' }, cancel: { text: "marks.teacher.donNotRetry" } } }).then(ans => { if (ans) submit() })})
-            } else { qAlert({ message: "marks.teacher.invalidInfo", mode: 'error', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) submit() }) }
+                    .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans) submit() })})
+            } else { qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) submit() }) }
         }
     }
 }

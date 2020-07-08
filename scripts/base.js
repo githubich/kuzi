@@ -43,10 +43,10 @@ function verifyAndChangePassword() {
         new1 = $('.password-modal--newPassword').value,
         new2 = $('.password-modal--newPassword2').value
 
-    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qAlert({ message: "base.changePassword.error.emptyFields", mode: "error" , buttons: { cancel: { invisible: true } } })
-    if (old == new1) return qAlert({ message: "base.changePassword.error.old=new", mode: "error" , buttons: { cancel: { invisible: true } } })
-    if (new1 != new2) return qAlert({ message: "base.changePassword.error.new1!=new2", mode: "error" , buttons: { cancel: { invisible: true } } })
-    if (new1.length < 6) return qAlert({ message: "base.changePassword.error.length", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qAlert({ message: "[{(error.invalidInput)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (old == new1) return qAlert({ message: "[{(error.oldPassword=newPassword)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (new1 != new2) return qAlert({ message: "[{(error.newPassword!=newPasswordConfirmation)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (new1.length < 6) return qAlert({ message: "[{(error.newPasswordLength)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
 
     fetch('/user/changePassword',
         {
@@ -63,8 +63,8 @@ function verifyAndChangePassword() {
         .then(res => res.json()
             .then(res => {
                 console.log(res)
-                if (res.message == 'ok') { qAlert({ message: "base.changePassword.success", mode: "ok" , buttons: { cancel: { invisible: true } } }); toggleModal('password') }
-                else qAlert({ message: "base.changePassword.error.oldPasswordNotCorrect", mode: "error" , buttons: { cancel: { invisible: true } } })
+                if (res.message == 'ok') { qAlert({ message: "[{(success.passwordUpdate)}]", mode: "ok" , buttons: { cancel: { invisible: true } } }); toggleModal('password') }
+                else qAlert({ message: "[{(error.oldPasswordNotCorrect)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
             })
         )
 }

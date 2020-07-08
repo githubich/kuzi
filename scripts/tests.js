@@ -1,2 +1,2 @@
-setPageTitle("clipboard-check", "tests.title")
+setPageTitle("clipboard-check", "[{(tests)}]")
 setActiveTab(3)

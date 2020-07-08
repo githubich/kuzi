@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="langcode">
+<html lang="[{(langcode)}]">
     <head>
         <meta charset="UTF-8">
 		<meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -30,21 +30,21 @@
 			</a>
 			<div class="header--vertical-separator"></div>
 			<ul class="header--actions">
-				<li class="header--action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>base.header.dashboard</span></a></li>
-				<li class="header--action news-action"><a href="/news.html"><i class="fad fa-comment-exclamation"></i><span>base.header.news</span><span class="notify-dot news-notify-dot"></span></a></li>
-				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>base.header.marks</span><span class="notify-dot marks-notify-dot"></span></a></li>
-				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>base.header.tests</span><span class="notify-dot tests-notify-dot"></span></a></li>
-				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>base.header.resources</span><span class="notify-dot resources-notify-dot"></span></a></li>
+				<li class="header--action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>[{(dashboard)}]</span></a></li>
+				<li class="header--action news-action"><a href="/news.html"><i class="fad fa-comment-exclamation"></i><span>[{(news)}]</span><span class="notify-dot news-notify-dot"></span></a></li>
+				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
+				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
+				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
 			</ul>
-			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML=$('.header--actions').innerHTML;toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
+			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
 		<div id="dropdown" class="blurry-bg">
 			<a class="dropdown-close close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
-				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>base.dropdown.changePicture</span></a></li>
-				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>base.dropdown.changePassword</span></a></li>
-				<li class="dropdown-action"><a onclick='fetch("/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>base.dropdown.logout</span></a></li>
-				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>base.dropdown.thanks</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>[{(changePicture)}]</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>[{(changePassword)}]</span></a></li>
+				<li class="dropdown-action"><a onclick='fetch("/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>[{(logout)}]</span></a></li>
+				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>[{(thanksTo)}]</span></a></li>
 
 			</ul>
 		</div>
@@ -58,9 +58,9 @@
 				<img class="big-logo" id="picture-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
 				<form action="/user/changePicture" method="POST" enctype="multipart/form-data">
 					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
-					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">base.picture.chooseFile</label>
-					<p class="picture-file-name">base.picture.filename</p>
-					<button onclick='this.parentElement.submit()' id="picture-submit">base.picture.submit</button>
+					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">[{(chooseFile)}]</label>
+					<p class="picture-file-name">[{(fileName)}]</p>
+					<button onclick='this.parentElement.submit()' id="picture-submit">[{(submit)}]</button>
 				</form>
 			</div>
 		</div>
@@ -68,20 +68,20 @@
 			<a class="password-modal-close close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
 			<div class="center password-modal-inner">
 				<img class="big-logo" id="password-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
-				<p class="hint"><i class="fad fa-key"></i>base.changePassword.oldPassword</p>
+				<p class="hint"><i class="fad fa-key"></i>[{(oldPassword)}]</p>
 				<input id="kuzi-password" class="password-modal--input password-modal--oldPassword" type="password" name="oldPassword">
-				<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPassword</p>
+				<p class="hint"><i class="fad fa-key"></i>[{(newPassword)}]</p>
 				<input class="password-modal--input password-modal--newPassword" type="password" name="newPassword">
-				<p class="hint"><i class="fad fa-key"></i>base.changePassword.newPasswordConfirmation</p>
+				<p class="hint"><i class="fad fa-key"></i>[{(newPasswordConfirmation)}]</p>
 				<input class="password-modal--input password-modal--newPassword2" type="password" name="newPassword2">
-				<button onclick='verifyAndChangePassword()'>base.changePassword.submit</button>
+				<button onclick='verifyAndChangePassword()'>[{(submit)}]</button>
 			</div>
 		</div>
 		<div id="thanks-modal" class="modal blurry-bg" style="display: none;">
 			<a class="thanks-modal-close close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
 			<div class="center thanks-modal-inner" style="text-align: center; width: 100%">
 				<img class="big-logo" id="thanks-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
-				<p>Kuzi global.version, by ezarcel<br>
+				<p>Kuzi [{(global.version)}], by ezarcel<br>
 				Powered by HTML5 & node.js<br><br>
 
 				Thanks to:<br>

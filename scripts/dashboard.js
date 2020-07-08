@@ -1,4 +1,4 @@
-setPageTitle("chart-line", "dashboard.title")
+setPageTitle("chart-line", "[{(dashboard)}]")
 setActiveTab(0)
 
 function random(min,max) {return Math.floor(Math.random()*(max-min+1)+min)}

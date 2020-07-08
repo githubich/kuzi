@@ -1,4 +1,4 @@
-<title>marks.title - Kuzi</title>
+<title>[{(marks)}] - Kuzi</title>
 <link rel="stylesheet" href="/style/marks.css">
 <script src="/scripts/marks.js"></script>
 
@@ -6,49 +6,49 @@
     <div class="tabs">
         <a class="tab selected">
             <div>
-                <i class="fad fa-edit"></i><span>marks.teacher.writeAMark</span>
+                <i class="fad fa-edit"></i><span>[{(writeAMark)}]</span>
             </div>
         </a>
         <a class="tab">
             <div>
-                <i class="fad fa-eye"></i><span>marks.teacher.viewMarks</span>
+                <i class="fad fa-eye"></i><span>[{(viewMarks)}]</span>
             </div>
         </a>
     </div>
     <div class="content submit-marks">
         <div class="myclasses-block">
-            <h3><i class="fad fa-th-large"></i>marks.teacher.myClasses</h3>
+            <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
             <ul id="my-classes"></ul>
         </div>
         <div class="students-block">
-            <h3><i class="fad fa-users"></i>marks.teacher.noClassSelected</h3>
+            <h3><i class="fad fa-users"></i>[{(noCLassSelected)}]</h3>
             <div class="title-controls">
-                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = true; e.setAttribute('is-checked', true) })"><i class="fad fa-user-check"></i><span>marks.teacher.checkAll</span></a>
-                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = false; e.setAttribute('is-checked', false) })"><i class="fad fa-user-times"></i><span>marks.teacher.uncheckAll</span></a>
+                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = true; e.setAttribute('is-checked', true) })"><i class="fad fa-user-check"></i><span>[{(checkAll)}]</span></a>
+                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = false; e.setAttribute('is-checked', false) })"><i class="fad fa-user-times"></i><span>[{(uncheckAll)}]</span></a>
             </div>
             <ul id="students-in-class"></ul>
         </div>
         <div class="markinfo-block">
-            <h3><i class="fad fa-info-circle"></i>marks.teacher.details</h3>
+            <h3><i class="fad fa-info-circle"></i>[{(details)}]</h3>
             <div>
                 <div class="itemname">
-                    <p class="hint"><i class="fad fa-i-cursor"></i>marks.teacher.name</p>
+                    <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
                     <input type="text" id="mark-name">
                 </div>
                 <div class="subject-chooser-div">
-                    <p class="hint"><i class="fad fa-calendar-check"></i>marks.teacher.subject</p><br>
+                    <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p><br>
                     <select name="subject" id="subject-chooser">
                     </select>
                 </div>
                 <div class="period-chooser-div">
-                    <p class="hint"><i class="fad fa-calendar-alt"></i>marks.teacher.period</p><br>
+                    <p class="hint"><i class="fad fa-calendar-alt"></i>[{(period)}]</p><br>
                     <select name="period" id="period-chooser">
                     </select>
                 </div>
             </div>
         </div>
         <div class="submit-block">
-            <button class="submit" onclick="submit()">marks.teacher.submit</button>
+            <button class="submit" onclick="submit()">[{(submit)}]</button>
         </div>
     </div>
     <div style="display: none;" class="content view-submitted-marks"></div>
