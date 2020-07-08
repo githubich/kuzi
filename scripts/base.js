@@ -79,7 +79,7 @@ window.addEventListener('load', () => {
                 headerDropdownArrow = $("#dropdown-arrow")
                 if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
                 $('.user-info .name').innerText = userInfo.prettyName
-                if (userInfo.role == "teacher") $('.user-info .status').innerText = "base.teacher"
+                if (userInfo.role == "teacher") $('.user-info .status').innerText = "[{(teacher)}]"
                 else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
                 $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
