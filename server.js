@@ -5,13 +5,14 @@ else console.log(`[Kuzi] Starting... (${require('os').platform} ${require('os').
 const express = require('express')
 const app = express()
 const { extname } = require('path')
-const { readFileSync, existsSync, unlinkSync, writeFileSync } = require('fs')
+const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
 app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); if (verbose) app.use(require('./middleware').verbose); app.use(require('./middleware').kuziMiddleware)
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
 if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
+if (!existsSync('notifications/')) mkdirSync('notifications')
 
 app.get('/users/:id', (req, res) => {
 	try {
@@ -147,6 +148,7 @@ app.post('/marks/get', (req, res) => {
 						let pMark = mark.marks.find(i => i.studentID == req.userInfo.userID)
 						delete pMark.studentID
 						pMark.name = mark.name
+						pMark.markID = mark.markID
 						resContent[i].subjects[j].marks.push(pMark)
 					}
 				})
@@ -278,11 +280,26 @@ app.post('/periods/list', (req, res) => {
 app.post('/marks/create', (req, res) => {
 	try {
 		if (req.userInfo.role == "teacher") {
+			console.log(req.body)
 			let marks = importJSON('marks.json')
+			req.body.markID = marks.length
 			marks.push(req.body)
 			saveJSON('marks.json', marks)
 			res.respond({ message: 'ok' }, '', 'application/json', 200)
+			req.body.marks.forEach(mark => {
+				let notifications = importJSON(`notifications/${mark.studentID}.json`)
+				notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
+				saveJSON(`notifications/${mark.studentID}.json`, notifications)
+			})
 		} else { res.respond({ message: 'not ok' }, '', 'application/json', 200) }
+	} catch(e) { console.error(e) }
+})
+app.post('/notifications/get', (req, res) => {
+	try {
+		let content = JSON.stringify(importJSON(`notifications/${req.userInfo.userID}.json`))
+		let locales = eval(`importJSON('localization.json').${settings.language}`)
+		locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
+		res.respond(content, '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`))

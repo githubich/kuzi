@@ -17,6 +17,8 @@ function kuziMiddleware(req, res, next) {
     let modified = false
     let currentTime = new Date()
 
+    if (req.url.includes("?")) req.url = req.url.split("?")[0]
+
     if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') {
         let cookies = {}
         req.headers.cookie.split('&').forEach(cookie => {

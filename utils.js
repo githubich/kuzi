@@ -1,10 +1,9 @@
-const { readFileSync, writeFileSync } = require('fs')
+const { readFileSync, writeFileSync, existsSync } = require('fs')
 function random(min,max) {return Math.floor(Math.random()*(max-min+1)+min)}
 function newUUID() {try{return random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)}catch(e){console.error(e)}}
 importJSON = (location) => {
-	let fileContent = readFileSync(location).toString('utf8')
-	if (fileContent == "") { console.warn(`[Kuzi|Warning] ${location} is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
-	else return JSON.parse(fileContent)
+	if (!existsSync(location)) { console.warn(`[Kuzi|Warning] ${location} is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
+	else return JSON.parse(readFileSync(location).toString('utf8'))
 }
 saveJSON = (file, JSONobject) => {writeFileSync(file, JSON.stringify(JSONobject, null, 4))}
 function extensionToMime(ext) {

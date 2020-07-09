@@ -3,6 +3,8 @@ setActiveTab(2)
 
 function load() {
     if (userInfo.role == "student") {
+        let URLparams = {}
+        if (window.location.toString().includes("?")) URLparams = $parseURLArgs()
         $('#manager').remove()
         fetch('/marks/get', { method: "POST" })
             .then(res => res.json()
@@ -42,7 +44,7 @@ function load() {
                             subject.marks.forEach(mark => {
                                 let markE = document.createElement('div')
                                 subjectEContent.appendChild(markE)
-                                markE.classList.add("mark")
+                                markE.classList.add("mark", `mark-${mark.markID}`)
 
                                 let markEName = document.createElement('div')
                                 markE.appendChild(markEName)
@@ -56,6 +58,10 @@ function load() {
                             })
                         })
                     })
+                    if (URLparams && URLparams.highlightID) {
+                        $(`.mark-${URLparams.highlightID}`).classList.add('highlighted')
+                        $('.highlighted').scrollIntoView()
+                    }
                 })
             )
     } else {

@@ -49,3 +49,7 @@
     margin: 0; padding: 0;
     border: none;
 }
+.event > *, .notification > * { display: inline-block; }
+.event p, .notification p { margin: 0; width: fit-content; }
+.event .details, .notification .details { font-size: 0.9em; }
+.event i, .notification i { float: left; margin-right: 12px; position: relative; top: 5.5px; }

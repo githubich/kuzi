@@ -4,11 +4,6 @@ function correctDropdown() {
     headerDropdown.style.left = $('header > div:nth-child(2)').offsetLeft + "px"
     headerDropdown.style.width = ($("header > :nth-child(4)").offsetLeft-$("header > :nth-child(2)").offsetLeft + 1) + "px"
 }
-function setPageTitle(icon, title) { $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
-function setActiveTab(index) {
-    $$('.header--action')[index].classList.add('selected')
-    $$('.header--action a')[index].removeAttribute('href')
-}
 function toggleDropdown() {
     if (!$("#dropdown.hiding") && !$("#dropdown.showing")) {
         headerDropdown.classList.remove("showed","hidden")
@@ -18,13 +13,38 @@ function toggleDropdown() {
             headerDropdownArrow.style.transform = ""
             setTimeout(() => { headerDropdown.classList.remove("hiding"); headerDropdown.classList.add("hidden") }, 200)
         } else {
-            correctDropdown()
             headerDropdownVisible = true
             headerDropdown.classList.add("showing")
+            correctDropdown()
             headerDropdownArrow.style.transform = "rotateX(180deg)"
             setTimeout(() => { headerDropdown.classList.remove("showing"); headerDropdown.classList.add("showed") }, 200)
         }
     }
+}
+function correctMore() {
+    more = $("#more")
+    more.style.top = ( $('main').offsetTop ) + "px"
+    more.style.left = ( $('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth ) + "px"
+}
+function toggleMore() {
+    if (!$("#more.hiding") && !$("#more.showing")) {
+        more.classList.remove("showed","hidden")
+        if (moreVisible) {
+            moreVisible = false
+            more.classList.add("hiding")
+            setTimeout(() => { more.classList.remove("hiding"); more.classList.add("hidden") }, 200)
+        } else {
+            moreVisible = true
+            more.classList.add("showing")
+            correctMore()
+            setTimeout(() => { more.classList.remove("showing"); more.classList.add("showed") }, 200)
+        }
+    }
+}
+function setPageTitle(icon, title) { $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
+function setActiveTab(index) {
+    $$('.header--action')[index].classList.add('selected')
+    $$('.header--action a')[index].removeAttribute('href')
 }
 function uploadProfilePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
@@ -76,6 +96,7 @@ window.addEventListener('load', () => {
                 userInfo = res.userInfo
                 if (typeof load == "function") load()
                 headerDropdownVisible = false
+                moreVisible = false
                 headerDropdownArrow = $("#dropdown-arrow")
                 if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
                 $('.user-info .name').innerText = userInfo.prettyName
@@ -88,7 +109,10 @@ window.addEventListener('load', () => {
         })
 })
 window.addEventListener('scroll', () => correctDropdown())
-window.addEventListener('click', e => { if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown() })
+window.addEventListener('click', e => {
+    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
+    if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
+})
 window.addEventListener('keypress', e => {
     if (e.key == "Enter") {
         if (document.activeElement === $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
