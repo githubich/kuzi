@@ -4,6 +4,7 @@
         "classID": 1,
         "teacherID": 1,
         "time": {
+            "weekDay": 4,
             "hours": 9,
             "minutes": 0,
             "duration": {
@@ -17,6 +18,7 @@
         "classID": 1,
         "teacherID": 1,
         "time": {
+            "weekDay": 4,
             "hours": 10,
             "minutes": 0,
             "duration": {
@@ -30,6 +32,7 @@
         "classID": 2,
         "teacherID": 1,
         "time": {
+            "weekDay": 4,
             "hours": 9,
             "minutes": 0,
             "duration": {
@@ -43,6 +46,7 @@
         "classID": 2,
         "teacherID": 1,
         "time": {
+            "weekDay": 4,
             "hours": 10,
             "minutes": 0,
             "duration": {

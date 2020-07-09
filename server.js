@@ -38,7 +38,7 @@ app.get('*', (req, res) => {
 		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") {
 		  	if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
 			else if (existsSync(`.${req.url}`)) {
-				if (extname(req.url) == '.html' && req.url != '/login.html') {
+				if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/marks-graph.html') {
 					res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
 				} else res.respond('', `.${req.url}`, '', 200)
 			} else res.respond('', '404.html', 'text/html', 404)
@@ -162,6 +162,48 @@ app.post('/marks/get', (req, res) => {
 			i++
 		})
 		i = 0
+		
+		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
+	} catch(e) { console.log(e) }
+})
+app.post('/marks/get/graph', (req, res) => {
+	try {
+		let exists = false
+		let marks = importJSON('marks.json')
+		let resContent = []
+		let subjects = importJSON('subjects.json')
+		let i = 0
+		let usefulSubjects = []
+
+		marks.forEach(mark => {
+			exists = false
+			if (mark.marks.findIndex(item => item.studentID == req.userInfo.userID) != -1) {
+				usefulSubjects.forEach(usefulSubject => {
+					if (mark.subjectID == usefulSubject) exists = true
+				})
+				if (!exists) usefulSubjects.push(mark.subjectID)
+			}
+		})
+		i = 0
+		usefulSubjects.forEach(usefulSubject => {
+			resContent.push({ subjectID: usefulSubject, marks: [] })
+			marks.forEach(mark => {
+				if (mark.subjectID == usefulSubject && mark.marks.findIndex(item => item.studentID == req.userInfo.userID) != -1) {
+					let pMark = mark.marks.find(i => i.studentID == req.userInfo.userID)
+					delete pMark.studentID
+					pMark.name = mark.name
+					resContent[i].marks.push(pMark)
+				}
+			})
+			i++
+		})
+		i = 0
+		resContent.forEach(subjectResContent => {
+			subjects.forEach(subjectJSON => {
+				if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjectName = subjectJSON.prettyName
+			})
+			i++
+		})
 		
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 	} catch(e) { console.log(e) }

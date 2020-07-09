@@ -44,5 +44,7 @@
 }
 #markGraph {
     width: 100%;
-    height: 200px;
+    height: 250px;
+    margin: 0; padding: 0;
+    border: none;
 }

@@ -53,7 +53,7 @@ function kuziMiddleware(req, res, next) {
         end.setMinutes(connection.time.minutes + connection.time.duration.minutes)
         end.setSeconds(0)
         end.setMilliseconds(0)
-        if (connection.classID == req.userInfo.class.classID && start.getTime() <= currentTime.getTime() && end.getTime() > currentTime.getTime()) subjects.forEach(subject => {
+        if (connection.classID == req.userInfo.class.classID && start.getTime() <= currentTime.getTime() && end.getTime() > currentTime.getTime() && currentTime.getDay() == connection.time.weekDay) subjects.forEach(subject => {
             if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
         })
     })
