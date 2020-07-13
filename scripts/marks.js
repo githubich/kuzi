@@ -67,7 +67,7 @@ function load() {
             )
     } else {
         $$('.tab').forEach(tab => tab.setAttribute('onclick', `$('.tab.selected').classList.remove('selected'); this.classList.add('selected')`))
-        fetch('/teachers/marks/getInfo', { method: "POST" })
+        fetch('/teachers/getInfo', { method: "POST" })
             .then(res => res.json()
                 .then(res => {
                     data = res
@@ -78,7 +78,7 @@ function load() {
                         clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
                     })
                 }))
-        fetch('/periods/list', { method: "POST" })
+        fetch('/misc/periods/list', { method: "POST" })
             .then(res => res.json()
                 .then(res => {
                     let periodChooser = $('#period-chooser')
