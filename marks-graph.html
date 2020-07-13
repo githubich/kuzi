@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+    <head>
+		<script src="/lib/qTools.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+        <script>
+            random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
+            resize = () => {
+                $('#graph').setAttribute('height', $().offsetHeight)
+                $('#graph').setAttribute('width', $().offsetWidth)
+                $('#graph').style.height = $().offsetHeight + "px"
+                $('#graph').style.width = $().offsetWidth + "px"
+            }
+            refresh = () => {
+                if (!mouseOver) {
+                    if (c >= resData.length) c = 0
+                    let subject = resData[c]
+                    let data = []
+                    let labels = []
+                    let i = 0
+                    subject.marks.forEach(mark => {
+                        data.push(mark.mark)
+                        if (mark.name.length > 20) labels.push(mark.name.slice(0,17) + "...")
+                        else labels.push(mark.name)
+                    })
+                    markGraph.data.datasets[0].data = data
+                    markGraph.data.labels = labels
+                    markGraph.options.title.text = subject.subjectName
+                    markGraph.update()
+                    c++
+                    setTimeout(refresh, 3000)
+                } else {
+                    setTimeout(refresh, 100)
+                }
+            }
+            window.addEventListener('load', resize)
+            window.addEventListener('resize', resize)
+            window.addEventListener('load', () => {
+                fetch('/marks/get/graph', { method: "POST" })
+                    .then(res => res.json()
+                        .then(res => {
+                            resData = res
+                            c = 0
+                            let subject = resData[c]
+                            let data = []
+                            let labels = []
+                            let i = 0
+                            subject.marks.forEach(mark => {
+                                data.push(mark.mark)
+                                if (mark.name.length > 20) labels.push(mark.name.slice(0,17) + "...")
+                                else labels.push(mark.name)
+                            })
+                            mouseOver = false
+                            let ctx = $('#graph').getContext('2d');
+                            markGraph = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: subject.subjectName,
+                                        data: data,
+                                        backgroundColor: '#0070c07a',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: subject.subjectName
+                                    },
+                                    legend: {
+                                        display: false
+                                    },
+                                    scales: {
+                                        xAxes: [{
+                                            gridLines: {
+                                                color: "#0000"
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            },
+                                            steps: 10,
+                                            gridLines: {
+                                                color: "#0000"
+                                            }
+                                        }]
+                                    }
+                                }
+                                
+                            })
+                            setTimeout(refresh, 3000)
+                        }))
+            })
+        </script>
+        <style>
+            html, head, body {
+                margin: 0; padding: 0;
+                overflow: hidden;
+                height: 100%
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas onmouseover="mouseOver = true" onmouseout="mouseOver = false" id="graph"></canvas>
+        </div>
+    </body>
+</html>
