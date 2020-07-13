@@ -59,9 +59,9 @@ function toggleModal(modalName) {
     else modal.style.display = "block"
 }
 function verifyAndChangePassword() {
-    let old = $('.password-modal--oldPassword').value,
-        new1 = $('.password-modal--newPassword').value,
-        new2 = $('.password-modal--newPassword2').value
+    let old = $('.password-modal--oldPassword').value
+    let new1 = $('.password-modal--newPassword').value
+    let new2 = $('.password-modal--newPassword2').value
 
     if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qAlert({ message: "[{(error.invalidInput)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
     if (old == new1) return qAlert({ message: "[{(error.oldPassword=newPassword)}]", mode: "error" , buttons: { cancel: { invisible: true } } })

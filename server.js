@@ -1,6 +1,4 @@
-const verbose = (process.argv[2] == "-v")
-if (verbose) console.log(`[Kuzi] Starting in verbose mode... (${require('os').platform} ${require('os').release()})`)
-else console.log(`[Kuzi] Starting... (${require('os').platform} ${require('os').release()})`)
+console.log(`[Kuzi] Starting... (${require('os').platform} ${require('os').release()})`)
 
 const express = require('express')
 const app = express()
@@ -9,11 +7,16 @@ const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = requi
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
-app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); if (verbose) app.use(require('./middleware').verbose); app.use(require('./middleware').kuziMiddleware)
+app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware'))
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
 if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
 if (!existsSync('notifications/')) mkdirSync('notifications')
 
+
+
+/////////////
+//   GET   //
+/////////////
 app.get('/users/:id', (req, res) => {
 	try {
 		let id = req.params.id
@@ -39,14 +42,22 @@ app.get('*', (req, res) => {
 		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") {
 		  	if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
 			else if (existsSync(`.${req.url}`)) {
-				if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/marks-graph.html') {
+				if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') {
 					res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
 				} else res.respond('', `.${req.url}`, '', 200)
 			} else res.respond('', '404.html', 'text/html', 404)
 		} else res.respond('<script>window.location = "/"</script>', '', 'text/html', 200)
 	} catch(e) { console.error(e) }
 })
-app.post('/login', (req, res) => {
+
+
+
+//////////////
+//   POST   //
+//////////////
+
+// Common
+app.post('/user/login', (req, res) => {
 	try {
 		let users = importJSON('users.json')
 		let found = false
@@ -66,7 +77,7 @@ app.post('/login', (req, res) => {
 		} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
 	} catch(e) { console.error(e) }
 })
-app.post('/logout', (req, res) => {
+app.post('/user/logout', (req, res) => {
 	try {
 		let activeCookies = importJSON('active.cookies.json')
 		let i = 0
@@ -81,6 +92,7 @@ app.post('/logout', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/user/getInfo', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		if (req.userInfo.userID) {
 			delete req.userInfo.password
@@ -89,6 +101,7 @@ app.post('/user/getInfo', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/user/changePicture', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
 		else if (existsSync(`./users/${req.userInfo.userID}.jpg`)) unlinkSync(`./users/${req.userInfo.userID}.jpg`)
@@ -99,6 +112,7 @@ app.post('/user/changePicture', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/user/changePassword', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		let users = importJSON('users.json')
 		let changed = false
@@ -117,7 +131,10 @@ app.post('/user/changePassword', (req, res) => {
 		} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
 	} catch(e) { console.error(e) }
 })
-app.post('/marks/get', (req, res) => {
+
+// Students
+app.post('/students/marks/get', (req, res) => {
+	if (!req.userInfo || req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		let exists = false
 		let marks = importJSON('marks.json')
@@ -168,7 +185,8 @@ app.post('/marks/get', (req, res) => {
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 	} catch(e) { console.log(e) }
 })
-app.post('/marks/get/graph', (req, res) => {
+app.post('/students/marks/graph', (req, res) => {
+	if (!req.userInfo || req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		let exists = false
 		let marks = importJSON('marks.json')
@@ -210,9 +228,26 @@ app.post('/marks/get/graph', (req, res) => {
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 	} catch(e) { console.log(e) }
 })
-app.post('/teachers/marks/getInfo', (req, res) => {
+
+// Teachers
+app.post('/teachers/marks/create', (req, res) => {
+	if (!req.userInfo || req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	try {
-		if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: 'nice try' }), '', 'application/json', 200)
+		let marks = importJSON('marks.json')
+		req.body.markID = marks.length
+		marks.push(req.body)
+		saveJSON('marks.json', marks)
+		res.respond({ message: 'ok' }, '', 'application/json', 200)
+		req.body.marks.forEach(mark => {
+			let notifications = importJSON(`notifications/${mark.studentID}.json`)
+			notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
+			saveJSON(`notifications/${mark.studentID}.json`, notifications)
+		})
+	} catch(e) { console.error(e) }
+})
+app.post('/teachers/marks/getInfo', (req, res) => {
+	if (!req.userInfo || req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	try {
 		let classes = importJSON('classes.json')
 		let exists = false
 		let i = 0
@@ -263,7 +298,63 @@ app.post('/teachers/marks/getInfo', (req, res) => {
 		res.respond(JSON.stringify(resClasses), '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
-app.post('/periods/list', (req, res) => {
+app.post('/teachers/events/getInfo', (req, res) => {
+	if (!req.userInfo || req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	try {
+		let classes = importJSON('classes.json')
+		let exists = false
+		let i = 0
+		let j = 0
+		let k = 0
+		let subjects = importJSON('subjects.json')
+		let scheduling = importJSON('scheduling.json')
+		let resClasses = []
+		let users = importJSON('users.json')
+		scheduling.forEach(connection => {
+			if (connection.teacherID == req.userInfo.userID) {
+				exists = false
+				i = 0
+				resClasses.forEach(resClass => {
+					if (resClass.classID == connection.classID) {
+						exists = true
+						resClasses[i].subjects.push({ subjectID: connection.subjectID })
+					}
+					i++
+				})
+				if (!exists) classes.forEach(clas => {
+					if (clas.classID == connection.classID) {
+						resClasses.push({ classID: connection.classID, classStudents: [], subjects: [ { subjectID: connection.subjectID } ] })
+						clas.students.forEach(student => resClasses[resClasses.length - 1].classStudents.push({ studentID: student }))
+					}
+				})
+			}
+		})
+		i = 0
+		resClasses.forEach(resClass => {
+			j = 0
+			k = 0
+			resClass.classStudents.forEach(student => {
+				users.forEach(user => {
+					if (user.userID == student.studentID) resClasses[i].classStudents[k].studentName = user.prettyName
+				})
+				k++
+			})
+			classes.forEach(clas => { if (clas.classID == resClass.classID) resClasses[i].className = clas.prettyName })
+			resClass.subjects.forEach(subjectFromRawClasses => {
+				subjects.forEach(subject => {
+					if (subject.subjectID == subjectFromRawClasses.subjectID) resClasses[i].subjects[j].subjectName = subject.prettyName
+				})
+				j++
+			})
+			i++
+		})
+		res.respond(JSON.stringify(resClasses), '', 'application/json', 200)
+	} catch(e) { console.error(e) }
+})
+
+// Misc
+app.post('/misc/periods/list', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	try {
 		let periods = importJSON('periods.json')
 		let i = 0
@@ -277,24 +368,8 @@ app.post('/periods/list', (req, res) => {
 		res.respond(JSON.stringify(periods), '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
-app.post('/marks/create', (req, res) => {
-	try {
-		if (req.userInfo.role == "teacher") {
-			console.log(req.body)
-			let marks = importJSON('marks.json')
-			req.body.markID = marks.length
-			marks.push(req.body)
-			saveJSON('marks.json', marks)
-			res.respond({ message: 'ok' }, '', 'application/json', 200)
-			req.body.marks.forEach(mark => {
-				let notifications = importJSON(`notifications/${mark.studentID}.json`)
-				notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
-				saveJSON(`notifications/${mark.studentID}.json`, notifications)
-			})
-		} else { res.respond({ message: 'not ok' }, '', 'application/json', 200) }
-	} catch(e) { console.error(e) }
-})
-app.post('/notifications/get', (req, res) => {
+app.post('/misc/notifications/get', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	try {
 		let content = JSON.stringify(importJSON(`notifications/${req.userInfo.userID}.json`))
 		let locales = eval(`importJSON('localization.json').${settings.language}`)
@@ -302,4 +377,5 @@ app.post('/notifications/get', (req, res) => {
 		res.respond(content, '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
+
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`))

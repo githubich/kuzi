@@ -1,2 +1,4 @@
-setPageTitle("clipboard-check", "[{(tests)}]")
-setActiveTab(3)
+window.addEventListener('load', () => {
+    setPageTitle("clipboard-check", "[{(tests)}]")
+    setActiveTab(3)
+})

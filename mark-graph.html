@@ -36,7 +36,7 @@
             window.addEventListener('load', resize)
             window.addEventListener('resize', resize)
             window.addEventListener('load', () => {
-                fetch('/marks/get/graph', { method: "POST" })
+                fetch('/students/marks/graph', { method: "POST" })
                     .then(res => res.json()
                         .then(res => {
                             resData = res

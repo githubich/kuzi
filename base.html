@@ -44,7 +44,7 @@
 			<ul class="dropdown-actions">
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>[{(changePicture)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>[{(changePassword)}]</span></a></li>
-				<li class="dropdown-action"><a onclick='fetch("/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>[{(logout)}]</span></a></li>
+				<li class="dropdown-action"><a onclick='fetch("/user/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>[{(logout)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>[{(thanksTo)}]</span></a></li>
 			</ul>
 		</div>

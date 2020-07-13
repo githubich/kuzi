@@ -1,2 +1,4 @@
-setPageTitle("folders", "[{(resources)}]")
-setActiveTab(4)
+window.addEventListener('load', () => {
+    setPageTitle("folders", "[{(resources)}]")
+    setActiveTab(4)
+})

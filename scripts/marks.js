@@ -1,12 +1,13 @@
-setPageTitle("calendar-check", "[{(marks)}]")
-setActiveTab(2)
-
+window.addEventListener('load', () => {
+    setPageTitle("calendar-check", "[{(marks)}]")
+    setActiveTab(2)
+})
 function load() {
     if (userInfo.role == "student") {
         let URLparams = {}
         if (window.location.toString().includes("?")) URLparams = $parseURLArgs()
         $('#manager').remove()
-        fetch('/marks/get', { method: "POST" })
+        fetch('/students/marks/get', { method: "POST" })
             .then(res => res.json()
                 .then(periods => {
                     let periodContainer = document.createElement('div')
