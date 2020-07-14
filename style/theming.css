@@ -21,7 +21,6 @@
         --bg-alt-nearly-transparent: #00000020;
     }
 }
-
 @media (prefers-color-scheme: dark), (prefers-color-scheme: nopreference) {
     :root {
         --bg: #000;
@@ -45,17 +44,6 @@
         --bg-alt-nearly-transparent: #ffffff20;        
     }
 }
-
-:root {
-    --accent-dark: #0050a0;
-    --accent: #0070c0;
-    --accent-light: #2090e0;
-}
-
-body {
-    background: var(--bg);
-}
-
-*:not(input):not(textarea):not(button) {
-    color: var(--bg-alt);
-}
+:root { --accent-dark: #0050a0; --accent: #0070c0; --accent-light: #2090e0; }
+body { background: var(--bg); }
+*:not(input):not(textarea):not(button) { color: var(--bg-alt); }

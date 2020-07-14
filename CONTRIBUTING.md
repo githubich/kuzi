@@ -9,7 +9,7 @@ If an issue doesn't follow these guidelines it will be marked as "w/o proper gui
     * Keep it about 25 words
 * Body
     * Environment
-        * (Bug Report) Put the Node.js, Kuzi and OS versions. Example: "Node.js: 14.0.0, Kuzi: 1.0, OS: Debian Sid"
+        * (Bug Report) Put the Node.js, Kuzi and OS versions. Example: "Node.js: 14.0.0, Kuzi: 1.0, OS: Arch Linux"
     * Description
         * We're not using SMS, use the words you consider
         * Provide rich information, screenshots, videos...
@@ -21,6 +21,5 @@ If you consider that your issue follows these guidelines, send it!
 Pull requests are the most effective and helpful way to contribute, fork this project, modify what you consider, and create a pull request [here](https://github.com/ezarcel/kuzi/pulls)
 
 ### Pull request guidelines
-If an issue doesn't follow these guidelines it will be marked as "w/o proper guidelines"
-
+If an issue doesn't follow these guidelines it will be marked as "w/o proper guidelines"  
 Use the same guidelines as the [Issues Guidelines](#issue-guidelines)
