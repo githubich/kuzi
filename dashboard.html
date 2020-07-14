@@ -2,12 +2,13 @@
 <link rel="stylesheet" href="/style/dashboard.css">
 <script src="/scripts/dashboard.js"></script>
 
-<div class="dash-container">
-    <div class="dash-block motivation-dash-block">
-        <div class="dash-block-inner dash-block-title">
-            <h3 class="title"></h3>
-        </div>
+<div class="dash-block motivation-dash-block">
+    <div class="dash-block-inner dash-block-title">
+        <h3 class="title"></h3>
     </div>
+</div>
+
+<div class="dash-container">
     <div class="dash-block marks-dash-block">
         <div class="dash-block-inner dash-block-title">
             <h3 class="title"><i class="fad fa-calendar-check"></i>[{(markGraph)}]</h3>
@@ -18,14 +19,24 @@
     </div>
     <div class="dash-block events-dash-block">
         <div class="dash-block-inner dash-block-title">
-            <h3 class="title"><i class="fad fa-calendar-exclamation"></i>[{(events)}]</h2>
+            <h3 class="title"><i class="fad fa-calendar-exclamation"></i>[{(events)}]</h3>
+            <i class="far fa-plus action" onclick="toggleModal('new-event')"></i>
         </div>
         <div class="dash-block-inner dash-block-content"></div>
     </div>
     <div class="dash-block notifications-dash-block">
         <div class="dash-block-inner dash-block-title">
             <h3 class="title"><i class="fad fa-bells"></i>[{(notifications)}]</h3>
+            <i class="fad fa-broom action" title="[{(discardAll)}]" onclick=""></i>
         </div>
         <div class="dash-block-inner dash-block-content"></div>
+    </div>
+</div>
+
+<div id="new-event-modal" class="modal blurry-bg">
+    <a class="close" onclick="toggleModal('new-event')"><i class="fas fa-times"></i></a>
+    <div class="center">
+        <h1 class="main-title"><i class="fad fa-calendar-plus"></i>[{(createEvent)}]</h1>
+        <input type="date" name="" id="">
     </div>
 </div>

@@ -1,6 +1,6 @@
 /* STUDENTS */
-@media (min-width: 800px) { .period-content { grid-template-areas: "a a"; } }
-@media (min-width: 1150px) { .period-content { grid-template-areas: "a a a"; } }
+@media (min-width: 800px) { .period-content { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1150px) { .period-content { grid-template-columns: 1fr 1fr 1fr; } }
 .period:not(:nth-last-child(1)) { margin-bottom: 20px; }
 .period, .subject { border-radius: 10px; border: solid .5px var(--bg-alt-super-alpha) }
 .period > * { padding: 12.5px; }
@@ -20,7 +20,11 @@
     border-radius: 10px 10px 0 0;
 }
 .subject-content { border-radius: 0 0 10px 10px; }
-.mark * { display: inline-block; }
+.mark { display: inline-flex; width: 100%; }
+.mark:not(:nth-last-child(1)) { padding-bottom: 4.5px; margin-bottom: 4.5px; border: solid var(--bg-alt-nearly-transparent); border-width: 0 0 1px 0; }
+.mark > * { display: inline-block; }
+.mark .mark-title { margin: auto 0; }
+.mark .mark-content { margin: auto 0 auto auto; padding-left: 10px; }
 .mark-content { float: right; }
 .highlighted { font-weight: bold; }
 

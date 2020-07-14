@@ -1,5 +1,6 @@
+headerDropdownVisible = false
+moreVisible = false
 function correctDropdown() {
-    headerDropdown = $("#dropdown")
     headerDropdown.style.top = ( $('main').offsetTop ) + "px"
     headerDropdown.style.left = $('header > div:nth-child(2)').offsetLeft + "px"
     headerDropdown.style.width = ($("header > :nth-child(4)").offsetLeft-$("header > :nth-child(2)").offsetLeft + 1) + "px"
@@ -22,7 +23,6 @@ function toggleDropdown() {
     }
 }
 function correctMore() {
-    more = $("#more")
     more.style.top = ( $('main').offsetTop ) + "px"
     more.style.left = ( $('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth ) + "px"
 }
@@ -41,7 +41,7 @@ function toggleMore() {
         }
     }
 }
-function setPageTitle(icon, title) { $('.page-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
+function setPageTitle(icon, title) { $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
 function setActiveTab(index) {
     $$('.header--action')[index].classList.add('selected')
     $$('.header--action a')[index].removeAttribute('href')
@@ -89,22 +89,21 @@ function verifyAndChangePassword() {
         )
 }
 window.addEventListener('load', () => {
+    headerDropdown = $('#dropdown')
+    headerDropdownArrow = $("#dropdown-arrow")
+    more = $("#more")
     fetch('/user/getInfo', { method: 'POST' })
         .then(res => {
             res.json().then(res => {
                 if (res.message == "logout") window.location = '/'
                 userInfo = res.userInfo
                 if (typeof load == "function") load()
-                headerDropdownVisible = false
-                moreVisible = false
-                headerDropdownArrow = $("#dropdown-arrow")
                 if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
                 $('.user-info .name').innerText = userInfo.prettyName
                 if (userInfo.role == "teacher") $('.user-info .status').innerText = "[{(teacher)}]"
                 else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
                 $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
-                correctDropdown()
             })
         })
 })

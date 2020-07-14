@@ -7,9 +7,11 @@
         --bg-semi-alpha: #ffffffbf;
         --bg-alpha: #ffffff7a;
         --bg-super-alpha: #ffffff40;
+        --bg-nearly-transparent: #ffffff20;
         --bg-alt: #000;
         --bg-alt-alpha: #0000007a;
         --bg-alt-super-alpha: #00000040;
+        --bg-alt-nearly-transparent: #00000020;
         --accent-dark: #0050a0;
         --accent: #0070c0;
         --accent-light: #2090e0;
@@ -25,9 +27,11 @@
         --bg-semi-alpha: #000000bf;
         --bg-alpha: #0000007a;
         --bg-super-alpha: #00000040;
+        --bg-nearly-transparent: #00000020;
         --bg-alt: #fff;
         --bg-alt-alpha: #ffffff7a;
         --bg-alt-super-alpha: #ffffff40;
+        --bg-alt-nearly-transparent: #ffffff20;
         --accent-dark: #0050a0;
         --accent: #0070c0;
         --accent-light: #2090e0;

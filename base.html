@@ -35,12 +35,12 @@
 				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
 				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
 				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
-				<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fad fa-plus"></i><span>[{(more)}]</span></a></li>
+				<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fas fa-plus"></i><span>[{(more)}]</span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
-		<div id="dropdown" class="blurry-bg">
-			<a class="dropdown-close close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
+		<div id="dropdown" class="blurry-bg hidden">
+			<a class="close phone-close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>[{(changePicture)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>[{(changePassword)}]</span></a></li>
@@ -48,22 +48,22 @@
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>[{(thanksTo)}]</span></a></li>
 			</ul>
 		</div>
-		<div id="more" class="blurry-bg">
-			<a class="dropdown-close close" onclick="toggleMore()"><i class="fas fa-times"></i></a>
+		<div id="more" class="blurry-bg hidden">
+			<a class="close phone-close" onclick="toggleMore()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
 				<li class="dropdown-action"><a href="/mark-graph.html"><i class="fad fa-calendar-check"></i><span>[{(markGraph)}]</span></a></li>
 				<li class="dropdown-action"><a href="/events.html"><i class="fad fa-calendar-exclamation"></i><span>[{(events)}]</span></a></li>
 				<li class="dropdown-action"><a href="/notifications.html"><i class="fad fa-bells"></i><span>[{(notifications)}]</span></a></li>
 			</ul>
 		</div>
-		<div id="hamburger-menu-modal" class="modal blurry-bg" style="display: none;">
-			<a class="hamburger-menu-close close" onclick="toggleModal('hamburger-menu')"><i class="fas fa-times"></i></a>
-			<ul class="hamburger--actions"></ul>
+		<div id="hamburger-menu-modal" class="modal blurry-bg">
+			<a class="close" onclick="toggleModal('hamburger-menu')"><i class="fas fa-times"></i></a>
+			<ul class="hamburger--actions center"></ul>
 		</div>
-		<div id="picture-modal" class="modal blurry-bg" style="display: none;">
-			<a class="picture-modal-close close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
-			<div class="center picture-modal-inner">
-				<img class="big-logo" id="picture-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+		<div id="picture-modal" class="modal blurry-bg">
+			<a class="close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
+			<div class="center">
+				<img class="big-logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
 				<form action="/user/changePicture" method="POST" enctype="multipart/form-data">
 					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
 					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">[{(chooseFile)}]</label>
@@ -72,10 +72,10 @@
 				</form>
 			</div>
 		</div>
-		<div id="password-modal" class="modal blurry-bg" style="display: none;">
-			<a class="password-modal-close close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
-			<div class="center password-modal-inner">
-				<img class="big-logo" id="password-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+		<div id="password-modal" class="modal blurry-bg">
+			<a class="close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
+			<div class="center">
+				<img class="big-logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
 				<p class="hint"><i class="fad fa-key"></i>[{(oldPassword)}]</p>
 				<input id="kuzi-password" class="password-modal--input password-modal--oldPassword" type="password" name="oldPassword">
 				<p class="hint"><i class="fad fa-key"></i>[{(newPassword)}]</p>
@@ -85,10 +85,10 @@
 				<button id="password-submit" onclick='verifyAndChangePassword()'>[{(submit)}]</button>
 			</div>
 		</div>
-		<div id="thanks-modal" class="modal blurry-bg" style="display: none;">
-			<a class="thanks-modal-close close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
-			<div class="center thanks-modal-inner" style="text-align: center; width: 100%">
-				<img class="big-logo" id="thanks-modal--logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+		<div id="thanks-modal" class="modal blurry-bg">
+			<a class="close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
+			<div class="center">
+				<img class="big-logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
 				<p>Kuzi [{(global.version)}], by ezarcel<br>
 				Powered by HTML5 & node.js<br><br>
 
@@ -100,5 +100,5 @@
 			</div>
 		</div>
 		<main>
-			<h1 class="page-title"><i class="fad"></i></h1>
+			<h1 class="main-title"><i class="fad"></i></h1>
 			<div id="root">

@@ -1,31 +1,7 @@
-.dash-container {
-    display: grid;
-    gap: 20px;
-    grid-template-areas: "motivation motivation motivation motivation"
-                         "marks marks events notifications";
-}
-@media (max-width: 800px) {
-    .dash-container {
-        grid-template-areas: "motivation motivation"
-                             "events notifications"
-                             "marks marks";
-    }
-}
-@media (max-width: 600px) {
-    .dash-container {
-        grid-template-areas: "motivation"
-                             "events"
-                             "notifications"
-                             "marks";
-    }
-}
-.motivation-dash-block { grid-area: motivation; }
-.events-dash-block { grid-area: events; }
-.notifications-dash-block { grid-area: notifications; }
-.marks-dash-block { grid-area: marks; }
+.dash-container { display: grid; gap: 20px; grid-template-columns: 2.5fr 1fr 1fr; }
+.motivation-dash-block { margin-bottom: 20px; }
 .dash-block {
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     padding: 5px;
     border-radius: 12.5px;
     background: linear-gradient(to bottom right, var(--accent-light), var(--accent-dark));
@@ -35,21 +11,46 @@
     border-radius: 8.5px;
     background-color: var(--bg);
 }
-.dash-block .dash-block-title h3 i {
-    margin-right: 7.5px;
-}
-.dash-block-content {
-    margin: 5px 0 0 0;
-    flex: 1 1 auto;
-}
+.dash-block .dash-block-title * { white-space: nowrap !important; }
+.dash-block .dash-block-title h3 { display: inline-block; }
+.dash-block .dash-block-title h3 i { margin-right: 7.5px; }
+.dash-block-content { margin: 5px 0 0 0; flex: 1 1 auto; }
 #markGraph {
-    width: 100%;
-    min-height: 250px;
-    height: 100%;
+    width: 100%; min-height: 200px; height: 100%;
     margin: 0; padding: 0;
     border: none;
 }
-.event > *, .notification > * { display: inline-block; }
-.event p, .notification p { margin: 0; width: fit-content; }
+.event, .notification { white-space: nowrap; display: flex; }
+.event p, .notification p { white-space: normal; }
+.event:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }
+.event > div > *, .notification > div > * { display: inline-block; }
+.event p, .notification p { margin: 0; }
 .event .details, .notification .details { font-size: 0.9em; }
-.event i, .notification i { float: left; margin-right: 12px; position: relative; top: 5.5px; }
+.event i:nth-child(1), .notification i:nth-child(1) { float: left; margin-right: 12px; position: relative; top: 5px; }
+.delete-notification { margin: auto 0 auto auto; }
+.notification .clickable { display: inline-flex; }
+.dash-block .dash-block-title .action {
+    float: right;
+    font-size: 18px;
+    position: relative;
+    top: 5px;
+    color: var(--accent);
+}
+#new-event-modal input[type=date] {
+    padding: 0; margin: 0; border: none;
+    color: var(--bg-alt); background-color: #0000;
+    width: 100%;
+    font-size: 16px;
+}
+@media (min-width: 801px) {
+    .notification .delete-notification { visibility: hidden; }
+    .notification:hover .delete-notification { visibility: visible; }
+    .dash-block-content { overflow-x: hidden; overflow-y: auto; max-height: 60vh; }
+}
+@media (max-width: 900px) {
+    .dash-container { grid-template-columns: 100%; }
+    .dash-block .dash-block-title { text-align: center; }
+}
+@media (max-width: 800px) {
+    .delete-notification { padding: 13px; padding-right: 0; }
+}

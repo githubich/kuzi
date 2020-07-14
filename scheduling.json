@@ -4,8 +4,8 @@
         "classID": 1,
         "teacherID": 1,
         "time": {
-            "weekDay": 4,
-            "hours": 9,
+            "weekDay": 2,
+            "hours": 19,
             "minutes": 0,
             "duration": {
                 "hours": 1,

@@ -137,7 +137,7 @@ function load() {
                 }
             })
             if (sendData.name && sendData.subjectID && sendData.marks.length > 0) {
-                fetch('marks/create', {
+                fetch('/teachers/marks/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(sendData)

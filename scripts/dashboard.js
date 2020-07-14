@@ -18,12 +18,15 @@ window.addEventListener('load', () => {
                     notificationE = document.createElement('div')
                     notifications.insertBefore(notificationE, notifications.children[0])
                     notificationE.outerHTML = `
-                        <div class="notification" onclick='${notification.action}'>
-                            <i class="fad fa-bell"></i>
-                            <div class="notification-content">
-                                <p class="title">${notification.title}</p>
-                                <p class="details">${notification.details}</p>
+                        <div class="notification">
+                            <div class="clickable" onclick='${notification.action}'>
+                                <i class="fad fa-bell"></i>
+                                <div class="notification-content">
+                                    <p class="title">${notification.title}</p>
+                                    <p class="details">${notification.details}</p>
+                                </div>
                             </div>
+                            <i class="far fa-check delete-notification" title="[{(discard)}]" onclick=""></i>
                         </div>
                     `
                 })

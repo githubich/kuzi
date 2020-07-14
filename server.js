@@ -7,8 +7,13 @@ const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = requi
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
-app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 })); app.use(require('./middleware'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 }))
+app.use(require('./middleware'))
+
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
+if (!existsSync('events.json') || readFileSync('events.json') == "") writeFileSync('events.json', JSON.stringify([]))
 if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
 if (!existsSync('notifications/')) mkdirSync('notifications')
 
@@ -183,7 +188,7 @@ app.post('/students/marks/get', (req, res) => {
 		i = 0
 		
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
-	} catch(e) { console.log(e) }
+	} catch(e) { console.error(e) }
 })
 app.post('/students/marks/graph', (req, res) => {
 	if (!req.userInfo || req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
@@ -226,7 +231,7 @@ app.post('/students/marks/graph', (req, res) => {
 		})
 		
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
-	} catch(e) { console.log(e) }
+	} catch(e) { console.error(e) }
 })
 
 // Teachers
@@ -240,7 +245,7 @@ app.post('/teachers/marks/create', (req, res) => {
 		res.respond({ message: 'ok' }, '', 'application/json', 200)
 		req.body.marks.forEach(mark => {
 			let notifications = importJSON(`notifications/${mark.studentID}.json`)
-			notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
+			notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}%`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
 			saveJSON(`notifications/${mark.studentID}.json`, notifications)
 		})
 	} catch(e) { console.error(e) }
