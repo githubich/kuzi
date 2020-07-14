@@ -108,6 +108,7 @@ app.post('/user/getInfo', (req, res) => {
 app.post('/user/changePicture', (req, res) => {
 	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
+		console.log(req)
 		if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
 		else if (existsSync(`./users/${req.userInfo.userID}.jpg`)) unlinkSync(`./users/${req.userInfo.userID}.jpg`)
 		else if (existsSync(`./users/${req.userInfo.userID}.jpeg`)) unlinkSync(`./users/${req.userInfo.userID}.jpeg`)

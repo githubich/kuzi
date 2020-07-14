@@ -46,12 +46,12 @@ function setActiveTab(index) {
     $$('.header--action')[index].classList.add('selected')
     $$('.header--action a')[index].removeAttribute('href')
 }
-function uploadProfilePhoto() {
+function changePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
     if ($('.picture-input').files[0] != null) {
         let fileSize = $('.picture-input').files[0].size
         if (fileSize > maxSize || fileSize == 0) return false; return true
-    } else return false
+    } else qAlert({ message: "[{(noFileSelected)}]", mode: "error", buttons: { cancel: { invisible: true } } })
 }
 function toggleModal(modalName) {
     let modal = $(`#${modalName}-modal`)

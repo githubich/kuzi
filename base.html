@@ -63,19 +63,19 @@
 		<div id="picture-modal" class="modal blurry-bg">
 			<a class="close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
 			<div class="center">
-				<img class="big-logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+				<h1 class="main-title"><i class="fad fa-portrait"></i>[{(changePicture)}]</h1>
 				<form action="/user/changePicture" method="POST" enctype="multipart/form-data">
 					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
 					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">[{(chooseFile)}]</label>
 					<p class="picture-file-name">[{(fileName)}]</p>
-					<button onclick='this.parentElement.submit()' id="picture-submit">[{(submit)}]</button>
+					<button onclick='changePhoto()' id="picture-submit">[{(submit)}]</button>
 				</form>
 			</div>
 		</div>
 		<div id="password-modal" class="modal blurry-bg">
 			<a class="close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
 			<div class="center">
-				<img class="big-logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+				<h1 class="main-title"><i class="fad fa-key"></i>[{(changePassword)}]</h1>
 				<p class="hint"><i class="fad fa-key"></i>[{(oldPassword)}]</p>
 				<input id="kuzi-password" class="password-modal--input password-modal--oldPassword" type="password" name="oldPassword">
 				<p class="hint"><i class="fad fa-key"></i>[{(newPassword)}]</p>

@@ -87,19 +87,19 @@ header > *, .dropdown-link * { margin-top: auto; margin-bottom: auto; }
 	color: var(--bg-alt) !important;
 }
 #picture-modal > div :not(:nth-last-child(1)), #password-modal > div :not(:nth-last-child(1)) { margin-bottom: 20px; }
-button { position: relative; top: -1px; margin: auto; }
+#picture-modal .center input, #picture-modal .center p { display: inline-block }
+button { margin: auto; display: block; }
 .picture-label { width: fit-content; }
 .picture-label, button {
 	background: #0000;
 	border: solid var(--bg-alt) 1px;
 	color: var(--bg-alt) !important;
-	padding: 5px 10px; margin: auto;
-	display: block;
+	padding: 5px 10px;
 	font-size: 16px;
 	border-radius: 99px;
 }
 .big-logo { height: 80px; width: 80px; margin: auto auto 40px auto !important; display: block; }
-.picture-file-name { text-align: center; font-size: 14px; color: var(--bg-alt); }
+.picture-file-name { margin-left: 5px; }
 .picture-input {
 	width: 0.1px; height: 0.1px;
 	opacity: 0;
