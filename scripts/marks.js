@@ -102,11 +102,11 @@ function load() {
                 if (clas.classID == updateID) {
                     studentsInClass.innerHTML = ''
                     subjectChooser.innerHTML = ''
-                    $('.students-block h3').innerHTML = `<i class="fad fa-users"></i>[{(studentsIn)}] ${clas.className}`
+                    $('.students h3').innerHTML = `<i class="fad fa-users"></i>[{(studentsIn)}] ${clas.className}`
                     clas.classStudents.forEach(student => {
                         studentE = document.createElement('li')
                         studentsInClass.appendChild(studentE)
-                        studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label><div class="markInput"><input class="percent" studentID="${student.studentID}" id="markInput-${student.studentID}" type="number" min="0" max="100">%</div></li>`
+                        studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label><div class="markInput" onclick="this.children[0].focus()"><input class="percent" studentID="${student.studentID}" id="markInput-${student.studentID}" type="number" min="0" max="100">%</div></li>`
                     })
                     clas.subjects.forEach(subject => {
                         subjectE = document.createElement('option')
@@ -122,6 +122,10 @@ function load() {
                 if (value < min) e.value = min
                 if (value > max) e.value = max
             }))
+            $('.myClassesAndStudents').style = "margin-bottom: 20px;"
+            $('.submit').style = ""
+            $('.students').style = ""
+            $('.mark-info').style = ""
         }
         $('#manager').style.display = ""
         submit = () => {
@@ -144,11 +148,11 @@ function load() {
                 })
                     .then(res => res.json()
                         .then(res => {
-                            if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) location.reload() })
-                            if (res.message == 'not ok') qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans) submit() })
+                            if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() })
+                            if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
                         }))
-                    .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans) submit() })})
-            } else { qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans) submit() }) }
+                    .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
+            } else { qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) }
         }
     }
 }

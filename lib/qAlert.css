@@ -2,14 +2,10 @@
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: 9999;
-    background-color: #0000007a;
-    backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-    --qAlert-button-text-color: #fff
 }
 .qAlert-inner {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     text-align: center;
-    background-color: #fff;
+    background-color: var(--bg);
     padding: 30px;
     border-radius: 20px;
     min-width: 20%;
@@ -34,12 +30,9 @@
     background-color: var(--qAlert-accent);
     border: none;
     border-radius: 999px;
-    color: #fff !important;
     cursor: pointer;
+    color: #fff;
 }
 #qAlert .qAlert-inner .fas { font-size: 55px; color: var(--qAlert-accent); }
 #qAlert .text-input { margin: 0 0 12px 0; text-align: left; }
-#qAlert .text-input input { border-color: #000; }
-#qAlert .text-input .hint { margin: 12px 0 24px 0; color: #000 }
-#qAlert .text-input .hint i { color: #000 }
-#qAlert .alert-text { color: #000 }
+#qAlert .text-input .hint { margin: 12px 0 24px 0; }

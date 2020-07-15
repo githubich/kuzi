@@ -1,5 +1,3 @@
-body .dash-container { display: grid; gap: 20px; grid-template-columns: 2.5fr 1fr 1fr; }
-body.teacher .dash-container { display: grid; gap: 20px; grid-template-columns: 1fr 1fr 1fr; }
 .motivation-dash-block { margin-bottom: 20px; }
 .dash-block {
     display: flex; flex-direction: column;
@@ -29,25 +27,37 @@ body.teacher .dash-container { display: grid; gap: 20px; grid-template-columns: 
 .notification .clickable { display: inline-flex; }
 .dash-block .dash-block-title .action {
     float: right;
-    font-size: 18px;
+    font-size: 16px;
     position: relative;
     top: 5px;
     color: var(--accent);
+    margin-left: 10px;
 }
 body.student .birthday-dash-block, body.teacher .marks-dash-block { display: none }
-#new-event-modal input[type=date] {
-    padding: 0; margin: 0; border: none;
-    color: var(--bg-alt); background-color: #0000;
-    width: 100%;
-    font-size: 16px;
+#new-event-modal textarea {
+    display: block;
+    width: 35vw; height: 35vh;
+    background-color: #0000;
+    border: solid var(--bg-alt) 1px;
 }
 @media (min-width: 801px) {
     .notification .delete-notification { visibility: hidden; }
     .notification:hover .delete-notification { visibility: visible; }
     .dash-block-content { overflow-x: hidden; overflow-y: auto; height: 60vh; }
+    body .dash-container { display: grid; gap: 20px; grid-template-columns: 2.25fr 1fr 1fr; }
+    body.teacher .dash-container { display: grid; gap: 20px; grid-template-columns: 1fr 1fr 1fr; }
 }
 @media (max-width: 900px) {
     .dash-container { grid-template-columns: 100%; }
     .dash-block .dash-block-title { text-align: center; }
 }
-@media (max-width: 800px) { .delete-notification { padding: 13px; padding-right: 0; } }
+@media (max-width: 800px) {
+    body .dash-container { grid-template-columns: 1fr; }
+    .delete-notification { padding: 13px; padding-right: 0; }
+    #new-event-modal textarea {
+        display: block;
+        width: 100%; height: 150px;
+        background-color: #0000;
+        border: solid var(--bg-alt) 1px;
+    }
+}

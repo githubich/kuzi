@@ -35,7 +35,8 @@
     <div class="dash-block notifications-dash-block">
         <div class="dash-block-inner dash-block-title">
             <a><h3 class="title"><i class="fad fa-bells"></i>[{(notifications)}]</h3></a>
-            <i class="fad fa-broom action" title="[{(discardAll)}]" onclick=""></i>
+            <i class="fad fa-broom action" title="[{(discardAll)}]" onclick="discardNotification('all')"></i>
+            <i class="fad fa-sync action" title="[{(refresh)}]" onclick="updateNotifications()"></i>
         </div>
         <div class="dash-block-inner dash-block-content"></div>
     </div>
@@ -45,6 +46,12 @@
     <a class="close" onclick="toggleModal('new-event')"><i class="fas fa-times"></i></a>
     <div class="center">
         <h1 class="main-title"><i class="fad fa-calendar-plus"></i>[{(createEvent)}]</h1>
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
+        <input class="new-event-modal--input new-event-modal--event-name" type="text" name="oldPassword">
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(description)}]</p>
+        <textarea class="new-event-modal--input new-event-modal--description" type="text" name="newPassword"></textarea>
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(date)}]</p>
         <input type="date" name="" id="">
+        <button id="password-submit" onclick='verifyAndChangePassword()'>[{(submit)}]</button>
     </div>
 </div>

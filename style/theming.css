@@ -4,6 +4,7 @@
         --bg-shade1: #eee;
         --bg-shade2: #ddd;
         --bg-shade3: #ccc;
+        --bg-shade4: #bbb;
         --bg-nearly-opaque: #ffffffdf;
         --bg-semi-alpha: #ffffffbf;
         --bg-alpha: #ffffff7a;
@@ -14,6 +15,7 @@
         --bg-alt-shade1: #111;
         --bg-alt-shade2: #222;
         --bg-alt-shade3: #333;
+        --bg-alt-shade4: #444;
         --bg-alt-nearly-opaque: #000000df;
         --bg-alt-semi-alpha: #000000bf;
         --bg-alt-alpha: #0000007a;
@@ -27,6 +29,7 @@
         --bg-shade1: #111;
         --bg-shade2: #222;
         --bg-shade3: #333;
+        --bg-shade4: #444;
         --bg-nearly-opaque: #000000df;
         --bg-semi-alpha: #000000bf;
         --bg-alpha: #0000007a;
@@ -37,6 +40,7 @@
         --bg-alt-shade1: #eee;
         --bg-alt-shade2: #ddd;
         --bg-alt-shade3: #ccc;
+        --bg-alt-shade4: #bbb;
         --bg-alt-nearly-opaque: #ffffffdf;
         --bg-alt-semi-alpha: #ffffffbf;
         --bg-alt-alpha: #ffffff7a;

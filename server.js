@@ -330,6 +330,18 @@ app.post('/misc/notifications/get', (req, res) => {
 		res.respond(content, '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
+app.post('/misc/notifications/discard', (req, res) => {
+	console.log(req.body)
+	if (req.body.notificationI == "all") {
+		writeFileSync(`notifications/${req.userInfo.userID}.json`, JSON.stringify([]))
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	} else {
+		let notifications = importJSON(`notifications/${req.userInfo.userID}.json`)
+		notifications.splice(req.body.notificationI, 1)
+		saveJSON(`notifications/${req.userInfo.userID}.json`, notifications)
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	}
+})
 function runAtMidnight() {
 	let now = new Date()
 	if (now.getHours() == 0 &&

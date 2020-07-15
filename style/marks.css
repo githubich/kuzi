@@ -31,21 +31,13 @@
 
 
 /* TEACHERS */
-.tabs { display: grid; grid-template-areas: "a a"; }
+.tabs { display: grid; grid-template-columns: 1fr 1fr; }
 .tab { display: inline-flex; background-color: var(--bg-shade2); padding: 20px; }
 .tab:nth-child(1) { border-radius: 10px 0 0 0; } .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
 .tab i { margin-right: 5px; }
 .tab.selected { background-color: var(--bg-shade3); }
 .tabs a div { margin: auto; }
-.content { gap: 10px; background-color: var(--bg-shade1); padding: 20px; border-radius: 0 0 10px 10px; display: grid; }
-.content.submit-marks { grid-template-areas: "myclasses students"
-                                             "markinfo markinfo"
-                                             "submit submit"; }
-.myclasses-block { grid-area: myclasses }
-.students-block { grid-area: students }
-.markinfo-block { grid-area: markinfo; }
-.submit-block { grid-area: submit; }
-.markinfo-block > div { display: grid; grid-template-areas: "a a a"; gap: 10px; }
+.content { background-color: var(--bg-shade1); padding: 20px; border-radius: 0 0 10px 10px; }
 .content.submit-marks h3 { margin-bottom: 10px; }
 .content.submit-marks h3 i { margin-right: 5px; }
 .content.submit-marks ul {
@@ -56,10 +48,12 @@
     padding: 10px 0;
 }
 .content.submit-marks ul li { padding: 0 10px; }
+.content input { min-width: unset; }
+.myClassesAndStudents { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
 .class input[type=radio], .student input[type=checkbox] { margin-left: 0; margin-right: 5px; }
-.student input:not(:checked) + label + .markInput { display: none; }
-.student { display: flex; }
-.student > * { margin-top: auto; margin-bottom: auto; }
+li.student input:not(:checked) + label + .markInput { display: none; }
+li.student { display: flex; }
+li.student > * { margin-top: auto; margin-bottom: auto; }
 :not(li.controls) .control:not(:nth-last-child(1)) { margin-right: 10px; }
 .markInput {
 	display: inline-block;
@@ -67,7 +61,8 @@
     border: solid var(--bg-alt);
 	border-width: 0 0 1px 0;
 	margin-left: auto;
-	white-space: nowrap;
+    white-space: nowrap;
+    cursor: text;
 }
 .markInput * { color: var(--bg-alt); font-size: 16px; }
 .markInput input[type=number] {
@@ -79,10 +74,9 @@
 .markInput input[type=number]::-webkit-outer-spin-button, .markInput input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .markInput input[type=number] { -moz-appearance: textfield; }
 h3, .title-controls { display: inline-block; }
-.title-controls { margin-left: 5px; margin-bottom: 10px; }
+.title-controls { margin-left: 10px; margin-bottom: 10px; position: relative; top: 2px; }
 .control i { margin-right: 5px; }
 .control:not(:nth-last-child(1)) { margin-right: 10px; }
-.markinfo-block input { width: -webkit-fill-available; }
 .subject-chooser-div select, .period-chooser-div select {
     display: block;
     padding: 5px 10px;
@@ -95,19 +89,23 @@ h3, .title-controls { display: inline-block; }
     height: 33px;
 }
 .submit-block button.submit { margin-top: 10px; }
+.mark-info { margin-bottom: 20px; }
+.mark-info-inner { display: grid; gap: 20px; grid-template-columns: 2fr 1fr 1fr; }
+.students--header { display: flex; }
 
 @media (max-width: 600px) {
-    .tabs { grid-template-areas: "a"; }
+    .tabs { grid-template-columns: 1fr; }
     .tab { padding: 10px; }
     .tab:nth-child(1) { border-radius: 10px 10px 0 0; }
     .tab:nth-last-child(1) { border-radius: 0 0 0 0; }
-    .content.submit-marks { grid-template-areas: "myclasses"
-                                                 "students"
-                                                 "markinfo"
-                                                 "submit"; gap: 25px; }
+    .myClassesAndStudents { grid-template-columns: 1fr; }
+    .mark-info-inner { grid-template-columns: 1fr; }
+    .markinfo-block > div { grid-template-areas: "a"; }
+    .submit-block button.submit { margin-top: 0; }
+}
+@media (max-width: 800px) {
+    .title-controls { margin-left: auto; }
     .title-controls span { display: none; }
     .control i { margin-right: 0; }
     .control:not(:nth-last-child(1)) { margin-right: 5px; }
-    .markinfo-block > div { grid-template-areas: "a"; }
-    .submit-block button.submit { margin-top: 0; }
 }

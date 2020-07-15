@@ -16,21 +16,25 @@
         </a>
     </div>
     <div class="content submit-marks">
-        <div class="myclasses-block">
-            <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
-            <ul id="my-classes"></ul>
-        </div>
-        <div class="students-block">
-            <h3><i class="fad fa-users"></i>[{(noClassSelected)}]</h3>
-            <div class="title-controls">
-                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = true; e.setAttribute('is-checked', true) })"><i class="fad fa-user-check"></i><span>[{(checkAll)}]</span></a>
-                <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = false; e.setAttribute('is-checked', false) })"><i class="fad fa-user-times"></i><span>[{(uncheckAll)}]</span></a>
+        <div class="myClassesAndStudents" style="grid-template-columns: 1fr;">
+            <div class="myclasses">
+                <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
+                <ul id="my-classes"></ul>
             </div>
-            <ul id="students-in-class"></ul>
+            <div class="students" style="display: none;">
+                <div class="students--header">
+                    <h3><i class="fad fa-users"></i></h3>
+                    <div class="title-controls">
+                        <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = true; e.setAttribute('is-checked', true) })"><i class="fad fa-user-check"></i><span>[{(checkAll)}]</span></a>
+                        <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = false; e.setAttribute('is-checked', false) })"><i class="fad fa-user-times"></i><span>[{(uncheckAll)}]</span></a>
+                    </div>
+                </div>
+                <ul id="students-in-class"></ul>
+            </div>
         </div>
-        <div class="markinfo-block">
+        <div class="mark-info" style="display: none;">
             <h3><i class="fad fa-info-circle"></i>[{(details)}]</h3>
-            <div>
+            <div class="mark-info-inner">
                 <div class="itemname">
                     <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
                     <input type="text" id="mark-name">
@@ -47,9 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class="submit-block">
-            <button class="submit" onclick="submit()">[{(submit)}]</button>
-        </div>
+        <button style="display: none;" class="submit" onclick="submit()">[{(submit)}]</button>
     </div>
     <div style="display: none;" class="content view-submitted-marks"></div>
 </div>

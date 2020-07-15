@@ -28,7 +28,7 @@
                     markGraph.update()
                     c++
                     resize()
-                    setTimeout(refresh, 3000)
+                    setTimeout(refresh, 5000)
                 } else {
                     setTimeout(refresh, 0)
                 }
@@ -48,17 +48,21 @@
                                 data: {
                                     labels: [],
                                     datasets: [{
-                                        label: "",
                                         data: [],
                                         backgroundColor: '#0070c07a',
                                         borderWidth: 1
                                     }]
                                 },
                                 options: {
+                                    animation: {
+                                        duration: 600
+                                    },
                                     maintainAspectRatio: false,
                                     title: {
                                         display: true,
-                                        text: ""
+                                    },
+                                    tooltips: {
+                                        displayColors: false
                                     },
                                     legend: {
                                         display: false
