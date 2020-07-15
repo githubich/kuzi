@@ -97,13 +97,19 @@ window.addEventListener('load', () => {
             res.json().then(res => {
                 if (res.message == "logout") window.location = '/'
                 userInfo = res.userInfo
-                if (typeof load == "function") load()
-                if (userInfo.role == "teacher") $$('span.notify-dot').forEach(dot => dot.remove())
-                $('.user-info .name').innerText = userInfo.prettyName
-                if (userInfo.role == "teacher") $('.user-info .status').innerText = "[{(teacher)}]"
-                else if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
-                else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
                 $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+                $('.user-info .name').innerText = userInfo.prettyName
+                $().classList.add(userInfo.role)
+                if (userInfo.role == "teacher") {
+                    if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
+                    else $('.user-info .status').innerText = `[{(teacher)}]`
+                    if ($('#markGraph')) $('#markGraph').remove()
+                } else if (userInfo.role == "student") {
+                    if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
+                    else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
+                    if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
+                }
+                if (typeof load == "function") load()
             })
         })
 })

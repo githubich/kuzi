@@ -2,6 +2,7 @@
     "en": [
         "langcode|en",
 
+        "birthdayList|Birthday list",
         "cancel|Cancel",
         "changePassword|Change password",
         "changePicture|Change picture",
@@ -68,6 +69,7 @@
     "es": [
         "langcode|es",
 
+        "birthdayList|Cumpleaños",
         "cancel|Cancelar",
         "changePassword|Cambiar contraseña",
         "changePicture|Cambiar foto de perfil",
@@ -135,6 +137,7 @@
     "ca": [
         "langcode|ca",
 
+        "birthdayList|Aniversaris",
         "cancel|Cancel·lar",
         "changePassword|Cambia la contrasenya",
         "changePicture|Cambia la foto de perfil",

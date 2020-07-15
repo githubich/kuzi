@@ -154,6 +154,9 @@ input[type=text], input[type=password] {
 a, a * { color: var(--accent) !important; cursor: pointer; text-decoration: none; }
 .notify-dot { display: none; }
 #thanks-modal > .center { text-align: center; width: 100% }
+
+body.teacher span.notify-dot { display: none; }
+
 @media (max-width: 600px) {
 	#dropdown, #more {
 		height: 100% !important; width: 100% !important;

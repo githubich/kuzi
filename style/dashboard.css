@@ -1,4 +1,5 @@
-.dash-container { display: grid; gap: 20px; grid-template-columns: 2.5fr 1fr 1fr; }
+body .dash-container { display: grid; gap: 20px; grid-template-columns: 2.5fr 1fr 1fr; }
+body.teacher .dash-container { display: grid; gap: 20px; grid-template-columns: 1fr 1fr 1fr; }
 .motivation-dash-block { margin-bottom: 20px; }
 .dash-block {
     display: flex; flex-direction: column;
@@ -11,15 +12,12 @@
     border-radius: 8.5px;
     background-color: var(--bg);
 }
-.dash-block .dash-block-title * { white-space: nowrap !important; }
-.dash-block .dash-block-title h3 { display: inline-block; }
+.dash-block .dash-block-title * { white-space: nowrap !important; color: var(--bg-alt) !important; }
+.dash-block .dash-block-title h3 { display: inline-block; color: var(--bg-alt); }
 .dash-block .dash-block-title h3 i { margin-right: 7.5px; }
 .dash-block-content { margin: 5px 0 0 0; flex: 1 1 auto; }
-#markGraph {
-    width: 100%; min-height: 200px; height: 100%;
-    margin: 0; padding: 0;
-    border: none;
-}
+#markGraph:not([src]) { display: none; }
+#markGraph[src] { width: 100%; min-height: 200px; height: 100%; margin: 0; padding: 0; border: none; }
 .event, .notification { white-space: nowrap; display: flex; }
 .event p, .notification p { white-space: normal; }
 .event:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }
@@ -36,6 +34,7 @@
     top: 5px;
     color: var(--accent);
 }
+body.student .birthday-dash-block, body.teacher .marks-dash-block { display: none }
 #new-event-modal input[type=date] {
     padding: 0; margin: 0; border: none;
     color: var(--bg-alt); background-color: #0000;
@@ -45,12 +44,10 @@
 @media (min-width: 801px) {
     .notification .delete-notification { visibility: hidden; }
     .notification:hover .delete-notification { visibility: visible; }
-    .dash-block-content { overflow-x: hidden; overflow-y: auto; max-height: 60vh; }
+    .dash-block-content { overflow-x: hidden; overflow-y: auto; height: 60vh; }
 }
 @media (max-width: 900px) {
     .dash-container { grid-template-columns: 100%; }
     .dash-block .dash-block-title { text-align: center; }
 }
-@media (max-width: 800px) {
-    .delete-notification { padding: 13px; padding-right: 0; }
-}
+@media (max-width: 800px) { .delete-notification { padding: 13px; padding-right: 0; } }

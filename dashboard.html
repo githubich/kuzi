@@ -11,22 +11,30 @@
 <div class="dash-container">
     <div class="dash-block marks-dash-block">
         <div class="dash-block-inner dash-block-title">
-            <h3 class="title"><i class="fad fa-calendar-check"></i>[{(markGraph)}]</h3>
+            <a><h3 class="title"><i class="fad fa-calendar-check"></i>[{(markGraph)}]</h3></a>
         </div>
         <div class="dash-block-inner dash-block-content" style="display: flex;">
-            <iframe id="markGraph" src="/mark-graph.html"></iframe>
+            <iframe id="markGraph"></iframe>
+        </div>
+    </div>
+    <div class="dash-block birthday-dash-block">
+        <div class="dash-block-inner dash-block-title">
+            <h3 class="title"><i class="fad fa-calendar-day"></i>[{(birthdayList)}]</h3>
+        </div>
+        <div class="dash-block-inner dash-block-content" style="display: flex;">
+            <iframe id="markGraph"></iframe>
         </div>
     </div>
     <div class="dash-block events-dash-block">
         <div class="dash-block-inner dash-block-title">
-            <h3 class="title"><i class="fad fa-calendar-exclamation"></i>[{(events)}]</h3>
-            <i class="far fa-plus action" onclick="toggleModal('new-event')"></i>
+            <a><h3 class="title"><i class="fad fa-calendar-exclamation"></i>[{(events)}]</h3></a>
+            <i class="far fa-plus action" title="[{(createEvent)}]" onclick="toggleModal('new-event')"></i>
         </div>
         <div class="dash-block-inner dash-block-content"></div>
     </div>
     <div class="dash-block notifications-dash-block">
         <div class="dash-block-inner dash-block-title">
-            <h3 class="title"><i class="fad fa-bells"></i>[{(notifications)}]</h3>
+            <a><h3 class="title"><i class="fad fa-bells"></i>[{(notifications)}]</h3></a>
             <i class="fad fa-broom action" title="[{(discardAll)}]" onclick=""></i>
         </div>
         <div class="dash-block-inner dash-block-content"></div>
