@@ -2,6 +2,7 @@ console.log(`[Kuzi] Starting... (${require('os').platform()} ${require('os').rel
 
 const express = require('express')
 const app = express()
+const expressFileUpload = require('express-fileupload')
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
@@ -9,7 +10,7 @@ const settings = importJSON('settings.json')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 }))
+app.use(expressFileUpload({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 }))
 app.use(require('./middleware'))
 
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
@@ -25,10 +26,10 @@ if (!existsSync('notifications/')) mkdirSync('notifications')
 app.get('/users/:id', (req, res) => {
 	try {
 		let id = req.params.id
-		if (existsSync(`${id}.png`)) res.respond('', `${id}.png`, 'image/png', 200)
-		else if (existsSync(`${id}.jpg`)) res.respond('', `${id}.jpg`, 'image/jpeg', 200)
-		else if (existsSync(`${id}.jpeg`)) res.respond('', `${id}.jpeg`, 'image/jpeg', 200)
-		else if (existsSync(`${id}.webp`)) res.respond('', `${id}.webp`, 'image/webp', 200)
+		if (existsSync(`users/${id}.png`)) res.respond('', `users/${id}.png`, 'image/png', 200)
+		else if (existsSync(`users/${id}.jpg`)) res.respond('', `users/${id}.jpg`, 'image/jpeg', 200)
+		else if (existsSync(`users/${id}.jpeg`)) res.respond('', `users/${id}.jpeg`, 'image/jpeg', 200)
+		else if (existsSync(`users/${id}.webp`)) res.respond('', `users/${id}.webp`, 'image/webp', 200)
 		else res.respond('', 'users/noone.png', 'image/png', 200)
 	} catch(e) { console.error(e) }
 })
@@ -108,13 +109,12 @@ app.post('/user/getInfo', (req, res) => {
 app.post('/user/changePicture', (req, res) => {
 	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
-		console.log(req)
 		if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
 		else if (existsSync(`./users/${req.userInfo.userID}.jpg`)) unlinkSync(`./users/${req.userInfo.userID}.jpg`)
 		else if (existsSync(`./users/${req.userInfo.userID}.jpeg`)) unlinkSync(`./users/${req.userInfo.userID}.jpeg`)
 		else if (existsSync(`./users/${req.userInfo.userID}.webp`)) unlinkSync(`./users/${req.userInfo.userID}.webp`)
 		req.files.photo.mv(`./users/${req.userInfo.userID}${extname(req.files.photo.name)}`)
-		res.respond('<script>alert("Foto de perfil canviada existosament"); window.history.back()</script>', '', 'text/html', 200)
+		res.respond({ message: 'ok' }, '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
 app.post('/user/changePassword', (req, res) => {
