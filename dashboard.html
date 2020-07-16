@@ -50,8 +50,33 @@
         <input class="new-event-modal--input new-event-modal--event-name" type="text" name="oldPassword">
         <p class="hint"><i class="fad fa-i-cursor"></i>[{(description)}]</p>
         <textarea class="new-event-modal--input new-event-modal--description" type="text" name="newPassword"></textarea>
-        <p class="hint"><i class="fad fa-i-cursor"></i>[{(date)}]</p>
+        <p class="hint"><i class="fad fa-calendar"></i>[{(date)}]</p>
         <input type="date" name="" id="">
+        <div class="teachers-only">
+
+            <p class="hint"><i class="fad fa-eye"></i>[{(visibility)}]</p>
+            <ul class="who">
+                <li class="class"><input type="radio" checked oninput="$('.myClassesAndStudents').style.display = 'none'" id="justForMe" name="who" value="justForMe"><label for="justForMe">[{(justForMe)}]</label></li>
+                <li class="class"><input type="radio" oninput="$('.myClassesAndStudents').style = ''" id="forMyStudentsAndMe" name="who" value="forMyStudentsAndMe"><label for="forMyStudentsAndMe">[{(forMyStudentsAndMe)}]</label></li>
+            </ul>
+            <div class="myClassesAndStudents" style="display: none;">
+                <div class="myclasses">
+                    <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
+                    <ul id="my-classes"></ul>
+                </div>
+                <div class="students" style="display: none;">
+                    <div class="students--header">
+                        <h3><i class="fad fa-users"></i></h3>
+                        <div class="title-controls">
+                            <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => e.checked = true)"><i class="fad fa-user-check"></i><span>[{(checkAll)}]</span></a>
+                            <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => e.checked = false)"><i class="fad fa-user-times"></i><span>[{(uncheckAll)}]</span></a>
+                        </div>
+                    </div>
+                    <ul id="students-in-class"></ul>
+                </div>
+            </div>
+
+        </div>
         <button id="password-submit" onclick='verifyAndChangePassword()'>[{(submit)}]</button>
     </div>
 </div>

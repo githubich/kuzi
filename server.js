@@ -39,7 +39,7 @@ app.get('/remove_menus.css', (req, res) => {
 	if (settings.disableMarks) content = `${content}\n.marks-action { display: none !important; }`
 	if (settings.disableTests) content = `${content}\n.tests-action { display: none !important; }`
 	if (settings.disableResources) content = `${content}\n.resources-action { display: none !important; }`
-	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block {	display: none !important; }	.dash-container { display: grid; gap: 20px; grid-template-areas: "marks marks events notifications" !important; } @media (max-width: 800px) { .dash-container { grid-template-areas: "events notifications" "marks marks" !important; } } @media (max-width: 600px) { .dash-container { grid-template-areas: "events" "notifications" "marks" !important; } }`
+	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block {	display: none !important; } }` 
 	res.respond(content, '', 'text/css', 200)
 })
 app.get('/', (req, res) => res.redirect("/login.html"))

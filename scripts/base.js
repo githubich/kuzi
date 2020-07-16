@@ -57,6 +57,7 @@ function toggleModal(modalName) {
     let modal = $(`#${modalName}-modal`)
     if (modal.style.display == "block") modal.style.display = "none"
     else modal.style.display = "block"
+    window.dispatchEvent(new Event(`toggle-modal-${modalName}`))
 }
 function verifyAndChangePassword() {
     let old = $('.password-modal--oldPassword').value
@@ -115,17 +116,17 @@ window.addEventListener('click', e => {
     if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
 })
 window.addEventListener('keydown', e => {
-    console.log(e)
     if (e.key == "Enter") {
+        e.preventDefault()
         if (document.activeElement === $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
         else if (document.activeElement === $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
         else if (document.activeElement === $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
         return false
     }
     if (e.key == "Escape") {
+        e.preventDefault()
         $$('.modal').forEach(modal => {
             if (modal.style.display == "block") modal.querySelector('.close').click()
         })
-        return false
     }
 })

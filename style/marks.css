@@ -54,7 +54,7 @@
 li.student input:not(:checked) + label + .markInput { display: none; }
 li.student { display: flex; }
 li.student > * { margin-top: auto; margin-bottom: auto; }
-:not(li.controls) .control:not(:nth-last-child(1)) { margin-right: 10px; }
+.control:not(:nth-last-child(1)) { margin-right: 10px; }
 .markInput {
 	display: inline-block;
 	padding: 5px 10px;

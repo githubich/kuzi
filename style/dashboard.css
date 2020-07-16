@@ -1,4 +1,5 @@
 .motivation-dash-block { margin-bottom: 20px; }
+.dash-container { display: grid; gap: 20px; }
 .dash-block {
     display: flex; flex-direction: column;
     padding: 5px;
@@ -36,7 +37,8 @@
 body.student .birthday-dash-block, body.teacher .marks-dash-block { display: none }
 #new-event-modal textarea {
     display: block;
-    width: 35vw; height: 20vh;
+    width: 100% !important; resize: vertical;
+    min-height: 34px;
     background-color: #0000;
     border: solid var(--bg-alt) 1px;
 }
@@ -44,8 +46,8 @@ body.student .birthday-dash-block, body.teacher .marks-dash-block { display: non
     .notification .delete-notification { visibility: hidden; }
     .notification:hover .delete-notification { visibility: visible; }
     .dash-block-content { overflow-x: hidden; overflow-y: auto; height: 60vh; }
-    body .dash-container { display: grid; gap: 20px; grid-template-columns: 2.25fr 1fr 1fr; }
-    body.teacher .dash-container { display: grid; gap: 20px; grid-template-columns: 1fr 1fr 1fr; }
+    body .dash-container { grid-template-columns: 2.25fr 1fr 1fr; }
+    body.teacher .dash-container { grid-template-columns: 1fr 1fr 1fr; }
 }
 @media (max-width: 900px) {
     .dash-container { grid-template-columns: 100%; }
@@ -60,4 +62,28 @@ body.student .birthday-dash-block, body.teacher .marks-dash-block { display: non
         background-color: #0000;
         border: solid var(--bg-alt) 1px;
     }
+    #new-event-modal .title-controls { margin-left: auto; }
+    #new-event-modal .title-controls span { display: none; }
+    #new-event-modal .control i { margin-right: 0; }
+    #new-event-modal .control:not(:nth-last-child(1)) { margin-right: 5px; }
 }
+
+
+/**/
+
+#new-event-modal h3 { margin-bottom: 10px; }
+#new-event-modal h3 i { margin-right: 5px; }
+#new-event-modal ul {
+    margin: 0;
+    list-style-type: none;
+    padding: 0;
+}
+#new-event-modal .myClassesAndStudents { margin-top: 20px; display: grid; gap: 20px; }
+#new-event-modal .class input[type=radio], .student input[type=checkbox] { margin: 0 5px 0 0; }
+#new-event-modal .student { display: flex; }
+#new-event-modal .student > * { margin-top: auto; margin-bottom: auto; }
+#new-event-modal .control:not(:nth-last-child(1)) { margin-right: 10px; }
+#new-event-modal h3, #new-event-modal .title-controls { display: inline-block; }
+#new-event-modal .title-controls { margin-left: 10px; margin-bottom: 10px; }
+#new-event-modal .control i { margin-right: 5px; }
+#new-event-modal .control:not(:nth-last-child(1)) { margin-right: 10px; }

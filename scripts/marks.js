@@ -69,35 +69,35 @@ function load() {
         $$('.tab').forEach(tab => tab.setAttribute('onclick', `$('.tab.selected').classList.remove('selected'); this.classList.add('selected')`))
         fetch('/teachers/getInfo', { method: "POST" })
             .then(res => res.json()
-                .then(res => {
-                    data = res
-                    let myClasses = $('#my-classes')
-                    data.forEach(clas => {
-                        let clasE = document.createElement('li')
-                        myClasses.appendChild(clasE)
-                        clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
-                    })
-                }))
+            .then(res => {
+                data = res
+                let myClasses = $('#my-classes')
+                data.forEach(clas => {
+                    let clasE = document.createElement('li')
+                    myClasses.appendChild(clasE)
+                    clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
+                })
+            }))
+            .catch(e => console.error(e))
         fetch('/misc/periods/list', { method: "POST" })
             .then(res => res.json()
-                .then(res => {
-                    let periodChooser = $('#period-chooser')
-                    res.forEach(period => {
-                        let periodE = document.createElement('option')
-                        periodChooser.appendChild(periodE)
-                        let periodDisplayName = period.periodName
-                        if (period.current === true) { periodDisplayName = `${periodDisplayName} ([{(current)}])` }
-                        periodE.outerHTML = `<option value="${period.periodID}">${periodDisplayName}</option>`
-                        if (period.current === true) { periodChooser.value = period.periodID }
-                    })
-                }))
-        update = (updateID) => {
+            .then(res => {
+                let periodChooser = $('#period-chooser')
+                res.forEach(period => {
+                    let periodE = document.createElement('option')
+                    periodChooser.appendChild(periodE)
+                    let periodDisplayName = period.periodName
+                    if (period.current === true) { periodDisplayName = `${periodDisplayName} ([{(current)}])` }
+                    periodE.outerHTML = `<option value="${period.periodID}">${periodDisplayName}</option>`
+                    if (period.current === true) { periodChooser.value = period.periodID }
+                })
+            }))
+            .catch(e => console.error(e))
+        update = updateID => {
             if (!updateID) return
             updateID = parseInt(updateID)
-        
             let studentsInClass = $('#students-in-class')
             let subjectChooser = $('#subject-chooser')
-        
             data.forEach(clas => {
                 if (clas.classID == updateID) {
                     studentsInClass.innerHTML = ''
@@ -147,12 +147,12 @@ function load() {
                     body: JSON.stringify(sendData)
                 })
                     .then(res => res.json()
-                        .then(res => {
-                            if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() })
-                            if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
-                        }))
+                    .then(res => {
+                        if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() })
+                        if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
+                    }))
                     .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
-            } else { qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) }
+            } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
         }
     }
 }

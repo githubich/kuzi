@@ -31,8 +31,10 @@
         "error.unknown.doNotRetry|An unknown error has occurred. Do you want to retry?",
         "error.unknown.retry|An unknown error has occurred",
         "events|Events",
+        "forMyStudentsAndMe|For my students and I",
         "fileName|File name",
         "goBack|Go back",
+        "justForMe|Just for me",
         "loading|Loading...",
         "login.password|Password",
         "login.username|Username",
@@ -68,6 +70,7 @@
         "uncheckAll|Uncheck all",
         "username|Username",
         "viewMarks|View marks",
+        "visibility|Visibility",
         "writeAMark|Write a mark"
     ],
     "es": [
@@ -102,8 +105,10 @@
         "error.unknown.doNotRetry|Ha ocurrido un error desconocido. ¿Quieres reintentarlo?",
         "error.unknown.retry|Ha ocurrido un error desconocido",
         "events|Eventos",
+        "forMyStudentsAndMe|Para mis alumnos y para mí",
         "fileName|Nombre del archivo",
         "goBack|Retroceder",
+        "justForMe|Solo para mí",
         "loading|Cargando...",
         "login.password|Contraseña",
         "login.username|Nombre de usuario",
@@ -139,6 +144,7 @@
         "uncheckAll|Desmarcar todo",
         "username|Nombre de usuario",
         "viewMarks|Ver notas",
+        "visibility|Visibilidad",
         "writeAMark|Crear nota"
     ],
     
@@ -174,8 +180,10 @@
         "error.unknown.doNotRetry|Ha hagut un error desconegut. Vols reintentar-lo?",
         "error.unknown.retry|Ha hagut un error desconegut",
         "events|Esdeveniments",
+        "forMyStudentsAndMe|Pels meus alumnes i per a mi",
         "fileName|Nom de l'arxiu",
         "goBack|Retrocedir",
+        "justForMe|Només per a mi",
         "loading|Carregant...",
         "login.password|Contrasenya",
         "login.username|Nom d'usuario",
@@ -211,6 +219,7 @@
         "uncheckAll|Desmarcar tot",
         "username|Nom d'usuari",
         "viewMarks|Veure notes",
+        "visibility|Visibilitat",
         "writeAMark|Crea una nota"
     ]
 }
