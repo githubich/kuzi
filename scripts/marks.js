@@ -54,7 +54,7 @@ function load() {
 
                                 let markEContent = document.createElement('div')
                                 markE.appendChild(markEContent)
-                                markEContent.classList.add("mark-content")
+                                markEContent.classList.add("mark-content", "do-not-break")
                                 markEContent.innerHTML = `${mark.mark}%`
                             })
                         })

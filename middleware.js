@@ -58,7 +58,11 @@ function kuziMiddleware(req, res, next) {
             })
         } else if (req.userInfo.role == "teacher") {
             if (connection.teacherID == req.userInfo.userID && start.getTime() <= currentTime.getTime() && end.getTime() > currentTime.getTime() && currentTime.getDay() == connection.time.weekDay) subjects.forEach(subject => {
+                req.userInfo.class = { classID: connection.classID }
                 if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
+            })
+            classes.forEach(clas => {
+                if (clas.classID == req.userInfo.class.classID) req.userInfo.class = clas
             })
         }
     })
