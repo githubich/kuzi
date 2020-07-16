@@ -11,6 +11,8 @@ function toggleDropdown() {
         } else {
             headerDropdownVisible = true
             headerDropdown.classList.add("showing")
+            headerDropdown.style.left = `${$('header > div:nth-child(2)').offsetLeft}px`
+            headerDropdown.style.width = `${$("header > :nth-child(4)").offsetLeft - $("header > :nth-child(2)").offsetLeft + 1}px`
             headerDropdownArrow.style.transform = "rotateX(180deg)"
             setTimeout(() => { headerDropdown.classList.remove("showing"); headerDropdown.classList.add("shown") }, 200)
         }
@@ -26,6 +28,8 @@ function toggleMore() {
         } else {
             moreVisible = true
             more.classList.add("showing")
+            more.style.top = `${$('main').offsetTop}px`
+            more.style.left = `${$('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth}px`
             setTimeout(() => { more.classList.remove("showing"); more.classList.add("shown") }, 200)
         }
     }
@@ -93,10 +97,6 @@ window.addEventListener('load', () => {
             userInfo = res.userInfo
             $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
             $('.user-info .name').innerText = userInfo.prettyName
-            headerDropdown.style.left = `${$('header > div:nth-child(2)').offsetLeft}px`
-            headerDropdown.style.width = `${$("header > :nth-child(4)").offsetLeft - $("header > :nth-child(2)").offsetLeft + 1}px`
-            more.style.top = `${$('main').offsetTop}px`
-            more.style.left = `${$('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth}px`
             $().classList.add(userInfo.role)
             if (userInfo.role == "teacher") {
                 if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`

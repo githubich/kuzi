@@ -36,7 +36,7 @@
 body.student .birthday-dash-block, body.teacher .marks-dash-block { display: none }
 #new-event-modal textarea {
     display: block;
-    width: 35vw; height: 35vh;
+    width: 35vw; height: 20vh;
     background-color: #0000;
     border: solid var(--bg-alt) 1px;
 }
