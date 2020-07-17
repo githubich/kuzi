@@ -46,19 +46,23 @@
     <a class="close" onclick="toggleModal('new-event')"><i class="fas fa-times"></i></a>
     <div class="center">
         <h1 class="main-title"><i class="fad fa-calendar-plus"></i>[{(createEvent)}]</h1>
-        <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
-        <input class="new-event-modal--input new-event-modal--event-name" type="text" name="oldPassword">
-        <p class="hint"><i class="fad fa-i-cursor"></i>[{(description)}]</p>
-        <textarea class="new-event-modal--input new-event-modal--description" type="text" name="newPassword"></textarea>
-        <p class="hint"><i class="fad fa-calendar"></i>[{(date)}]</p>
-        <input type="date" name="" id="">
-        <div class="teachers-only">
 
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
+        <input id="event-name" class="new-event-modal--input new-event-modal--event-name" type="text">
+
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(description)}]</p>
+        <textarea id="event-description" class="new-event-modal--input new-event-modal--description" type="text"></textarea>
+
+        <p class="hint"><i class="fad fa-calendar"></i>[{(date)}]</p>
+        <input id="event-date" type="date" name="" id="">
+
+        <div class="teachers-only">
             <p class="hint"><i class="fad fa-eye"></i>[{(visibility)}]</p>
             <ul class="who">
                 <li class="class"><input type="radio" checked oninput="$('.myClassesAndStudents').style.display = 'none'" id="justForMe" name="who" value="justForMe"><label for="justForMe">[{(justForMe)}]</label></li>
                 <li class="class"><input type="radio" oninput="$('.myClassesAndStudents').style = ''" id="forMyStudentsAndMe" name="who" value="forMyStudentsAndMe"><label for="forMyStudentsAndMe">[{(forMyStudentsAndMe)}]</label></li>
             </ul>
+
             <div class="myClassesAndStudents" style="display: none;">
                 <div class="myclasses">
                     <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
@@ -75,8 +79,8 @@
                     <ul id="students-in-class"></ul>
                 </div>
             </div>
-
         </div>
+
         <button id="password-submit" onclick='verifyAndChangePassword()'>[{(submit)}]</button>
     </div>
 </div>

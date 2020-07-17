@@ -63,19 +63,21 @@ window.addEventListener('onresize', () => {
     $('#markGraph').height = $('#markGraph').offsetHeight
 })
 window.addEventListener('toggle-modal-new-event', () => {
-    fetch('/teachers/getInfo', { method: "POST" })
-        .then(res => res.json()
-        .then(res => {
-            data = res
-            let myClasses = $('#my-classes')
-            myClasses.innerHTML = ""
-            data.forEach(clas => {
-                let clasE = document.createElement('li')
-                myClasses.appendChild(clasE)
-                clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
-            })
-        }))
-        .catch(e => console.error(e))
+    if (userInfo.role == "teacher") {
+        fetch('/teachers/getInfo', { method: "POST" })
+            .then(res => res.json()
+            .then(res => {
+                data = res
+                let myClasses = $('#my-classes')
+                myClasses.innerHTML = ""
+                data.forEach(clas => {
+                    let clasE = document.createElement('li')
+                    myClasses.appendChild(clasE)
+                    clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
+                })
+            }))
+            .catch(e => console.error(e))
+    }
     update = updateID => {
         if (!updateID) return
         updateID = parseInt(updateID)
@@ -94,19 +96,9 @@ window.addEventListener('toggle-modal-new-event', () => {
         $('.students').style = ""
     }
     submit = () => {
-        let sendData = { name: $('#mark-name').value, subjectID: parseInt($('#subject-chooser').value), periodID: parseInt($('#period-chooser').value), marks: [] }
-        $$('#students-in-class .markInput input').forEach(e => {
-            if (getComputedStyle(e.parentElement).display != "none" && parseInt(e.value).toString() != 'NaN') {
-                let mark = parseInt(e.value)
-                let min = parseInt(e.getAttribute('min'))
-                let max = parseInt(e.getAttribute('max'))
-                if (mark < min) mark = min
-                if (mark > max) mark = max
-                sendData.marks.push({ studentID: parseInt(e.getAttribute('studentID')), mark: mark })
-            }
-        })
-        if (sendData.name && sendData.subjectID && sendData.marks.length > 0) {
-            fetch('/teachers/marks/create', {
+        let sendData = { name: $('#event-name').value, description: $('#event-description'), date: $('#period-chooser') }
+        if (sendData.name && sendData.description && sendData.date) {
+            fetch('/teachers/event/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sendData)
