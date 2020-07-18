@@ -64,83 +64,68 @@ app.get('*', (req, res) => {
 
 // User-related stuff
 app.post('/user/login', (req, res) => {
-	try {
-		let users = importJSON('users.json')
-		let found = false
-		let userID = 0
-		users.forEach(userKey => {
-			if (userKey.username == req.body.username && userKey.password == req.body.password) {
-				found = true
-				userID = userKey.userID
-			}
-		})
-		if (found) {
-			let activeCookies = importJSON('active.cookies.json')
-			let newSession = newUUID()
-			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 401)
-			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
-			saveJSON('active.cookies.json', activeCookies)
-		} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
-	} catch(e) { console.error(e) }
+	let users = importJSON('users.json')
+	let found = false
+	let userID = 0
+	users.forEach(userKey => {
+		if (userKey.username == req.body.username && userKey.password == req.body.password) {
+			found = true
+			userID = userKey.userID
+		}
+	})
+	if (found) {
+		let activeCookies = importJSON('active.cookies.json')
+		let newSession = newUUID()
+		res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 401)
+		activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
+		saveJSON('active.cookies.json', activeCookies)
+	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
 })
 app.post('/user/logout', (req, res) => {
-	try {
-		let activeCookies = importJSON('active.cookies.json')
-		let i = 0
-		activeCookies.forEach(cookie => {
-			if (cookie.cookie == req.cookies.session) {
-				activeCookies.splice(i, 1)
-				saveJSON('active.cookies.json', activeCookies)
-			}
-			i++
-		})
-		res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
-	} catch(e) { console.error(e) }
+	let activeCookies = importJSON('active.cookies.json')
+	let i = 0
+	activeCookies.forEach(cookie => {
+		if (cookie.cookie == req.cookies.session) {
+			activeCookies.splice(i, 1)
+			saveJSON('active.cookies.json', activeCookies)
+		}
+		i++
+	})
+	res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
 })
 app.post('/user/getInfo', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
-	try {
-		if (req.userInfo.userID) {
-			delete req.userInfo.password
-			res.respond(JSON.stringify({ userInfo: req.userInfo }), '', 'application/json', 200)
-		} else res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
-	} catch(e) { console.error(e) }
+	delete req.userInfo.password
+	res.respond(JSON.stringify({ userInfo: req.userInfo }), '', 'application/json', 200)
 })
 app.post('/user/changePicture', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
-	try {
-		if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
-		else if (existsSync(`./users/${req.userInfo.userID}.jpg`)) unlinkSync(`./users/${req.userInfo.userID}.jpg`)
-		else if (existsSync(`./users/${req.userInfo.userID}.jpeg`)) unlinkSync(`./users/${req.userInfo.userID}.jpeg`)
-		else if (existsSync(`./users/${req.userInfo.userID}.webp`)) unlinkSync(`./users/${req.userInfo.userID}.webp`)
-		req.files.photo.mv(`./users/${req.userInfo.userID}${extname(req.files.photo.name)}`)
-		res.respond({ message: 'ok' }, '', 'application/json', 200)
-	} catch(e) { console.error(e) }
+	if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
+	else if (existsSync(`./users/${req.userInfo.userID}.jpg`)) unlinkSync(`./users/${req.userInfo.userID}.jpg`)
+	else if (existsSync(`./users/${req.userInfo.userID}.jpeg`)) unlinkSync(`./users/${req.userInfo.userID}.jpeg`)
+	else if (existsSync(`./users/${req.userInfo.userID}.webp`)) unlinkSync(`./users/${req.userInfo.userID}.webp`)
+	req.files.photo.mv(`./users/${req.userInfo.userID}${extname(req.files.photo.name)}`)
+	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/user/changePassword', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
-	try {
-		let users = importJSON('users.json')
-		let changed = false
-		let i = 0
-		users.forEach(user => {
-			if (user.userID == req.body.userID && user.password == req.body.oldPassword) {
-				changed = true
-				userID = userKey.userID
-				users[i].password = req.body.newPassword
-			}
-			i++
-		})
-		if (changed) {
-			res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-			saveJSON('users.json', users)
-		} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
-	} catch(e) { console.error(e) }
+	let users = importJSON('users.json')
+	let changed = false
+	let i = 0
+	users.forEach(user => {
+		if (user.userID == req.body.userID && user.password == req.body.oldPassword) {
+			changed = true
+			userID = userKey.userID
+			users[i].password = req.body.newPassword
+		}
+		i++
+	})
+	if (changed) {
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+		saveJSON('users.json', users)
+	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
 })
 
 // Students
 app.post('/students/marks/get', (req, res) => {
-	if (!req.userInfo || req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		let exists = false
 		let marks = importJSON('marks.json')
@@ -192,7 +177,7 @@ app.post('/students/marks/get', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/students/marks/graph', (req, res) => {
-	if (!req.userInfo || req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
 	try {
 		let exists = false
 		let marks = importJSON('marks.json')
@@ -237,7 +222,7 @@ app.post('/students/marks/graph', (req, res) => {
 
 // Teachers
 app.post('/teachers/marks/create', (req, res) => {
-	if (!req.userInfo || req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	try {
 		let marks = importJSON('marks.json')
 		req.body.markID = marks.length
@@ -252,7 +237,7 @@ app.post('/teachers/marks/create', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/teachers/getInfo', (req, res) => {
-	if (!req.userInfo || req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	try {
 		let classes = importJSON('classes.json')
 		let exists = false
@@ -307,31 +292,24 @@ app.post('/teachers/getInfo', (req, res) => {
 
 // Misc
 app.post('/misc/periods/list', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
-	try {
-		let periods = importJSON('periods.json')
-		let i = 0
-		periods.forEach(period => {
-			let startDate = new Date(); startDate.setMonth(period.startDate.month); startDate.setDate(period.startDate.day); startDate.setHours(0); startDate.setMinutes(0); startDate.setSeconds(0); startDate.setMilliseconds(0)
-			let now = new Date()
-			let endDate = new Date(); endDate.setMonth(period.endDate.month); endDate.setDate(period.endDate.day); endDate.setHours(0); endDate.setMinutes(0); endDate.setSeconds(0); endDate.setMilliseconds(0)
-			if (startDate.getTime() <= now.getTime() && now.getTime() <= endDate.getTime()) { periods[i].current = true }
-			i++
-		})
-		res.respond(JSON.stringify(periods), '', 'application/json', 200)
-	} catch(e) { console.error(e) }
+	let periods = importJSON('periods.json')
+	let i = 0
+	periods.forEach(period => {
+		let startDate = new Date(); startDate.setMonth(period.startDate.month); startDate.setDate(period.startDate.day); startDate.setHours(0); startDate.setMinutes(0); startDate.setSeconds(0); startDate.setMilliseconds(0)
+		let now = new Date()
+		let endDate = new Date(); endDate.setMonth(period.endDate.month); endDate.setDate(period.endDate.day); endDate.setHours(0); endDate.setMinutes(0); endDate.setSeconds(0); endDate.setMilliseconds(0)
+		if (startDate.getTime() <= now.getTime() && now.getTime() <= endDate.getTime()) { periods[i].current = true }
+		i++
+	})
+	res.respond(JSON.stringify(periods), '', 'application/json', 200)
 })
 app.post('/misc/notifications/get', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
-	try {
-		let content = JSON.stringify(importJSON(`notifications/${req.userInfo.userID}.json`))
-		let locales = eval(`importJSON('localization.json').${settings.language}`)
-		locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
-		res.respond(content, '', 'application/json', 200)
-	} catch(e) { console.error(e) }
+	let content = JSON.stringify(importJSON(`notifications/${req.userInfo.userID}.json`))
+	let locales = eval(`importJSON('localization.json').${settings.language}`)
+	locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
+	res.respond(content, '', 'application/json', 200)
 })
 app.post('/misc/notifications/discard', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	if (req.body.notificationI == "all") {
 		writeFileSync(`notifications/${req.userInfo.userID}.json`, JSON.stringify([]))
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -343,7 +321,6 @@ app.post('/misc/notifications/discard', (req, res) => {
 	}
 })
 app.post('/misc/events/create', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	let events = importJSON('events.json')
 	req.body.owner = req.userInfo.userID
 	if (req.userInfo.role == "student") delete req.body.visibleTo
@@ -355,12 +332,10 @@ app.post('/misc/events/create', (req, res) => {
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 app.post('/misc/events/get', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	let events = importJSON('events.json')
 	let theirEvents = []
 	let found = false
 	let i = 0
-	
 	events.forEach(event => {
 		if (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1)) {
 			found = false
@@ -393,7 +368,6 @@ app.post('/misc/events/get', (req, res) => {
 	res.respond(JSON.stringify(theirEvents), '', 'application/json', 200)
 })
 app.post('/misc/events/details', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
 	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
 	delete event.owner.password
@@ -409,7 +383,6 @@ app.post('/misc/events/details', (req, res) => {
 	else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
 })
 app.post('/misc/events/delete', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
 	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
 	if (req.userInfo.userID == event.owner.userID) {
@@ -420,7 +393,6 @@ app.post('/misc/events/delete', (req, res) => {
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
 })
 app.post('/misc/events/edit', (req, res) => {
-	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	let events = importJSON('events.json')
 	let eventIndex = events.findIndex(event => event.eventID == req.body.eventID)
 	if (req.userInfo.userID == events[eventIndex].owner) {

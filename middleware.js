@@ -33,7 +33,8 @@ function kuziMiddleware(req, res, next) {
             }
 		}
     })
-	users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = user })
+    users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = user })
+    if (req.method == "POST" && !req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
     req.userInfo.class = {}
     if (req.userInfo.role == "student") {
         classes.forEach(clas => clas.students.forEach(student => {
