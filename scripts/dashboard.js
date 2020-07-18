@@ -57,6 +57,7 @@ function updateEvents() {
         .then(res => res.json())
         .then(res => res.sort(sortEventsBlocksByDate))
         .then(res => {
+            console.log(res)
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
             events.innerHTML = ''
             res.forEach(day => {
@@ -71,14 +72,25 @@ function updateEvents() {
                 day.events.forEach(event => {
                     let eventE = document.createElement('div')
                     dayE.appendChild(eventE)
-                    eventE.outerHTML = `
-                        <div class="event">
-                            <i class="fad fa-calendar-alt"></i>
-                            <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n([{(clickToExpand)}])">
-                                <p class="name">${event.name}</p>
-                            </div></a>
-                        </div>
-                    `
+                    if (event.owner.userID == userInfo.userID) {
+                        eventE.outerHTML = `
+                            <div class="event">
+                                <i class="fad fa-calendar-alt"></i>
+                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n([{(clickToExpand)}])">
+                                    <p class="name">${event.name}</p>
+                                </div></a>
+                            </div>
+                        `
+                    } else {
+                        eventE.outerHTML = `
+                            <div class="event">
+                                <i class="fad fa-calendar-alt"></i>
+                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n[{(owner)}]: ${event.owner.prettyName}\n([{(clickToExpand)}])">
+                                    <p class="name">${event.name}</p>
+                                </div></a>
+                            </div>
+                        `
+                    }
                 })
             })
         })

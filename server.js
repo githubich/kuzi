@@ -364,6 +364,16 @@ app.post('/misc/events/get', (req, res) => {
 		if (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1)) {
 			found = false
 			i = 0
+			event.owner = importJSON('users.json').find(user => user.userID == event.owner)
+			delete event.owner.password
+			delete event.visibleTo
+			/*if (event.visibleTo) {
+				event.visibleTo.forEach(u => {
+					event.visibleTo[i] = importJSON('users.json').find(user => user.userID == event.visibleTo[i])
+					delete event.visibleTo[i].password
+					i++
+				})
+			}*/
 			theirEvents.forEach(tEvent => {
 				if (tEvent.date.year == event.date.year && tEvent.date.month == event.date.month && tEvent.date.day == event.date.day) {
 					found = true
@@ -380,7 +390,6 @@ app.post('/misc/events/get', (req, res) => {
 			}
 		}
 	})
-
 	res.respond(JSON.stringify(theirEvents), '', 'application/json', 200)
 })
 app.post('/misc/events/details', (req, res) => {
@@ -389,15 +398,14 @@ app.post('/misc/events/details', (req, res) => {
 	let i = 0
 	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
 	delete event.owner.password
-	if (event.visibleTo) {
-		console.log(`${JSON.stringify(event)}`)
+	delete event.visibleTo
+	/*if (event.visibleTo) {
 		event.visibleTo.forEach(u => {
 			event.visibleTo[i] = importJSON('users.json').find(user => user.userID == event.visibleTo[i])
 			delete event.visibleTo[i].password
 			i++
 		})
-	}
-	delete event.visibleTo
+	}*/
 
 	res.respond(JSON.stringify(event), '', 'application/json', 200)
 })
