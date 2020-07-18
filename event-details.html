@@ -1,0 +1,31 @@
+<title>[{(eventDetails)}] - Kuzi</title>
+<link rel="stylesheet" href="/style/event-details.css">
+<script src="/scripts/event-details.js"></script>
+
+<div id="view">
+    <p class="name">[{(name)}]:&nbsp;</p>
+    <p class="description">[{(description)}]:&nbsp;</p>
+    <p class="date">[{(date)}]:&nbsp;</p>
+    <p class="owner">[{(owner)}]:&nbsp;</p>
+    <div class="owner-only" style="display: none;">
+        <button onclick="$('#view').style.display = 'none'; $('#edit').style.display = ''"><i class="fad fa-edit"></i>Edit</button>
+        <button onclick="deleteEvent()"><i class="fad fa-trash"></i>Remove</button>
+    </div>
+</div>
+
+<div id="edit" style="display: none;">
+    <h3 class="subtitle"><i class="fad fa-edit"></i>[{(edit)}]</h3>
+    <div class="name-block">
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
+        <input type="text" class="name">
+    </div>
+    <div class="description-block">
+        <p class="hint"><i class="fad fa-i-cursor"></i>[{(description)}]</p>
+        <textarea class="description"></textarea>
+    </div>
+    <div class="date-block">
+        <p class="hint"><i class="fad fa-calendar"></i>[{(date)}]</p>
+        <input type="date" class="date">
+    </div>
+    <button onclick='editEvent()'><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+</div>
