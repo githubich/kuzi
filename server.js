@@ -348,7 +348,8 @@ app.post('/misc/events/create', (req, res) => {
 	req.body.owner = req.userInfo.userID
 	if (req.userInfo.role == "student") delete req.body.visibleTo
 	else delete req.body.teacherMode
-	req.body.eventID = events.length
+	if (events == []) req.body.eventID = 0
+	else req.body.eventID = events[events.length - 1].eventID + 1
 	events.push(req.body)
 	saveJSON('events.json', events)
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -414,6 +415,20 @@ app.post('/misc/events/delete', (req, res) => {
 	if (req.userInfo.userID == event.owner.userID) {
 		let events = importJSON('events.json')
 		events.splice(events.findIndex(eventF => event.eventID == eventF.eventID), 1)
+		saveJSON('events.json', events)
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
+})
+app.post('/misc/events/edit', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	let events = importJSON('events.json')
+	let eventIndex = events.findIndex(event => event.eventID == req.body.eventID)
+	if (req.userInfo.userID == events[eventIndex].owner) {
+		events[eventIndex].name = req.body.name
+		events[eventIndex].description = req.body.description
+		events[eventIndex].date.year = parseInt(req.body.date.split('-')[0])
+		events[eventIndex].date.month = parseInt(req.body.date.split('-')[1])
+		events[eventIndex].date.day = parseInt(req.body.date.split('-')[2])
 		saveJSON('events.json', events)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)

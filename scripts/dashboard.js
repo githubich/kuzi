@@ -75,7 +75,7 @@ function updateEvents() {
                         eventE.outerHTML = `
                             <div class="event">
                                 <i class="fad fa-calendar-alt"></i>
-                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n([{(clickToExpand)}])">
+                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}">
                                     <p class="name">${event.name}</p>
                                 </div></a>
                             </div>
@@ -84,7 +84,7 @@ function updateEvents() {
                         eventE.outerHTML = `
                             <div class="event">
                                 <i class="fad fa-calendar-alt"></i>
-                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n[{(owner)}]: ${event.owner.prettyName}\n([{(clickToExpand)}])">
+                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n[{(owner)}]: ${event.owner.prettyName}">
                                     <p class="name">${event.name}</p>
                                 </div></a>
                             </div>

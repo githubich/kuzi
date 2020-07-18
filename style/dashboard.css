@@ -38,6 +38,7 @@
     color: var(--accent);
     margin-left: 10px;
 }
+.dash-block.notifications-dash-block .dash-block-title .action { font-size: 15px !important; top: 6.5px !important; }
 body.student .birthday-dash-block, body.teacher .marks-dash-block { display: none }
 #new-event-modal textarea {
     display: block;
