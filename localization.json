@@ -2,6 +2,7 @@
     "en": [
         "langcode|en",
 
+        "areYouSure|Are you sure?",
         "birthdayList|Birthday list",
         "cancel|Cancel",
         "changePassword|Change password",
@@ -26,6 +27,7 @@
         "error.invalidInput|There is/are a/some empty/invalid text field(s)",
         "error.newPassword!=newPasswordConfirmation|The new passwords don't match",
         "error.newPasswordLength|The new password must be 6 characters long or more",
+        "error.notAllowed|You're not allowed to do that",
         "error.notLoggedIn|You're not logged in",
         "error.oldPassword=newPassword|The old password is the same one as the new one",
         "error.oldPasswordNotCorrect|The old password is incorrect",
@@ -65,6 +67,8 @@
         "studentsIn|Students in",
         "subject|Subject",
         "submit|Submit",
+        "success.delete.event|Event deleted successfully!",
+        "success.eventSubmit|Event created successfully!",
         "success.markSubmit|Mark submitted successfully!",
         "success.passwordUpdate|Password updated successfully",
         "teacher|Teacher",
@@ -92,6 +96,7 @@
     "es": [
         "langcode|es",
 
+        "areYouSure|¿Estás segur@?",
         "birthdayList|Cumpleaños",
         "cancel|Cancelar",
         "changePassword|Cambiar contraseña",
@@ -116,6 +121,7 @@
         "error.invalidInput|Hay algún/algunos campo(s) de texto vacío(s)/inválido(s)",
         "error.newPassword!=newPasswordConfirmation|Las contraseñas nuevas no coinciden",
         "error.newPasswordLength|La contraseña nueva debe tener 6 caratéres o más",
+        "error.notAllowed|No tienes permiso para hacer eso",
         "error.notLoggedIn|No has iniciado la sesión",
         "error.oldPassword=newPassword|La contraseña actual y la nueva son iguales",
         "error.oldPasswordNotCorrect|La contraseña actual es incorrecta",
@@ -155,6 +161,8 @@
         "studentsIn|Alumnos en",
         "subject|Asignatura",
         "submit|Enviar",
+        "success.delete.event|¡Evento eliminado con éxito!",
+        "success.eventSubmit|¡Evento creado con éxito!",
         "success.markSubmit|¡Nota enviada con éxito!",
         "success.passwordUpdatedSuccessfully|¡Contraseña actualizada con éxito!",
         "teacher|Profesor",
@@ -183,6 +191,7 @@
     "ca": [
         "langcode|ca",
 
+        "areYouSure|Estàs segur(a)?",
         "birthdayList|Aniversaris",
         "cancel|Cancel·lar",
         "changePassword|Cambia la contrasenya",
@@ -207,6 +216,7 @@
         "error.invalidInput|Hi ha algun(s) camp(s) de text buit(s)/invalid(s)",
         "error.newPassword!=newPasswordConfirmation|Les contrasenyas noves no coincideixen",
         "error.newPasswordLength|La contrasenya nova ha de tenir 6 caràters o més",
+        "error.notAllowed|No tens permís per fer això",
         "error.notLoggedIn|No has iniciat la sessió",
         "error.oldPassword=newPassword|La contrasenya actual i la nova són iguals",
         "error.oldPasswordNotCorrect|La contrasenya actual és incorrecta",
@@ -246,6 +256,8 @@
         "studentsIn|Alumnes en",
         "subject|Assignatura",
         "submit|Envia",
+        "success.delete.event|Esdeveniment eliminat amb èxit!",
+        "success.eventSubmit|Esdeveniment creat amb èxit!",
         "success.markSubmit|Nota enviada amb èxit!",
         "success.passwordUpdatedSuccessfully|Contrasenya actualitzada amb èxit!",
         "teacher|Professor",

@@ -366,14 +366,13 @@ app.post('/misc/events/get', (req, res) => {
 			i = 0
 			event.owner = importJSON('users.json').find(user => user.userID == event.owner)
 			delete event.owner.password
-			delete event.visibleTo
-			/*if (event.visibleTo) {
+			if (event.visibleTo) {
 				event.visibleTo.forEach(u => {
 					event.visibleTo[i] = importJSON('users.json').find(user => user.userID == event.visibleTo[i])
 					delete event.visibleTo[i].password
 					i++
 				})
-			}*/
+			}
 			theirEvents.forEach(tEvent => {
 				if (tEvent.date.year == event.date.year && tEvent.date.month == event.date.month && tEvent.date.day == event.date.day) {
 					found = true
@@ -395,19 +394,29 @@ app.post('/misc/events/get', (req, res) => {
 app.post('/misc/events/details', (req, res) => {
 	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
-	let i = 0
 	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
 	delete event.owner.password
-	delete event.visibleTo
-	/*if (event.visibleTo) {
+	if (event.visibleTo) {
+		let i = 0
 		event.visibleTo.forEach(u => {
 			event.visibleTo[i] = importJSON('users.json').find(user => user.userID == event.visibleTo[i])
 			delete event.visibleTo[i].password
 			i++
 		})
-	}*/
-
-	res.respond(JSON.stringify(event), '', 'application/json', 200)
+	}
+	if (event.owner.userID == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user.userID == req.userInfo.userID) != -1)) res.respond(JSON.stringify(event), '', 'application/json', 200)
+	else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
+})
+app.post('/misc/events/delete', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
+	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
+	if (req.userInfo.userID == event.owner.userID) {
+		let events = importJSON('events.json')
+		events.splice(events.findIndex(eventF => event.eventID == eventF.eventID), 1)
+		saveJSON('events.json', events)
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
 })
 
 function runAtMidnight() {

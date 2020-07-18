@@ -20,11 +20,14 @@
 .notification { white-space: nowrap; display: flex; }
 .notification p { white-space: normal; }
 .day:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }
+.day h4 { margin: 0 0 2.5px 0; }
 .event a * { color: var(--bg-alt) !important; }
 .event > div > *, .notification > div > * { display: inline-block; }
 .event p, .notification p { margin: 0; }
 .event .details, .notification .details { font-size: 0.9em; }
-.event i:nth-child(1), .notification i:nth-child(1) { float: left; margin-right: 12px; position: relative; top: 5px; }
+.event i:nth-child(1), .notification i:nth-child(1) { float: left; margin-right: 12px; position: relative; }
+.event i { top: 3px; }
+.notification i { top: 5px; }
 .delete-notification { margin: auto 0 auto auto; }
 .notification .clickable { display: inline-flex; }
 .dash-block .dash-block-title .action {

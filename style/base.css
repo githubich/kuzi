@@ -135,7 +135,9 @@ button { margin: auto; display: block; }
 #hamburger-menu-modal { display: none; }
 .modal .close i { color: var(--bg-alt) !important; }
 .main-title { margin: 0 0 20px 0; font-size: 27.5px; color: var(--accent); }
-.main-title i { margin-right: 8px; color: var(--accent); }
+.subtitle { margin: 0 0 20px 0; font-size: 22.5px; color: var(--accent); }
+.main-title i, .subtitle i, button i { margin-right: 0.3em; color: var(--accent); }
+button i { font-size: 15px; position: relative; top: -1px; }
 .notify-dot::before {
 	content: '';
 	height: 5px;
@@ -170,6 +172,7 @@ a, a * { color: var(--accent) !important; cursor: pointer; text-decoration: none
 #thanks-modal > .center { text-align: center; width: 100% }
 body.teacher span.notify-dot { display: none; }
 body:not(.teacher) .teachers-only { display: none; }
+input[type=date] { height: 33px; }
 
 @media (min-width: 601px) {
 	a.close:hover::after {

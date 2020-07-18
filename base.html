@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="/style/theming.css">
 		<link rel="stylesheet" href="/style/base.css">
 		<link rel="preconnect" href="https://kit-pro.fontawesome.com/">
-		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css" crossorigin="anonymous">
 		<script src="/lib/qTools.min.js"></script>
 		<script src="/scripts/base.js"></script>
 		<script defer src="/lib/qAlert.js"></script>
@@ -67,7 +67,7 @@
 					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
 					<label for="photo" class="picture-label" onclick="$('.picture-input').click()">[{(chooseFile)}]</label>
 					<p class="picture-file-name">[{(fileName)}]</p>
-					<button onclick='changePhoto()' id="picture-submit">[{(submit)}]</button>
+					<button onclick='changePhoto()' id="picture-submit"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
 			</div>
 		</div>
 		<div id="password-modal" class="modal blurry-bg">
@@ -80,7 +80,7 @@
 				<input class="password-modal--input password-modal--newPassword" type="password" name="newPassword">
 				<p class="hint"><i class="fad fa-key"></i>[{(newPasswordConfirmation)}]</p>
 				<input class="password-modal--input password-modal--newPassword2" type="password" name="newPassword2">
-				<button id="password-submit" onclick='verifyAndChangePassword()'>[{(submit)}]</button>
+				<button id="password-submit" onclick='verifyAndChangePassword()'><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
 			</div>
 		</div>
 		<div id="thanks-modal" class="modal blurry-bg">

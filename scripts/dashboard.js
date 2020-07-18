@@ -57,7 +57,6 @@ function updateEvents() {
         .then(res => res.json())
         .then(res => res.sort(sortEventsBlocksByDate))
         .then(res => {
-            console.log(res)
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
             events.innerHTML = ''
             res.forEach(day => {
