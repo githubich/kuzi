@@ -62,7 +62,7 @@ app.get('*', (req, res) => {
 //   POST   //
 //////////////
 
-// Common
+// User-related stuff
 app.post('/user/login', (req, res) => {
 	try {
 		let users = importJSON('users.json')
@@ -331,7 +331,7 @@ app.post('/misc/notifications/get', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/misc/notifications/discard', (req, res) => {
-	console.log(req.body)
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
 	if (req.body.notificationI == "all") {
 		writeFileSync(`notifications/${req.userInfo.userID}.json`, JSON.stringify([]))
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -342,6 +342,66 @@ app.post('/misc/notifications/discard', (req, res) => {
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	}
 })
+app.post('/misc/events/create', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	let events = importJSON('events.json')
+	req.body.owner = req.userInfo.userID
+	if (req.userInfo.role == "student") delete req.body.visibleTo
+	else delete req.body.teacherMode
+	req.body.eventID = events.length
+	events.push(req.body)
+	saveJSON('events.json', events)
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/misc/events/get', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	let events = importJSON('events.json')
+	let theirEvents = []
+	let found = false
+	let i = 0
+	
+	events.forEach(event => {
+		if (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1)) {
+			found = false
+			i = 0
+			theirEvents.forEach(tEvent => {
+				if (tEvent.date.year == event.date.year && tEvent.date.month == event.date.month && tEvent.date.day == event.date.day) {
+					found = true
+					let event2 = Object.assign({}, event)
+					delete event2.date
+					theirEvents[i].events.push(event2)
+				}
+				i++
+			})
+			if (!found) {
+				let event2 = Object.assign({}, event)
+				delete event2.date
+				theirEvents.push({ date: event.date, events: [ event2 ] })
+			}
+		}
+	})
+
+	res.respond(JSON.stringify(theirEvents), '', 'application/json', 200)
+})
+app.post('/misc/events/details', (req, res) => {
+	if (!req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
+	let i = 0
+	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
+	delete event.owner.password
+	if (event.visibleTo) {
+		console.log(`${JSON.stringify(event)}`)
+		event.visibleTo.forEach(u => {
+			event.visibleTo[i] = importJSON('users.json').find(user => user.userID == event.visibleTo[i])
+			delete event.visibleTo[i].password
+			i++
+		})
+	}
+	delete event.visibleTo
+
+	res.respond(JSON.stringify(event), '', 'application/json', 200)
+})
+
 function runAtMidnight() {
 	let now = new Date()
 	if (now.getHours() == 0 &&

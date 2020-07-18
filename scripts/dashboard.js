@@ -1,4 +1,11 @@
 function random(min,max) {return Math.floor(Math.random()*(max-min+1)+min)}
+function sortEventsBlocksByDate(a, b) {
+    let aDate = (new Date(`${a.date.year}-${a.date.month}-${a.date.day}`)).getTime()
+    let bDate = (new Date(`${b.date.year}-${b.date.month}-${b.date.day}`)).getTime()
+    if (aDate > bDate) return 1
+    else if (aDate < bDate) return -1
+    return 0
+}
 function updateNotifications() {
     let notifications = $('.notifications-dash-block .dash-block-content')
     notifications.innerHTML = '<p style="margin: 0;" align=center>[{(loading)}]</p>'
@@ -44,6 +51,39 @@ function discardNotification(index) {
         })
         .catch(e => console.error(e))
 }
+function updateEvents() {
+    let events = $('.events-dash-block .dash-block-content')
+    fetch('/misc/events/get', { method: 'POST' })
+        .then(res => res.json())
+        .then(res => res.sort(sortEventsBlocksByDate))
+        .then(res => {
+            let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
+            events.innerHTML = ''
+            res.forEach(day => {
+                let dayE = document.createElement('div')
+                events.appendChild(dayE)
+                dayE.classList.add('day')
+                
+                let dayETitle = document.createElement('b')
+                dayE.appendChild(dayETitle)
+                dayETitle.innerHTML = `<h4>${day.date.day} ${months[day.date.month - 1]} ${day.date.year}</h4>`
+
+                day.events.forEach(event => {
+                    let eventE = document.createElement('div')
+                    dayE.appendChild(eventE)
+                    eventE.outerHTML = `
+                        <div class="event">
+                            <i class="fad fa-calendar-alt"></i>
+                            <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n([{(clickToExpand)}])">
+                                <p class="name">${event.name}</p>
+                            </div></a>
+                        </div>
+                    `
+                })
+            })
+        })
+        .catch(e => console.error(e))
+}
 window.addEventListener('load', () => {
     setPageTitle("chart-line", "[{(dashboard)}]")
     setActiveTab(0)
@@ -57,6 +97,7 @@ window.addEventListener('load', () => {
             .catch(e => console.error(e))
     }
     updateNotifications()
+    updateEvents()
 })
 window.addEventListener('onresize', () => {
     $('#markGraph').width = $('#markGraph').offsetWidth
@@ -89,25 +130,37 @@ window.addEventListener('toggle-modal-new-event', () => {
                 clas.classStudents.forEach(student => {
                     studentE = document.createElement('li')
                     studentsInClass.appendChild(studentE)
-                    studentE.outerHTML = `<li class="student"><input type="checkbox" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label></li>`
+                    studentE.outerHTML = `<li class="student"><input type="checkbox" studentID="${student.studentID}" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label></li>`
                 })
             }
         })
         $('.students').style = ""
     }
     submit = () => {
-        let sendData = { name: $('#event-name').value, description: $('#event-description'), date: $('#period-chooser') }
-        if (sendData.name && sendData.description && sendData.date) {
-            fetch('/teachers/event/create', {
+        let sendData = { name: $('#event-name').value, description: $('#event-description').value, date: {} }
+        sendData.date.year = parseInt($('#event-date').value.split("-")[0])
+        sendData.date.month = parseInt($('#event-date').value.split("-")[1])
+        sendData.date.day = parseInt($('#event-date').value.split("-")[2])
+        if (userInfo.role == "teacher") {
+            if ($('#forMyStudentsAndMe').checked) {
+                sendData.teacherMode = "forMyStudentsAndMe"
+                sendData.visibleTo = []
+                $$('#students-in-class input').forEach(e => {
+                    if (e.checked) sendData.visibleTo.push(parseInt(e.getAttribute('studentID')))
+                })
+            } else sendData.teacherMode = "justForMe"
+        }
+        if (sendData.name && sendData.description && sendData.date.year != NaN && sendData.date.month != NaN && sendData.date.day != NaN && (!sendData.visibleTo || sendData.visibleTo.length > 0)) {
+            fetch('/misc/events/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sendData)
             })
-                .then(res => res.json()
+                .then(res => res.json())
                 .then(res => {
-                    if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() })
+                    if (res.message == 'ok') qAlert({ message: "[{(success.eventSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) toggleModal('new-event'); updateEvents() })
                     if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
-                }))
+                })
                 .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
         } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
     }

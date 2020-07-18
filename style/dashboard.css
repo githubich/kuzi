@@ -17,9 +17,10 @@
 .dash-block-content { margin: 5px 0 0 0; flex: 1 1 auto; }
 #markGraph:not([src]) { display: none; }
 #markGraph[src] { width: 100%; min-height: 200px; height: 100%; margin: 0; padding: 0; border: none; }
-.event, .notification { white-space: nowrap; display: flex; }
-.event p, .notification p { white-space: normal; }
-.event:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }
+.notification { white-space: nowrap; display: flex; }
+.notification p { white-space: normal; }
+.day:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }
+.event a * { color: var(--bg-alt) !important; }
 .event > div > *, .notification > div > * { display: inline-block; }
 .event p, .notification p { margin: 0; }
 .event .details, .notification .details { font-size: 0.9em; }
@@ -42,6 +43,9 @@ body.student .birthday-dash-block, body.teacher .marks-dash-block { display: non
     background-color: #0000;
     border: solid var(--bg-alt) 1px;
 }
+
+.day h4 { font-size: 1.1em; }
+
 @media (min-width: 801px) {
     .notification .delete-notification { visibility: hidden; }
     .notification:hover .delete-notification { visibility: visible; }
@@ -87,3 +91,15 @@ body.student .birthday-dash-block, body.teacher .marks-dash-block { display: non
 #new-event-modal .title-controls { margin-left: 10px; margin-bottom: 10px; }
 #new-event-modal .control i { margin-right: 5px; }
 #new-event-modal .control:not(:nth-last-child(1)) { margin-right: 10px; }
+
+/*.event::before {
+    opacity: 0;
+    pointer-events: none;
+    content: attr(title);
+    position: absolute;
+    background-color: var(--bg-alt-nearly-opaque); color: var(--bg);
+    z-index: 99;
+    transition-duration: .075s;
+    padding: 10px; border-radius: 10px;
+}
+.event:hover::before { opacity: 1; }*/

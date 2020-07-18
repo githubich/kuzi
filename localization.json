@@ -8,6 +8,7 @@
         "changePicture|Change picture",
         "checkAll|Check all",
         "chooseFile|Choose file",
+        "clickToExpand|Click to expand",
         "createEvent|Create event",
         "current|Current",
         "date|Date",
@@ -30,8 +31,9 @@
         "error.oldPasswordNotCorrect|The old password is incorrect",
         "error.unknown.doNotRetry|An unknown error has occurred. Do you want to retry?",
         "error.unknown.retry|An unknown error has occurred",
+        "eventDetails|Event details",
         "events|Events",
-        "forMyStudentsAndMe|For my students and I",
+        "forMyStudentsAndMe|For my students and me",
         "fileName|File name",
         "goBack|Go back",
         "justForMe|Just for me",
@@ -71,7 +73,20 @@
         "username|Username",
         "viewMarks|View marks",
         "visibility|Visibility",
-        "writeAMark|Write a mark"
+        "writeAMark|Write a mark",
+
+        "january|January",
+        "february|February",
+        "march|March",
+        "april|April",
+        "may|May",
+        "june|June",
+        "july|July",
+        "august|August",
+        "september|September",
+        "october|October",
+        "november|November",
+        "december|December"
     ],
     "es": [
         "langcode|es",
@@ -82,6 +97,7 @@
         "changePicture|Cambiar foto",
         "checkAll|Marcar todo",
         "chooseFile|Seleccionar",
+        "clickToExpand|Haz click para expandir",
         "createEvent|Nuevo evento",
         "current|Actual",
         "date|Fecha",
@@ -104,6 +120,7 @@
         "error.oldPasswordNotCorrect|La contraseña actual es incorrecta",
         "error.unknown.doNotRetry|Ha ocurrido un error desconocido. ¿Quieres reintentarlo?",
         "error.unknown.retry|Ha ocurrido un error desconocido",
+        "eventDetails|Detalles del evento",
         "events|Eventos",
         "forMyStudentsAndMe|Para mis alumnos y para mí",
         "fileName|Nombre del archivo",
@@ -145,7 +162,20 @@
         "username|Nombre de usuario",
         "viewMarks|Ver notas",
         "visibility|Visibilidad",
-        "writeAMark|Crear nota"
+        "writeAMark|Crear nota",
+
+        "january|Enero",
+        "february|Febrero",
+        "march|Marzo",
+        "april|Abril",
+        "may|Mayo",
+        "june|Junio",
+        "july|Julio",
+        "august|Agosto",
+        "september|Septiembre",
+        "october|Octubre",
+        "november|Noviembre",
+        "december|Diciembre"
     ],
     
     "ca": [
@@ -157,6 +187,7 @@
         "changePicture|Cambia la foto",
         "checkAll|Marcar tot",
         "chooseFile|Selecciona",
+        "clickToExpand|Fes click per a expandir",
         "createEvent|Nou esdeveniment",
         "current|Actual",
         "date|Data",
@@ -179,6 +210,7 @@
         "error.oldPasswordNotCorrect|La contrasenya actual és incorrecta",
         "error.unknown.doNotRetry|Ha hagut un error desconegut. Vols reintentar-lo?",
         "error.unknown.retry|Ha hagut un error desconegut",
+        "eventDetails|Detalls de l'esdeveniment",
         "events|Esdeveniments",
         "forMyStudentsAndMe|Pels meus alumnes i per a mi",
         "fileName|Nom de l'arxiu",
@@ -220,6 +252,19 @@
         "username|Nom d'usuari",
         "viewMarks|Veure notes",
         "visibility|Visibilitat",
-        "writeAMark|Crea una nota"
+        "writeAMark|Crea una nota",
+
+        "january|Gener",
+        "february|Febrer",
+        "march|Març",
+        "april|Abril",
+        "may|Maig",
+        "june|Juny",
+        "july|Juliol",
+        "august|Agost",
+        "september|Setembre",
+        "october|Octubre",
+        "november|Novembre",
+        "december|Decembre"
     ]
 }

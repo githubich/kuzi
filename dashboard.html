@@ -81,6 +81,17 @@
             </div>
         </div>
 
-        <button id="password-submit" onclick='verifyAndChangePassword()'>[{(submit)}]</button>
+        <button id="event-submit" onclick='submit()'>[{(submit)}]</button>
+    </div>
+</div>
+
+<div id="event-details-modal" class="modal blurry-bg">
+    <a class="close" onclick="toggleModal('event-details')"><i class="fas fa-times"></i></a>
+    <div class="center">
+        <h1 class="main-title"><i class="fad fa-calendar-plus"></i>[{(eventDetails)}]</h1>
+
+        <p class="event-details--">
+            <span></span><span></span>
+        </p>
     </div>
 </div>
