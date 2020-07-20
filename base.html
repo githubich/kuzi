@@ -8,7 +8,7 @@
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/style/theming.css">
 		<link rel="stylesheet" href="/style/base.css">
-		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+		<link defer rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 		<script src="/lib/qTools.min.js"></script>
 		<script src="/scripts/base.js"></script>
 		<script src="/lib/qAlert.js"></script>
@@ -25,7 +25,7 @@
 					<p class="name"></p>
 					<p class="status"></p>
 				</div>
-				<i id="dropdown-arrow" class="fas fa-chevron-down"></i>
+				<i id="dropdown-arrow" class="far fa-chevron-down"></i>
 			</a>
 			<div class="header--vertical-separator"></div>
 			<ul class="header--actions">
@@ -34,7 +34,7 @@
 				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
 				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
 				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
-				<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fas fa-plus"></i><span>[{(more)}]</span></a></li>
+				<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fad fa-plus"></i><span>[{(more)}]</span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
@@ -83,7 +83,7 @@
 		<div id="thanks-modal" class="modal blurry-bg">
 			<a class="close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
 			<div class="center">
-				<img class="big-logo" src="/imgs/png/favicon.big.png" alt="base.logoalt">
+				<img class="big-logo" src="/imgs/webp/favicon.big.webp" alt="base.logoalt">
 				<p>Kuzi [{(global.version)}], by ezarcel<br>
 				Powered by HTML5 & node.js<br><br>
 

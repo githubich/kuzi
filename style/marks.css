@@ -2,7 +2,9 @@
 @media (min-width: 800px) { .period-content { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1150px) { .period-content { grid-template-columns: 1fr 1fr 1fr; } }
 .period:not(:nth-last-child(1)) { margin-bottom: 20px; }
-.period, .subject { border-radius: 10px; border: solid .5px var(--bg-alt-super-alpha) }
+.period, .subject { border-radius: 10px; }
+.period-title, .subject-title { border: solid var(--bg-alt-super-alpha); border-width: .5px .5px 0 .5px; }
+.period-content, .subject-content { border: solid var(--bg-alt-super-alpha); border-width: 0 .5px .5px .5px; }
 .period > * { padding: 12.5px; }
 .subject > * { padding: 10px; }
 .period-title {
@@ -38,16 +40,16 @@
 .tab.selected { background-color: var(--bg-shade3); }
 .tabs a div { margin: auto; }
 .content { background-color: var(--bg-shade1); padding: 20px; border-radius: 0 0 10px 10px; }
-.content.submit-marks h3 { margin-bottom: 10px; }
-.content.submit-marks h3 i { margin-right: 5px; }
-.content.submit-marks ul {
+.content.write-a-mark h3 { margin-bottom: 10px; }
+.content.write-a-mark h3 i { margin-right: 5px; }
+.content.write-a-mark ul {
     background-color: var(--bg-shade2);
     margin: 0;
     border-radius: 10px;
     list-style-type: none;
     padding: 10px 0;
 }
-.content.submit-marks ul li { padding: 0 10px; }
+.content.write-a-mark ul li { padding: 0 10px; }
 .content input { min-width: unset; }
 .myClassesAndStudents { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
 .class input[type=radio], .student input[type=checkbox] { margin-left: 0; margin-right: 5px; }

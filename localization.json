@@ -84,6 +84,14 @@
         "visibility|Visibility",
         "writeAMark|Write a mark",
 
+        "monday|Monday",
+        "tuesday|Tuesday",
+        "wednesday|Wednesday",
+        "thursday|Thursday",
+        "friday|Friday",
+        "saturday|Saturday",
+        "sunday|Sunday",
+
         "january|January",
         "february|February",
         "march|March",
@@ -181,6 +189,14 @@
         "viewMarks|Ver notas",
         "visibility|Visibilidad",
         "writeAMark|Crear nota",
+
+        "monday|Lunes",
+        "tuesday|Martes",
+        "wednesday|Miércoles",
+        "thursday|Jueves",
+        "friday|Viernes",
+        "saturday|Sábado",
+        "sunday|Domingo",
 
         "january|Enero",
         "february|Febrero",
@@ -280,6 +296,14 @@
         "viewMarks|Veure notes",
         "visibility|Visibilitat",
         "writeAMark|Crea una nota",
+
+        "monday|Dilluns",
+        "tuesday|Dimarts",
+        "wednesday|Dimecres",
+        "thursday|Dijous",
+        "friday|Divendres",
+        "saturday|Dissabte",
+        "sunday|Diumenge",
 
         "january|Gener",
         "february|Febrer",

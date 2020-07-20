@@ -27,5 +27,8 @@
         <p class="hint"><i class="fad fa-calendar"></i>[{(date)}]</p>
         <input type="date" class="date">
     </div>
-    <button onclick='editEvent()'><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+    <div class="owner-only" style="display: none;">
+        <button onclick='editEvent()'><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+        <button onclick='location.reload()'><i class="fad fa-undo-alt"></i>[{(cancel)}]</button>
+    </div>
 </div>

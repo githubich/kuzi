@@ -26,7 +26,7 @@ function createSchedule() {
     let weekdays = []
     let hours = []
     let k = 0
-    let weekDaysNames = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
+    let weekDaysNames = [ "[{(monday)}]", "[{(tuesday)}]", "[{(wednesday)}]", "[{(thursday)}]", "[{(friday)}]", "[{(saturday)}]", "[{(sunday)}]" ]
     r.forEach(c => {
         if (subjects.findIndex(e => e == c.subject.subjectID) == -1) subjects.push(c.subject.subjectID)
         if (weekdays.findIndex(e => e == c.time.weekDay) == -1) weekdays.push(c.time.weekDay)

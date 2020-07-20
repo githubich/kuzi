@@ -2,16 +2,13 @@ console.log(`[Kuzi] Starting... (${require('os').platform()} ${require('os').rel
 
 const express = require('express')
 const app = express()
-const expressFileUpload = require('express-fileupload')
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(expressFileUpload({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 }))
-app.use(require('./middleware'))
+app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('./middleware'))
+app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 }))
 
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
 if (!existsSync('events.json') || readFileSync('events.json') == "") writeFileSync('events.json', JSON.stringify([]))
@@ -34,22 +31,21 @@ app.get('/users/:id', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.get('/remove_menus.css', (req, res) => {
-	let content = "body {}"
+	let content = ""
 	if (settings.disableAnnouncements) content = `${content}\n.announcements-action { display: none !important; }`
 	if (settings.disableMarks) content = `${content}\n.marks-action { display: none !important; }`
 	if (settings.disableTests) content = `${content}\n.tests-action { display: none !important; }`
 	if (settings.disableResources) content = `${content}\n.resources-action { display: none !important; }`
-	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block {	display: none !important; } }` 
+	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block {	display: none !important; }` 
 	res.respond(content, '', 'text/css', 200)
 })
 app.get('/', (req, res) => res.redirect("/login.html"))
 app.get('*', (req, res) => {
-	if (req.userInfo.userID || req.url === "/" || req.url === "/login.html" || extname(req.url) !== ".html") {
+	if (req.userInfo.userID || req.url === "/login.html" || extname(req.url) !== ".html") {
 		if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
 		else if (existsSync(`.${req.url}`)) {
-			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') {
-				res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
-			} else res.respond('', `.${req.url}`, '', 200)
+			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
+			else res.respond('', `.${req.url}`, '', 200)
 		} else res.respond('', '404.html', 'text/html', 404)
 	} else res.redirect('/login.html')
 })
@@ -301,6 +297,7 @@ app.post('/misc/periods/list', (req, res) => {
 	})
 	res.respond(JSON.stringify(periods), '', 'application/json', 200)
 })
+
 app.post('/misc/notifications/get', (req, res) => {
 	let content = JSON.stringify(importJSON(`notifications/${req.userInfo.userID}.json`))
 	let locales = eval(`importJSON('localization.json').${settings.language}`)
@@ -318,6 +315,7 @@ app.post('/misc/notifications/discard', (req, res) => {
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	}
 })
+
 app.post('/misc/events/create', (req, res) => {
 	let events = importJSON('events.json')
 	req.body.owner = req.userInfo.userID
@@ -337,8 +335,8 @@ app.post('/misc/events/get', (req, res) => {
 	let i = 0
 	events.forEach(event => {
 		let eventDate = new Date(`${event.date.year}-${event.date.month}-${event.date.day}`)
-		eventDate.setHours(0); eventDate.setMinutes(0); eventDate.setSeconds(0); eventDate.setMilliseconds(0)
-		if (now.getTime() <= eventDate.getTime() && ( event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1))) {
+		eventDate.setHours(23); eventDate.setMinutes(59); eventDate.setSeconds(59); eventDate.setMilliseconds(999)
+		if (now.getTime() <= eventDate.getTime() && (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1))) {
 			found = false
 			i = 0
 			event.owner = importJSON('users.json').find(user => user.userID == event.owner)
@@ -406,6 +404,7 @@ app.post('/misc/events/edit', (req, res) => {
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
 })
+
 app.post('/misc/schedule/get', (req, res) => {
 	let classes = importJSON('classes.json')
 	let scheduling = importJSON('scheduling.json')

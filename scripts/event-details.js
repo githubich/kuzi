@@ -14,7 +14,7 @@ function load() {
             $('#view p.date').innerText += `${res.date.day} ${months[res.date.month - 1]} ${res.date.year}`
             $('#view p.owner').innerText += res.owner.prettyName
             if (res.owner.userID == userInfo.userID) {
-                $$('.owner-only').forEach(e => e.style.display = "block")
+                $$('.owner-only').forEach(e => e.style.display = "")
                 $('#edit input.name').value = res.name
                 $('#edit textarea.description').innerText = res.description
                 if (res.date.month < 10 ) res.date.month = `0${res.date.month}`

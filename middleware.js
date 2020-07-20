@@ -3,7 +3,7 @@ const { readFileSync } = require('fs')
 const { extensionToMime } = require('./utils')
 const locales = importLocale()
 function kuziMiddleware(req, res, next) {
-    console.log(`[Kuzi|${req.connection.remoteAddress.replace('::ffff:','')}] ${req.method} ${req.url}`)
+    console.log(`[Kuzi|${req.connection.remoteAddress.replace('::ffff:','')}|${(new Date()).getHours()}:${(new Date()).getMinutes()}:${(new Date()).getSeconds()}] ${req.method} ${req.url}`)
     let activeCookies = importJSON('active.cookies.json')
     let classes = importJSON('classes.json')
     let subjects = importJSON('subjects.json')

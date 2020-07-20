@@ -1,5 +1,5 @@
-table { width: max-content; border-collapse: collapse; }
 table, table * { width: max-content; white-space: nowrap; }
+table { border-collapse: collapse; width: 70vw !important; }
 td { text-align: center; padding: 15px 10px; border: solid 1px var(--bg-alt); }
 .subject { position: absolute; background-color: var(--bg-alt-alpha); display: flex; text-align: center; transition: transform .05s ; }
 .subject .contents { margin: auto; height: min-content; }

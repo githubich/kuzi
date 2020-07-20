@@ -4,18 +4,18 @@
 
 <div id="manager" style="display: none;">
     <div class="tabs">
-        <a class="tab selected">
+        <a class="tab selected" onclick="$('.tab.selected').classList.remove('selected'); this.classList.add('selected'); $$('.content')[0].style = ''; $$('.content')[1].style.display = 'none'">
             <div>
                 <i class="fad fa-edit"></i><span>[{(writeAMark)}]</span>
             </div>
         </a>
-        <a class="tab">
+        <a class="tab" onclick="$('.tab.selected').classList.remove('selected'); this.classList.add('selected'); $$('.content')[0].style.display = 'none'; $$('.content')[1].style = ''">
             <div>
                 <i class="fad fa-eye"></i><span>[{(viewMarks)}]</span>
             </div>
         </a>
     </div>
-    <div class="content submit-marks">
+    <div class="content write-a-mark">
         <div class="myClassesAndStudents" style="grid-template-columns: 1fr;">
             <div class="myclasses">
                 <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
@@ -53,5 +53,5 @@
         </div>
         <button style="display: none;" class="submit" onclick="submit()">[{(submit)}]</button>
     </div>
-    <div style="display: none;" class="content view-submitted-marks"></div>
+    <div style="display: none;" class="content view-marks"></div>
 </div>

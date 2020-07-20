@@ -5,7 +5,7 @@
         "teacherID": 1,
         "time": {
             "weekDay": 1,
-            "hours": 19,
+            "hours": 8,
             "minutes": 0,
             "duration": {
                 "hours": 1,
@@ -19,7 +19,7 @@
         "teacherID": 1,
         "time": {
             "weekDay": 5,
-            "hours": 19,
+            "hours": 16,
             "minutes": 0,
             "duration": {
                 "hours": 1,

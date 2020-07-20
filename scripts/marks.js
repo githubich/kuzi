@@ -66,7 +66,6 @@ function load() {
                 })
             )
     } else {
-        $$('.tab').forEach(tab => tab.setAttribute('onclick', `$('.tab.selected').classList.remove('selected'); this.classList.add('selected')`))
         fetch('/teachers/getInfo', { method: "POST" })
             .then(res => res.json()
             .then(res => {
