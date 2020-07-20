@@ -6,23 +6,23 @@ A work-in-progress open-source alternative to make a simple and reliable (high)s
 For Arch Linux and its derivatives: `sudo pacman -S nodejs npm`  
 For Debian and Ubuntu and their derivatives: `sudo apt install nodejs npm`  
 For macOS 10.10+: [Click here](https://nodejs.org/es/download/package-manager/#macos)  
-For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/es/download/package-manager/#windows). When using Windows, remove `sudo` in the commands shown below  
+For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/es/download/package-manager/#windows). In Windows, remove `sudo` in the commands shown below  
 
 ### Install the dependencies
 Install all of this project's dependencies with `sudo npm i`
 
-### Customizing users
-There are some pre-made users, but if you want you can add yours [here](#creating-the-users)
+### Customize the users
+There are some pre-made users, but if you want you can add yours [here](#create-users)
 
-### Setting the language and other settings
+### Set the language and other settings
 Open `settings.json` and change the values you considering modifying. There are 3 available languages: English, Catalan and Castillian Spanish
 
 ### Run the server and test
 Run `sudo node server.js` and open `http://localhost/` on a web browser or click [here](http://localhost/)
 
-## Setting up
-### Creating the users
-Users go in `users.json`. For example:
+## Set up
+### Create users
+The file `users.json` contains the users. For example:
 ```json
 [
     {
@@ -36,13 +36,9 @@ Users go in `users.json`. For example:
     ...
 ]
 ```
-Notes:
-* You can create as many users as you wish
-* Be sure not to repeat the user IDs
-* It's recomended to start with ID = 0
 
-### Creating the classes
-Classes go in `classes.json`. For example:
+### Create classes
+The file `classes.json` contains the classes. For example:
 ```json
 [
     {
@@ -53,13 +49,9 @@ Classes go in `classes.json`. For example:
     ...
 ]
 ```
-Notes:
-* You can create as many classes as you wish
-* Be sure not to repeat the class IDs nor the user IDs
-* It's recomended to start with ID = 0
 
-### Creating the subjects
-Subjects go in `subjects.json`. For example:
+### Create the subjects
+The file `subjects.json` contains the subjects. For example:
 ```json
 [
     {
@@ -69,13 +61,9 @@ Subjects go in `subjects.json`. For example:
     ...
 ]
 ```
-Notes:
-* You can create as many classes as you wish
-* Be sure not to repeat the class IDs nor the user IDs
-* It's recomended to start with ID = 0
 
-### Creating a schedule
-Scheduling goes in `scheduling.json`. For example:
+### Create the schedule
+The file `scheduling.json` contains the scheduling. For example:
 ```json
 [
     {
@@ -98,7 +86,12 @@ Scheduling goes in `scheduling.json`. For example:
 In this example, Catalan would be taught by Admin Teacher in the class of 1st on Monday at 9 AM for 1 hour
 
 ### Notes
-I know this is guide can be hard to follow, I'll try my best to improve this procedure
+* I know this is guide can be hard to follow, I'll try my best to improve this procedure
+
+About users, classes, scheduling and subjects:
+* You can create as many as you wish
+* Be sure not to repeat the IDs
+* It's recomended to start with ID = 0
 
 ### Contributing and following the progress
 First, read the [contribution guide](https://github.com/ezarcel/kuzi/blob/edge/CONTRIBUTING.md#readme)
