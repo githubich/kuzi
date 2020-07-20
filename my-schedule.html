@@ -1,0 +1,22 @@
+<title>[{(mySchedule)}] - Kuzi</title>
+<link rel="stylesheet" href="/style/my-schedule.css">
+<script src="/scripts/my-schedule.js"></script>
+
+<div id="schedule-container">
+    <table id="schedule">
+
+    </table>
+    <div id="subjects-container"></div>
+</div>
+
+<div id="details-modal" class="modal blurry-bg">
+    <a class="close" onclick="toggleModal('details')"><i class="fas fa-times"></i></a>
+    <div class="center">
+        <h1 class="main-title"><i class="fad fa-clock"></i>[{(details)}]</h1>
+        <p class="subject-name"></p>
+        <p class="teacher-name"></p>
+        <p class="class-name"></p>
+        <p class="start-time"></p>
+        <p class="end-time"></p>
+    </div>
+</div>

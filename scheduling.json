@@ -4,7 +4,7 @@
         "classID": 1,
         "teacherID": 1,
         "time": {
-            "weekDay": 2,
+            "weekDay": 1,
             "hours": 19,
             "minutes": 0,
             "duration": {
@@ -18,12 +18,12 @@
         "classID": 1,
         "teacherID": 1,
         "time": {
-            "weekDay": 4,
-            "hours": 10,
+            "weekDay": 5,
+            "hours": 19,
             "minutes": 0,
             "duration": {
                 "hours": 1,
-                "minutes": 0
+                "minutes": 30
             }
         }
     },
@@ -37,7 +37,7 @@
             "minutes": 0,
             "duration": {
                 "hours": 1,
-                "minutes": 0
+                "minutes": 30
             }
         }
     },
@@ -50,7 +50,7 @@
             "hours": 10,
             "minutes": 0,
             "duration": {
-                "hours": 1,
+                "hours": 2,
                 "minutes": 0
             }
         }

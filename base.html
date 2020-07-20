@@ -34,7 +34,7 @@
 				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
 				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
 				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
-				<!--<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fas fa-plus"></i><span>[{(more)}]</span></a></li>-->
+				<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fas fa-plus"></i><span>[{(more)}]</span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
@@ -50,6 +50,7 @@
 		<div id="more" class="blurry-bg hidden">
 			<a class="close phone-close" onclick="toggleMore()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
+				<li class="dropdown-action"><a href="/my-schedule.html"><i class="fad fa-clock"></i><span>[{(mySchedule)}]</span></a></li>
 			</ul>
 		</div>
 		<div id="hamburger-menu-modal" class="modal blurry-bg">

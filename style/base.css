@@ -66,6 +66,7 @@ header > *, .dropdown-link * { margin-top: auto; margin-bottom: auto; }
 	list-style: none;
 	white-space: nowrap;
 }
+.header--actions * { white-space: nowrap; }
 .header--action { margin-right: 15px; }
 .header--action.selected span { font-weight: bold; }
 .dropdown-actions li *, .header--actions li *, .hamburger--actions li * { text-decoration: none; color: var(--accent); }

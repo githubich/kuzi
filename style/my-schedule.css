@@ -1,0 +1,16 @@
+table { width: max-content; border-collapse: collapse; }
+table, table * { width: max-content; white-space: nowrap; }
+td { text-align: center; padding: 15px 10px; border: solid 1px var(--bg-alt); }
+.subject { position: absolute; background-color: var(--bg-alt-alpha); display: flex; text-align: center; transition: transform .05s ; }
+.subject .contents { margin: auto; height: min-content; }
+.subject p {  color: var(--bg); margin: 0; transition: transform .05s ; }
+
+#details-modal.modal p { margin: 0; }
+#details-modal.modal > *:not(:nth-last-child(1)) { margin: 0 0 10px 0; }
+
+#schedule-container { overflow-x: auto; }
+
+@media (min-width: 801px) {
+    #schedule-container { width: max-content; display: block; margin: auto; }
+    table { width: 100%; }
+}

@@ -44,16 +44,14 @@ app.get('/remove_menus.css', (req, res) => {
 })
 app.get('/', (req, res) => res.redirect("/login.html"))
 app.get('*', (req, res) => {
-	try {
-		if (req.userInfo != {} || req.url === "/" || req.url === "/login" || extname(req.url) !== ".html") {
-		  	if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
-			else if (existsSync(`.${req.url}`)) {
-				if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') {
-					res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
-				} else res.respond('', `.${req.url}`, '', 200)
-			} else res.respond('', '404.html', 'text/html', 404)
-		} else res.respond('<script>window.location = "/"</script>', '', 'text/html', 200)
-	} catch(e) { console.error(e) }
+	if (req.userInfo.userID || req.url === "/" || req.url === "/login.html" || extname(req.url) !== ".html") {
+		if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
+		else if (existsSync(`.${req.url}`)) {
+			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') {
+				res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
+			} else res.respond('', `.${req.url}`, '', 200)
+		} else res.respond('', '404.html', 'text/html', 404)
+	} else res.redirect('/login.html')
 })
 
 
@@ -335,9 +333,12 @@ app.post('/misc/events/get', (req, res) => {
 	let events = importJSON('events.json')
 	let theirEvents = []
 	let found = false
+	let now = new Date()
 	let i = 0
 	events.forEach(event => {
-		if (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1)) {
+		let eventDate = new Date(`${event.date.year}-${event.date.month}-${event.date.day}`)
+		eventDate.setHours(0); eventDate.setMinutes(0); eventDate.setSeconds(0); eventDate.setMilliseconds(0)
+		if (now.getTime() <= eventDate.getTime() && ( event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1))) {
 			found = false
 			i = 0
 			event.owner = importJSON('users.json').find(user => user.userID == event.owner)
@@ -404,6 +405,29 @@ app.post('/misc/events/edit', (req, res) => {
 		saveJSON('events.json', events)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
+})
+app.post('/misc/schedule/get', (req, res) => {
+	let classes = importJSON('classes.json')
+	let scheduling = importJSON('scheduling.json')
+	let subjects = importJSON('subjects.json')
+	let theirScheduling = []
+	let users = importJSON('users.json')
+	let i = 0
+	scheduling.forEach(connection => {
+		if (req.userInfo.role == "student" && req.userInfo.class.classID == connection.classID) theirScheduling.push(connection)
+		if (req.userInfo.role == "teacher" && req.userInfo.userID == connection.teacherID) theirScheduling.push(connection)
+	})
+	theirScheduling.forEach(c => {
+		theirScheduling[i].subject = subjects.find(e => e.subjectID == c.subjectID)
+		delete theirScheduling[i].subjectID
+		theirScheduling[i].class = classes.find(e => e.classID == c.classID)
+		delete theirScheduling[i].classID
+		theirScheduling[i].teacher = users.find(e => e.userID == c.teacherID)
+		delete theirScheduling[i].teacher.password
+		delete theirScheduling[i].teacherID
+		i++
+	})
+	res.respond(JSON.stringify(theirScheduling), '', 'application/json', 200)
 })
 
 function runAtMidnight() {
