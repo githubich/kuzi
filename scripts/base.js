@@ -1,3 +1,46 @@
+window.addEventListener('load', () => {
+    headerDropdown = $('#dropdown')
+    headerDropdownArrow = $("#dropdown-arrow")
+    more = $("#more")
+    fetch('/user/getInfo', { method: 'POST' })
+        .then(res => res.json())
+        .then(res => {
+            if (!res.userInfo.userID) window.location = '/'
+            userInfo = res.userInfo
+            $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
+            $('.user-info .name').innerText = userInfo.prettyName
+            $().classList.add(userInfo.role)
+            if (userInfo.role == "teacher") {
+                if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
+                else $('.user-info .status').innerText = `[{(teacher)}]`
+                if ($('#markGraph')) $('#markGraph').remove()
+            } else if (userInfo.role == "student") {
+                if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
+                else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
+                if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
+            }
+            if (typeof load == "function") load()
+        })
+})
+window.addEventListener('click', e => {
+    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
+    if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
+})
+window.addEventListener('keydown', e => {
+    if (e.key == "Enter") {
+        e.preventDefault()
+        if (document.activeElement === $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
+        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
+        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
+        return false
+    }
+    if (e.key == "Escape") {
+        e.preventDefault()
+        $$('.modal').forEach(modal => {
+            if (modal.style.display == "block") modal.querySelector('.close').click()
+        })
+    }
+})
 headerDropdownVisible = false
 moreVisible = false
 function toggleDropdown() {
@@ -36,8 +79,8 @@ function toggleMore() {
 }
 function setPageTitle(icon, title) { $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
 function setActiveTab(index) {
-    $$('.header--action')[index].classList.add('selected')
-    $$('.header--action a')[index].removeAttribute('href')
+    $$('.header-action')[index].classList.add('selected')
+    $$('.header-action a')[index].removeAttribute('href')
 }
 function changePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
@@ -50,7 +93,7 @@ function changePhoto() {
         .then(res => res.json())
         .then(res => {
             if (res.message == 'ok') qAlert({ message: '[{(success.photoChange)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => window.location.reload())
-            else return qAlert({ message: '[{(error.unknown.doNotRetry)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+            else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
         })
 }
 function toggleModal(modalName) {
@@ -87,46 +130,3 @@ function verifyAndChangePassword() {
             else qAlert({ message: "[{(error.oldPasswordNotCorrect)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
         })
 }
-window.addEventListener('load', () => {
-    headerDropdown = $('#dropdown')
-    headerDropdownArrow = $("#dropdown-arrow")
-    more = $("#more")
-    fetch('/user/getInfo', { method: 'POST' })
-        .then(res => res.json())
-        .then(res => {
-            if (res.message == "logout") window.location = '/'
-            userInfo = res.userInfo
-            $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
-            $('.user-info .name').innerText = userInfo.prettyName
-            $().classList.add(userInfo.role)
-            if (userInfo.role == "teacher") {
-                if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
-                else $('.user-info .status').innerText = `[{(teacher)}]`
-                if ($('#markGraph')) $('#markGraph').remove()
-            } else if (userInfo.role == "student") {
-                if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
-                else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
-                if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
-            }
-            if (typeof load == "function") load()
-        })
-})
-window.addEventListener('click', e => {
-    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
-    if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
-})
-window.addEventListener('keydown', e => {
-    if (e.key == "Enter") {
-        e.preventDefault()
-        if (document.activeElement === $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
-        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
-        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
-        return false
-    }
-    if (e.key == "Escape") {
-        e.preventDefault()
-        $$('.modal').forEach(modal => {
-            if (modal.style.display == "block") modal.querySelector('.close').click()
-        })
-    }
-})

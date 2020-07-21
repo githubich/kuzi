@@ -5,12 +5,12 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.7-alpha.3"
+    "express-fileupload": "^1.1.7-alpha.4"
   },
   "scripts": {
-	"run": "node server.js",
-	"runSudo": "sudo node server.js",
-	"test": "sudo node server.js -v"
+    "run": "node server.js",
+    "runSudo": "sudo node server.js",
+    "test": "sudo node server.js -v"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,5 @@
     "url": "https://github.com/ezarcel/kuzi/issues"
   },
   "homepage": "https://github.com/ezarcel/kuzi#readme",
-  "devDependencies": {
-    "nodemon": "^2.0.4"
-  }
+  "devDependencies": {}
 }

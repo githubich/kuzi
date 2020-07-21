@@ -17,8 +17,16 @@ There are some pre-made users, but if you want you can add yours [here](#create-
 ### Set the language and other settings
 Open `settings.json` and change the values you considering modifying. There are 3 available languages: English, Catalan and Castillian Spanish
 
+### Recommended step for linux users
+***Run these commands as root*** (`sudo su`)***, not as sudo***
+```bash
+echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-unprivileged-ports.conf
+sysctl --system
+```
+This allows non-root users to run any server in any port they want, since usually port 80 (the port used everywhere) is locked to be used only as root.
+
 ### Run the server and test
-Run `sudo node server.js` and open `http://localhost/` on a web browser or click [here](http://localhost/)
+Run `sudo node server.js` (run without `sudo` if you are on Windows or if you followed [this](#recommended-step-for-linux-users)) and open `http://localhost/` on a web browser or click [here](http://localhost/)
 
 ## Set up
 ### Create users

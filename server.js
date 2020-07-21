@@ -3,17 +3,22 @@ console.log(`[Kuzi] Starting... (${require('os').platform()} ${require('os').rel
 const express = require('express')
 const app = express()
 const { extname } = require('path')
-const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = require('fs')
+const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
 app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('./middleware'))
-app.use(require('express-fileupload')({ uriDecodeFileNames: true, createParentPath: true, preserveExtension: 4 }))
+app.use(require('express-fileupload')({ createParentPath: true }))
 
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
 if (!existsSync('events.json') || readFileSync('events.json') == "") writeFileSync('events.json', JSON.stringify([]))
 if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
 if (!existsSync('notifications/')) mkdirSync('notifications')
+if (!existsSync('upload/')) mkdirSync('upload')
+if (!existsSync('upload/messages/')) mkdirSync('upload/messages')
+if (!existsSync('upload/messages/index.json') || readFileSync('upload/messages/index.json') == "") writeFileSync('upload/messages/index.json', JSON.stringify([]))
+if (!existsSync('upload/resources/')) mkdirSync('upload/resources')
+if (!existsSync('upload/resources/index.json') || readFileSync('upload/resources/index.json') == "") writeFileSync('upload/resources/index.json', JSON.stringify([]))
 
 
 
@@ -21,14 +26,17 @@ if (!existsSync('notifications/')) mkdirSync('notifications')
 //   GET   //
 /////////////
 app.get('/users/:id', (req, res) => {
-	try {
-		let id = req.params.id
-		if (existsSync(`users/${id}.png`)) res.respond('', `users/${id}.png`, 'image/png', 200)
-		else if (existsSync(`users/${id}.jpg`)) res.respond('', `users/${id}.jpg`, 'image/jpeg', 200)
-		else if (existsSync(`users/${id}.jpeg`)) res.respond('', `users/${id}.jpeg`, 'image/jpeg', 200)
-		else if (existsSync(`users/${id}.webp`)) res.respond('', `users/${id}.webp`, 'image/webp', 200)
-		else res.respond('', 'users/noone.png', 'image/png', 200)
-	} catch(e) { console.error(e) }
+	let id = req.params.id
+	if (existsSync(`users/${id}.png`)) res.respond('', `users/${id}.png`, 'image/png', 200)
+	else if (existsSync(`users/${id}.jpg`)) res.respond('', `users/${id}.jpg`, 'image/jpeg', 200)
+	else if (existsSync(`users/${id}.jpeg`)) res.respond('', `users/${id}.jpeg`, 'image/jpeg', 200)
+	else if (existsSync(`users/${id}.webp`)) res.respond('', `users/${id}.webp`, 'image/webp', 200)
+	else res.respond('', 'users/noone.png', 'image/png', 200)
+})
+app.get('/resources/download/:uuid', (req, res) => {
+	let file = importJSON('upload/resources/index.json').find(e => e.uuid == req.params.uuid)
+	if (req.userInfo.userID == file.ownerID || req.userInfo.class.classID == file.classID) res.download(`upload/resources/${file.name}`, file.display.name)
+	else res.respond({ message: 'not allowed' }, '', 'application/json', 401)
 })
 app.get('/remove_menus.css', (req, res) => {
 	let content = ""
@@ -44,7 +52,7 @@ app.get('*', (req, res) => {
 	if (req.userInfo.userID || req.url === "/login.html" || extname(req.url) !== ".html") {
 		if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
 		else if (existsSync(`.${req.url}`)) {
-			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') res.respond(`${readFileSync('base.html').toString('utf8').replace('[{(TITLE)}]',readFileSync(`.${req.url}`).toString('utf8').split("\n")[0])}\n${readFileSync(`.${req.url}`).toString('utf8').split("\n").splice(1,Infinity).join("\n")}\n</div></main></body></html>`, '', 'text/html', 200)
+			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
 			else res.respond('', `.${req.url}`, '', 200)
 		} else res.respond('', '404.html', 'text/html', 404)
 	} else res.redirect('/login.html')
@@ -213,6 +221,38 @@ app.post('/students/marks/graph', (req, res) => {
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
+app.post('/students/resources/get', (req, res) => {
+	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
+	let i = 0
+	let index = importJSON('upload/resources/index.json')
+	let theirFiles = []
+	index.forEach(file => {
+		let exists = false
+		theirFiles.forEach(file2 => {
+			if (file2.class.classID == file.classID && file2.subject.subjectID == file.subjectID) exists = true
+		})
+		if (req.userInfo.class.classID == file.classID && !exists) {
+			theirFiles.push({ class: classes.find(e => e.classID == file.classID), subject: subjects.find(e => e.subjectID == file.subjectID), files: [] })
+		}
+	})
+	theirFiles.forEach(thing => {
+		index.forEach(file => {
+			if (file.subjectID == thing.subject.subjectID && file.classID == thing.class.classID) {
+				file.class = classes.find(e => e.classID == file.classID)
+				delete file.classID
+				file.subject = subjects.find(e => e.subjectID == file.subjectID)
+				delete file.subjectID
+				file.owner = req.userInfo
+				delete file.owner.password
+				delete file.ownerID
+				theirFiles[i].files.push(file)
+			}
+		})
+		i++
+	})
+	res.respond(JSON.stringify(theirFiles), '', 'application/json', 200)
+})
 
 // Teachers
 app.post('/teachers/marks/create', (req, res) => {
@@ -282,6 +322,71 @@ app.post('/teachers/getInfo', (req, res) => {
 		})
 		res.respond(JSON.stringify(resClasses), '', 'application/json', 200)
 	} catch(e) { console.error(e) }
+})
+app.post('/teachers/resources/upload', (req, res) => {
+	req.body = JSON.parse(req.body.data)
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	if (!req.files || !req.files.file || !req.body.classID || !req.body.subjectID) return res.respond({ message: 'unknown error' }, '', 'application/json', 500)
+	let file = req.files.file
+	let uuid = newUUID()
+	let fileName = `${uuid}${file.name.slice(req.files.file.name.indexOf('.'), file.name.length)}`
+	let index = importJSON('upload/resources/index.json')
+	index.push({
+		uuid: uuid,
+		name: fileName,
+		ownerID: req.userInfo.userID,
+		classID: req.body.classID,
+		subjectID: req.body.subjectID,
+		display: {
+			name: file.name,
+			byteSize: file.size
+		}
+	})
+	saveJSON('upload/resources/index.json', index)
+	file.mv(`upload/resources/${fileName}`)
+	res.respond({ message: 'ok' }, '', 'application/json', 200)
+})
+app.post('/teachers/resources/get', (req, res) => {
+	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
+	let i = 0
+	let index = importJSON('upload/resources/index.json')
+	let theirFiles = []
+	index.forEach(file => {
+		let exists = false
+		theirFiles.forEach(file2 => {
+			if (file2.class.classID == file.classID && file2.subject.subjectID == file.subjectID) exists = true
+		})
+		if (req.userInfo.userID == file.ownerID && !exists) {
+			theirFiles.push({ class: classes.find(e => e.classID == file.classID), subject: subjects.find(e => e.subjectID == file.subjectID), files: [] })
+		}
+		console.log(file)
+		console.log(theirFiles)
+		console.log(theirFiles.findIndex(e => e.subject.subjectID == file.subjectID && e.class.classID == file.classID))
+	})
+	theirFiles.forEach(thing => {
+		index.forEach(file => {
+			if (file.subjectID == thing.subject.subjectID && file.classID == thing.class.classID) {
+				file.class = classes.find(e => e.classID == file.classID)
+				delete file.classID
+				file.subject = subjects.find(e => e.subjectID == file.subjectID)
+				delete file.subjectID
+				file.owner = req.userInfo
+				delete file.owner.password
+				delete file.ownerID
+				theirFiles[i].files.push(file)
+			}
+		})
+		i++
+	})
+	res.respond(JSON.stringify(theirFiles), '', 'application/json', 200)
+})
+app.post('/teachers/resources/delete', (req, res) => {
+	let index = importJSON('upload/resources/index.json')
+	//unlinkSync(`upload/resources/${index.find(e => e.uuid == req.body.uuid).name}`)
+	index.splice(index.findIndex(e => e.uuid == req.body.uuid), 1)
+	saveJSON('upload/resources/index.json', index)
+	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 
 // Misc

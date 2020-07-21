@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="[{(langcode)}]">
     <head>
-		[{(TITLE)}]
         <meta charset="UTF-8">
 		<meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<link rel="prefetch" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/style/theming.css">
 		<link rel="stylesheet" href="/style/base.css">
 		<link defer rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
-		<script src="/lib/qTools.min.js"></script>
-		<script src="/scripts/base.js"></script>
-		<script src="/lib/qAlert.js"></script>
-		<link rel="stylesheet" href="/lib/qAlert.css">
 		<link rel="stylesheet" href="/remove_menus.css"></link>
+		<script async src="/lib/qTools.min.js"></script>
+		<script async src="/lib/qAlert.js"></script>
+		<script src="/scripts/base.js"></script>
+		<link defer rel="stylesheet" href="/lib/qAlert.css">
     </head>
     <body>
 		<header class="blurry-bg">
-			<img class="header--logo" onclick="window.location='/dashboard.html'" src="/imgs/webp/favicon.big.webp" alt="base.logoalt">
-			<div class="header--vertical-separator"></div>
-			<a style="color:var(--bg)" class="dropdown-link" onclick='toggleDropdown()'>
+			<a href="/dashboard.html"><img class="header--logo" src="/imgs/webp/favicon.big.webp" alt="base.logoalt"></a>
+			<div class="vertical-separator"></div>
+			<a class="dropdown-link" onclick='toggleDropdown()'>
 				<div class="user-photo" style="background-image: url()"></div>
 				<div class="user-info">
 					<p class="name"></p>
@@ -27,14 +26,14 @@
 				</div>
 				<i id="dropdown-arrow" class="far fa-chevron-down"></i>
 			</a>
-			<div class="header--vertical-separator"></div>
+			<div class="vertical-separator"></div>
 			<ul class="header--actions">
-				<li class="header--action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>[{(dashboard)}]</span></a></li>
-				<li class="header--action news-action"><a href="/news.html"><i class="fad fa-comment-exclamation"></i><span>[{(news)}]</span><span class="notify-dot news-notify-dot"></span></a></li>
-				<li class="header--action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
-				<li class="header--action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
-				<li class="header--action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
-				<li class="header--action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fad fa-plus"></i><span>[{(more)}]</span></a></li>
+				<li class="header-action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>[{(dashboard)}]</span></a></li>
+				<li class="header-action news-action"><a href="/news.html"><i class="fad fa-comment-exclamation"></i><span>[{(news)}]</span><span class="notify-dot news-notify-dot"></span></a></li>
+				<li class="header-action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
+				<li class="header-action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
+				<li class="header-action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
+				<li class="header-action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fad fa-plus"></i><span>[{(more)}]</span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>

@@ -148,9 +148,9 @@ function load() {
                     .then(res => res.json()
                     .then(res => {
                         if (res.message == 'ok') qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() })
-                        if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
+                        if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
                     }))
-                    .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
+                    .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
             } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
         }
     }

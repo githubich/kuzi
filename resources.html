@@ -1,3 +1,24 @@
 <title>[{(resources)}] - Kuzi</title>
 <link rel="stylesheet" href="/style/resources.css">
 <script src="/scripts/resources.js"></script>
+
+<div id="files">
+</div>
+
+<div id="upload-modal" class="modal blurry-bg">
+    <a class="close" onclick="toggleModal('upload')"><i class="fas fa-times"></i></a>
+    <div class="center">
+        <h1 class="main-title"><i class="fad fa-file-upload"></i>[{(uploadFile)}]</h1>
+        <input max-size=5000000 type="file" class="upload-input">
+        <div class="myclasses">
+            <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
+            <ul id="my-classes"></ul>
+        </div>
+        <div class="subject-chooser-div" style="display: none;">
+            <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p><br>
+            <select name="subject" id="subject-chooser">
+            </select>
+        </div>
+        <button onclick='uploadFile()' id="upload-submit"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+    </div>
+</div>
