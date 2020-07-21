@@ -360,9 +360,6 @@ app.post('/teachers/resources/get', (req, res) => {
 		if (req.userInfo.userID == file.ownerID && !exists) {
 			theirFiles.push({ class: classes.find(e => e.classID == file.classID), subject: subjects.find(e => e.subjectID == file.subjectID), files: [] })
 		}
-		console.log(file)
-		console.log(theirFiles)
-		console.log(theirFiles.findIndex(e => e.subject.subjectID == file.subjectID && e.class.classID == file.classID))
 	})
 	theirFiles.forEach(thing => {
 		index.forEach(file => {

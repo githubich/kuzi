@@ -1,0 +1,21 @@
+main p { margin: 0; display: inline-block; }
+#question-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.question { display: flex; }
+.question .question-side {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 0 15px 0 0;
+    word-wrap: none;
+    white-space: nowrap;
+}
+.question .question-side p { text-align: center; color: #7a7a7a; margin: 0 0.2em; font-size: 15px; word-wrap: none; white-space: nowrap; }
+.question .question-side p:nth-child(4) { margin: 3px 0 0; }
+.question .question-side .separator::after { content: ''; display: block; background-color: #7a7a7a; width: 100%; height: 1px; }
+.answer { margin: 10px 0 0; }
+.option { display: flex;  }
+.option, .option * { cursor: pointer; }
+.option label { width: 100%; padding: 0 0 0 2.5px; }
+@media (max-width: 600px) {
+    #question-container { grid-template-columns: 1fr; }
+}
