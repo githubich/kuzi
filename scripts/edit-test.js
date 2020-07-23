@@ -22,10 +22,40 @@ function editQuestion(i) {
 function editQuestionSave(i) {
     if ($('#question-question').value && $('#question-type').value) {
         i = parseInt(i)
-        toggleModal('edit-question')
+        let answers = []
+        let anyCorrect = false
+        let correct = null
+        let j = 0
+        let invalid = false
+        let type = $('#question-type').value
+        if (type == "single-choice") {
+            $$('li.single-choice:not(.new-option) input[type=text]').forEach(el => {
+                if (el.value) answers.push(el.value)
+                else invalid = true
+                if (el.previousElementSibling.checked) anyCorrect = true
+                correct = j
+                j++
+            })
+        } else if (type == "multiple-choice") {
+            $$('li.multiple-choice:not(.new-option)').forEach(el => {
+                if (el.querySelector('input[type=text]').value && el.querySelector('input[type=number]').value != "") answers.push({ text: el.querySelector('input[type=text]').value, value: parseFloat(el.querySelector('input[type=number]').value) })
+                else invalid = true
+                if (el.querySelector('input[type=number]').value > 0) anyCorrect = true
+            })
+        }
+        if (invalid || (type != "open" && (answers.length <= 1 || anyCorrect == false)) || (type == "single-choice" && !$('#question-value').value)) return qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+
+        delete testData.questions[i].correctAnswer
+        delete testData.questions[i].options
+        delete testData.questions[i].value
+
         testData.questions[i].question = $('#question-question').value
-        testData.questions[i].type = $('#question-type').value
+        testData.questions[i].type = type
+        if (type != "open") testData.questions[i].options = answers
+        if (type == "single-choice") testData.questions[i].correctAnswer = correct
+        toggleModal('edit-question')
         rerender()
+        console.log(testData.questions[i])
     } else qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
 }
 function addFunctionality() {
@@ -189,6 +219,7 @@ function newQuestion() {
     `
     testData.questions.push({
         "question": "[{(newQuestion)}]",
+        "type": "open"
     })
     addFunctionality()
     rerender()
@@ -226,8 +257,7 @@ window.addEventListener('load', () => {
         "questions": [
             {
                 "question": "Question 1",
-                "type": "open",
-                "value": 1
+                "type": "open"
             },
             {
                 "question": "Question 2",
@@ -291,3 +321,4 @@ window.addEventListener('load', () => {
         i++
     })
 })
+window.addEventListener('online', save)
