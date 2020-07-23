@@ -3,17 +3,21 @@ console.log(`[Kuzi] Starting... (${require('os').platform()} ${require('os').rel
 const express = require('express')
 const app = express()
 const { extname } = require('path')
-const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
+const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
-app.use(express.json()); app.use(express.urlencoded({ extended: true })); app.use(require('./middleware'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(require('express-fileupload')({ createParentPath: true }))
+app.use(require('./middleware'))
 
 if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
 if (!existsSync('events.json') || readFileSync('events.json') == "") writeFileSync('events.json', JSON.stringify([]))
 if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
+if (!existsSync('tests.json') || readFileSync('tests.json') == "") writeFileSync('tests.json', JSON.stringify([]))
 if (!existsSync('notifications/')) mkdirSync('notifications')
+if (!existsSync('test-progress/')) mkdirSync('test-progress')
 if (!existsSync('upload/')) mkdirSync('upload')
 if (!existsSync('upload/messages/')) mkdirSync('upload/messages')
 if (!existsSync('upload/messages/index.json') || readFileSync('upload/messages/index.json') == "") writeFileSync('upload/messages/index.json', JSON.stringify([]))

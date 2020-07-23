@@ -1,4 +1,4 @@
 window.addEventListener('load', () => {
-    setPageTitle("clipboard-check", "[{(tests)}]")
+    setPageTitle("clipboard-check", "[{(performTest)}]")
     setActiveTab(3)
 })

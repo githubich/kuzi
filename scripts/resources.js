@@ -11,6 +11,7 @@ function load() {
     fetch(`/${userInfo.role}s/resources/get`, { method: 'POST' })
         .then(res => res.json())
         .then(res => {
+            if (res.length != 0) $('#files').innerHTML = ''
             res.forEach(block => {
                 let subjectE = document.createElement('div')
                 $('#files').appendChild(subjectE)
@@ -34,42 +35,46 @@ function load() {
                 let audioFormats = ['aa','aac','aax','act','aiff','alac','amr','ape','au','awb','dct','dss','dvf','flac','gsm','iklax','ivs','m4a','m4b','m4p','mmf','mp3','mpc','msv','nmf','ogg','oga','mogg','opus','ra','rf64','sln','tta','voc','vox','wav','wma','wv','8svx','cda']
                 let archiveFormats = ['a','ar','cpio','shar','lbr','iso','lbr','mar','sbx','tar','bz2','f','?xf','gz','lz','lz4','lzma','lzo','rz','sfark','sz','?q?','?z?','xz','z','zst','??_','7z','s7z','ace','afa','alz','apk','arc','ark','cdx','arj','b1','b6z','ba','bh','cab','car','cfs','cpt','dar','dd','dgc','dmg','ear','gca','ha','hki','ice','jar','kgb','lzh','lha','lzx','pak','partimg','paq','paq1','paq2','paq3','paq4','paq5','paq6','paq7','paq8','paq9','pea','pim','pit','qda','rar','rk','sda','sea','sen','sfx','shk','sit','sitx','sqx','tag.gz','.tgz','tar.z','tar.bz2','tbz2','tar.lz','tlz','tar.xz','txz','uc','uc0','uz2','ucn','ur2','ue2','uca','uha','war','wim','xar','xp3','yz1','zip','zipx','zoo','zpaq','zz','ecc','ecsbx','par','par2','rev']
                 let programmingFormats = ['html','css','sass','scss','js','jsx','htm','c','h','cpp','cs','hta','json','xml','xaml','yml','dat','dat.old','properties','conf','cfg','vb','vbs','java','class']
+                let textFormats = ['txt','rtf']
 
                 block.files.forEach(file => {
                     let fileE = document.createElement('a')
                     subjectContentE.appendChild(fileE)
                     let prettySize = file.display.byteSize
-                    Math.round(((prettySize / 1073741824) + Number.EPSILON) * 100) / 100
-                    if (prettySize >= 1073741824) prettySize = `${Math.round(((prettySize / 1073741824) + Number.EPSILON) * 100) / 100}GiB`
-                    else if (prettySize >= 1048576) prettySize = `${Math.round(((prettySize / 1048576) + Number.EPSILON) * 100) / 100}MiB`
-                    else if (prettySize >= 1024) prettySize = `${Math.round(((prettySize / 1024) + Number.EPSILON) * 100) / 100}KiB`
-                    else prettySize = `${prettySize}B`
-                    let fileExt = file.name.slice(file.name.indexOf('.') + 1, file.name.length).toLowerCase()
+                    if (prettySize >= 1073741824) prettySize = `${Math.round(((prettySize / 1073741824) + Number.EPSILON) * 100) / 100}Gi`
+                    else if (prettySize >= 1048576) prettySize = `${Math.round(((prettySize / 1048576) + Number.EPSILON) * 100) / 100}Mi`
+                    else if (prettySize >= 1024) prettySize = `${Math.round(((prettySize / 1024) + Number.EPSILON) * 100) / 100}Ki`
+                    else prettySize = `${prettySize}`
 
-                    if (wordFormats.find(e => e == fileExt)) icon = '-word'
-                    else if (pptFormats.find(e => e == fileExt)) icon = '-powerpoint'
-                    else if (excelFormats.find(e => e == fileExt)) icon = '-excel'
-                    else if (imageFormats.find(e => e == fileExt)) icon = '-image'
-                    else if (videoFormats.find(e => e == fileExt)) icon = '-video'
-                    else if (audioFormats.find(e => e == fileExt)) icon = '-music'
+                    let fileExt = file.name.slice(file.name.indexOf('.') + 1, file.name.length).toLowerCase()
+                    let icon = ''
+                    let fileType = 'Unknown'
+                    if (wordFormats.find(e => e == fileExt)) { icon = '-word'; fileType = 'Word Document' }
+                    else if (pptFormats.find(e => e == fileExt)) { icon = '-powerpoint'; fileType = 'PowerPoint Presentation' }
+                    else if (excelFormats.find(e => e == fileExt)) { icon = '-excel'; fileType = 'Excel Spreadsheet' }
+                    else if (imageFormats.find(e => e == fileExt)) { icon = '-image'; fileType = 'Image' }
+                    else if (videoFormats.find(e => e == fileExt)) { icon = '-video'; fileType = 'Video' }
+                    else if (audioFormats.find(e => e == fileExt)) { icon = '-music'; fileType = 'Audio' }
                     else if (fileExt == 'pdf' ) icon = '-pdf'
                     else if (fileExt == 'txt' || fileExt == 'rtf' ) icon = '-alt'
                     else if (archiveFormats.find(e => e == fileExt)) icon = '-archive'
                     else if (programmingFormats.find(e => e == fileExt)) icon = '-code'
+                    else if (textFormats.find(e => e == fileExt)) icon = '-alt'
                     else icon = ''
+
                     fileE.outerHTML = `
-                        <a class="file" download uuid="${file.uuid}" href="/resources/download/${file.uuid}" title="Size: ${prettySize}">
+                        <a class="file" download style="animation-play-state: running;" uuid="${file.uuid}" href="/resources/download/${file.uuid}" title="Size: ${prettySize}B\nType: ${fileType}">
                             <i class="fad fa-file${icon}"></i>
                             <div class="details">
                                 <p>${file.display.name}</p>
-                                <p class="mobile-only">Size: ${prettySize}B</p>
+                                <p class="mobile-only size">Size: ${prettySize}B</p><p class="mobile-only separator">|</p><p class="mobile-only type">Type: ${fileType}</p>
                             </div>
                         </a>
                     `
                 })
             })
             // animateFiles(0)
-            $$('.file').forEach(e => {
+            if (userInfo.role == "teacher") $$('.file').forEach(e => {
                 e.addEventListener('contextmenu', function(e) {
                     e.preventDefault()
                     let file = this
@@ -90,7 +95,8 @@ function load() {
                         })
                 })
             })
-            $$('.file i').forEach(e => { e.style.transform = `rotate(${random(-7, 7)}deg)`; e.parentElement.style.animationPlayState = 'running'}) })
+            //$$('.file i').forEach(e => { e.style.transform = `rotate(${random(-7, 7)}deg)`; e.parentElement.style.animationPlayState = 'running'})
+        })
         .catch(e => console.error(e))
 }
 function uploadFile() {

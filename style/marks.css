@@ -79,17 +79,6 @@ h3, .title-controls { display: inline-block; }
 .title-controls { margin-left: 10px; margin-bottom: 10px; position: relative; top: 2px; }
 .control i { margin-right: 5px; }
 .control:not(:nth-last-child(1)) { margin-right: 10px; }
-.subject-chooser-div select, .period-chooser-div select {
-    display: block;
-    padding: 5px 10px;
-    border: solid var(--bg-alt);
-    border-width: 0 0 1px 0;
-    background: none;
-    color: var(--bg-alt);
-    width: -webkit-fill-available;
-    font-size: 16px;
-    height: 33px;
-}
 .submit-block button.submit { margin-top: 10px; }
 .mark-info { margin-bottom: 20px; }
 .mark-info-inner { display: grid; gap: 20px; grid-template-columns: 2fr 1fr 1fr; }

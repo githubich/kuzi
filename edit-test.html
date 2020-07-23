@@ -1,0 +1,46 @@
+<title>[{(createTest)}] - Kuzi</title>
+<link rel="stylesheet" href="/style/edit-test.css">
+<script src="/scripts/edit-test.js"></script>
+
+<div id="controls">
+    <div title="Edit test details" onclick=""><i class="fad fa-edit"></i><p>Edit test details</p></div>
+    <div title="Add question" onclick=""><i class="fad fa-plus"></i><p>Add question</p></div>
+</div>
+
+<div id="question-container"></div>
+
+<div id="edit-test-modal" class="modal blurry-bg">
+    <a class="close" onclick="toggleModal('edit-test')"><i class="fas fa-times"></i></a>
+    <div class="center">
+        <h1 class="main-title"><i class="fad fa-edit"></i>[{(editTestDetails)}]</h1>
+        <div class="test-name">
+            <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
+		    <input id="test-name" type="text">
+        </div>
+    </div>
+</div>
+
+<div id="edit-question-modal" class="modal blurry-bg">
+    <a class="close" onclick="toggleModal('edit-question')"><i class="fas fa-times"></i></a>
+    <div class="center">
+        <h1 class="main-title"><i class="fad fa-edit"></i>[{(editQuestion)}]</h1>
+        <div class="question-question">
+            <p class="hint"><i class="fad fa-i-cursor"></i>[{(question)}]</p>
+		    <input id="question-question" type="text">
+        </div>
+        <div class="question-type">
+            <p class="hint"><i class="fad fa-i-cursor"></i>[{(type)}]</p>
+		    <select id="question-type" oninput="updateEditQuestionModal(this.value)">
+                <option value="single-choice">[{(singleChoice)}]</option>
+                <option value="multiple-choice">[{(multipleChoice)}]</option>
+                <option value="open">[{(open)}]</option>
+            </select>
+        </div>
+        <div class="question-answer" style="display: none;">
+            <ul>
+                
+            </ul>
+        </div>
+        <button><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+    </div>
+</div>

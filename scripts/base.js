@@ -5,7 +5,7 @@ window.addEventListener('load', () => {
     fetch('/user/getInfo', { method: 'POST' })
         .then(res => res.json())
         .then(res => {
-            if (!res.userInfo.userID) window.location = '/'
+            if (!res.userInfo.userID) location = '/'
             userInfo = res.userInfo
             $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
             $('.user-info .name').innerText = userInfo.prettyName
@@ -92,7 +92,7 @@ function changePhoto() {
     fetch('/user/changePicture', { method: 'POST', body: data })
         .then(res => res.json())
         .then(res => {
-            if (res.message == 'ok') qAlert({ message: '[{(success.photoChange)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => window.location.reload())
+            if (res.message == 'ok') qAlert({ message: '[{(success.photoChange)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => location.reload())
             else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
         })
 }

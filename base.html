@@ -8,32 +8,31 @@
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/style/theming.css">
 		<link rel="stylesheet" href="/style/base.css">
-		<link defer rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 		<link rel="stylesheet" href="/remove_menus.css"></link>
 		<script async src="/lib/qTools.min.js"></script>
 		<script async src="/lib/qAlert.js"></script>
 		<script src="/scripts/base.js"></script>
-		<link defer rel="stylesheet" href="/lib/qAlert.css">
+		<link rel="stylesheet" href="/lib/qAlert.css">
     </head>
     <body>
 		<header class="blurry-bg">
 			<a href="/dashboard.html"><img class="header--logo" src="/imgs/webp/favicon.big.webp" alt="base.logoalt"></a>
 			<div class="vertical-separator"></div>
-			<a class="dropdown-link" onclick='toggleDropdown()'>
+			<div class="dropdown-link" onclick='toggleDropdown()'>
 				<div class="user-photo" style="background-image: url()"></div>
 				<div class="user-info">
 					<p class="name"></p>
 					<p class="status"></p>
 				</div>
 				<i id="dropdown-arrow" class="far fa-chevron-down"></i>
-			</a>
+			</div>
 			<div class="vertical-separator"></div>
 			<ul class="header--actions">
 				<li class="header-action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>[{(dashboard)}]</span></a></li>
-				<li class="header-action news-action"><a href="/news.html"><i class="fad fa-comment-exclamation"></i><span>[{(news)}]</span><span class="notify-dot news-notify-dot"></span></a></li>
-				<li class="header-action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span><span class="notify-dot marks-notify-dot"></span></a></li>
-				<li class="header-action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span><span class="notify-dot tests-notify-dot"></span></a></li>
-				<li class="header-action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span><span class="notify-dot resources-notify-dot"></span></a></li>
+				<li class="header-action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span></a></li>
+				<li class="header-action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}]</span></a></li>
+				<li class="header-action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span></a></li>
 				<li class="header-action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fad fa-plus"></i><span>[{(more)}]</span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
@@ -43,14 +42,15 @@
 			<ul class="dropdown-actions">
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>[{(changePicture)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>[{(changePassword)}]</span></a></li>
-				<li class="dropdown-action"><a onclick='fetch("/user/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; window.location="/" })'><i class="fad fa-times-circle"></i><span>[{(logout)}]</span></a></li>
+				<li class="dropdown-action"><a onclick='fetch("/user/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; location = "/" })'><i class="fad fa-times-circle"></i><span>[{(logout)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('thanks')"><i class="fas fa-heart"></i><span>[{(thanksTo)}]</span></a></li>
 			</ul>
 		</div>
 		<div id="more" class="blurry-bg hidden">
 			<a class="close phone-close" onclick="toggleMore()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
-				<li class="dropdown-action"><a href="/my-schedule.html"><i class="fad fa-clock"></i><span>[{(mySchedule)}]</span></a></li>
+				<li class="dropdown-action messages-action"><a href="javascript: alert('Coming soon :D')"><i class="fad fa-comments"></i><span>[{(messages)}]</span></a></li>
+				<li class="dropdown-action my-schedule-action"><a href="/my-schedule.html"><i class="fad fa-clock"></i><span>[{(mySchedule)}]</span></a></li>
 			</ul>
 		</div>
 		<div id="hamburger-menu-modal" class="modal blurry-bg">
