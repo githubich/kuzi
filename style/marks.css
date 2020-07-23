@@ -73,8 +73,6 @@ li.student > * { margin-top: auto; margin-bottom: auto; }
 	width: 32px;
 	margin-right: 2.5px;
 }
-.markInput input[type=number]::-webkit-outer-spin-button, .markInput input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.markInput input[type=number] { -moz-appearance: textfield; }
 h3, .title-controls { display: inline-block; }
 .title-controls { margin-left: 10px; margin-bottom: 10px; position: relative; top: 2px; }
 .control i { margin-right: 5px; }

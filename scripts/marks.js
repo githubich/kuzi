@@ -1,6 +1,6 @@
 window.addEventListener('load', () => {
     setPageTitle("calendar-check", "[{(marks)}]")
-    setActiveTab(2)
+    setActiveTab(1)
 })
 function load() {
     if (userInfo.role == "student") {

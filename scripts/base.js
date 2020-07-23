@@ -33,13 +33,12 @@ window.addEventListener('keydown', e => {
         else if (document.activeElement === $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
         else if (document.activeElement === $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
         return false
-    }
-    if (e.key == "Escape") {
+    } else if (e.key == "Escape") {
         e.preventDefault()
         $$('.modal').forEach(modal => {
             if (modal.style.display == "block") modal.querySelector('.close').click()
         })
-    }
+    } //else if (e.key == "F12" || (e.ctrlKey && e.shiftKey && e.key == "C") || (e.ctrlKey && e.shiftKey && e.key == "J")) e.preventDefault()
 })
 headerDropdownVisible = false
 moreVisible = false

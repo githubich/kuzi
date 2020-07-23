@@ -1,13 +1,5 @@
 function random(min,max) {return Math.floor(Math.random()*(max-min+1)+min)}
-/*function animateFiles(i) {
-    if ($$('.file').length != i) {
-        setTimeout(() => animateFiles(i + 1), 100)
-        $$('.file i')[i].style.transform = `rotate(${random(-7, 7)}deg)`
-        $$('.file i')[i].parentElement.style.animationPlayState = 'running'
-    }
-}*/
 function load() {
-    if (userInfo.role == "student") $$('.teachers-only').forEach(e => e.remove())
     fetch(`/${userInfo.role}s/resources/get`, { method: 'POST' })
         .then(res => res.json())
         .then(res => {
@@ -95,6 +87,7 @@ function load() {
                         })
                 })
             })
+            if (userInfo.role != "teacher") $$('.teachers-only').forEach(e => e.remove())
             //$$('.file i').forEach(e => { e.style.transform = `rotate(${random(-7, 7)}deg)`; e.parentElement.style.animationPlayState = 'running'})
         })
         .catch(e => console.error(e))
@@ -117,7 +110,10 @@ function uploadFile() {
             else return qAlert({ message: '[{(error.unknown.doNotRetry)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
         })
 }
-window.addEventListener('load', () => { setPageTitle("folders", "[{(resources)}]"); setActiveTab(4) })
+window.addEventListener('load', () => {
+    setPageTitle("folders", "[{(resources)}]")
+    setActiveTab(3)
+})
 window.addEventListener('toggle-modal-upload', () => {
     if (userInfo.role == "teacher") {
         fetch('/teachers/getInfo', { method: "POST" })

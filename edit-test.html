@@ -1,10 +1,11 @@
-<title>[{(createTest)}] - Kuzi</title>
+<title>[{(editTest)}] - Kuzi</title>
 <link rel="stylesheet" href="/style/edit-test.css">
 <script src="/scripts/edit-test.js"></script>
 
 <div id="controls">
-    <div title="Edit test details" onclick=""><i class="fad fa-edit"></i><p>Edit test details</p></div>
-    <div title="Add question" onclick=""><i class="fad fa-plus"></i><p>Add question</p></div>
+    <div title="[{(editTestDetails)}]" onclick=""><i class="fad fa-edit"></i><p>[{(editTestDetails)}]</p></div>
+    <div title="[{(newQuestion)}]" onclick="newQuestion()"><i class="fad fa-plus"></i><p>[{(newQuestion)}]</p></div>
+    <div title="[{(save)}]" onclick="save()"><i class="fad fa-save"></i><p>[{(save)}]</p></div>
 </div>
 
 <div id="question-container"></div>
@@ -30,17 +31,17 @@
         </div>
         <div class="question-type">
             <p class="hint"><i class="fad fa-i-cursor"></i>[{(type)}]</p>
-		    <select id="question-type" oninput="updateEditQuestionModal(this.value)">
+		    <select id="question-type" oninput="updateEditQuestionModal(this.value, this.parentElement.parentElement.parentElement.getAttribute('i'))">
                 <option value="single-choice">[{(singleChoice)}]</option>
                 <option value="multiple-choice">[{(multipleChoice)}]</option>
-                <option value="open">[{(open)}]</option>
+                <option value="open">[{(openAnswer)}]</option>
             </select>
         </div>
-        <div class="question-answer" style="display: none;">
-            <ul>
-                
-            </ul>
+        <ul class="question-answer"></ul>
+        <div class="question-value" style="display: block;">
+            <p class="hint"><i class="fad fa-i-cursor"></i>[{(value)}]</p>
+		    <div class="markInput" onclick="this.children[0].focus()"><input class="percent" id="question-value" type="number" min="0" max="100"><p>%</p></div>
         </div>
-        <button><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+        <button onclick="editQuestionSave(this.parentElement.parentElement.getAttribute('i'))"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
     </div>
 </div>
