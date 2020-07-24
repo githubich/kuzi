@@ -17,7 +17,22 @@ footer .spinner { position: relative; top: 2px; }
 .question-answer li input[type=radio], .question-answer li input[type=checkbox] { display: inline-block; margin: auto 5px auto 0; }
 .question-answer li input[type=number] { width: 100px; }
 .question-answer li * { display: inline-block; margin: 0; }
-.markInput { display: flex; }
+.markInput {
+	display: flex;
+	padding: 5px 10px;
+    border: solid var(--bg-alt);
+	border-width: 0 0 1px 0;
+	margin-left: auto;
+    white-space: nowrap;
+    cursor: text;
+}
+.markInput * { color: var(--bg-alt); font-size: 16px; }
+.markInput input[type=number] {
+	background: #0000;
+	border: none;
+    margin-right: 2.5px;
+    padding: 0;
+}
 .markInput p { margin: auto 0; }
 input[type=date], input[type=time] { min-width: unset; width: unset; }
 .layout { display: grid; grid-template-columns: 2fr 1fr; }
