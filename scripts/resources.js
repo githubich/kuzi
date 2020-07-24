@@ -120,7 +120,6 @@ window.addEventListener('toggle-modal-upload', () => {
             .then(res => res.json()
             .then(res => {
                 data = res
-                console.log(data)
                 let myClasses = $('#my-classes')
                 myClasses.innerHTML = ""
                 data.forEach(clas => {
@@ -147,32 +146,4 @@ window.addEventListener('toggle-modal-upload', () => {
         })
         $('.subject-chooser-div').style = ""
     }
-    /*submit = () => {
-        let sendData = { name: $('#event-name').value, description: $('#event-description').value, date: {} }
-        sendData.date.year = parseInt($('#event-date').value.split("-")[0])
-        sendData.date.month = parseInt($('#event-date').value.split("-")[1])
-        sendData.date.day = parseInt($('#event-date').value.split("-")[2])
-        if (userInfo.role == "teacher") {
-            if ($('#forMyStudentsAndMe').checked) {
-                sendData.teacherMode = "forMyStudentsAndMe"
-                sendData.visibleTo = []
-                $$('#students-in-class input').forEach(e => {
-                    if (e.checked) sendData.visibleTo.push(parseInt(e.getAttribute('studentID')))
-                })
-            } else sendData.teacherMode = "justForMe"
-        }
-        if (sendData.name && sendData.description && sendData.date.year != NaN && sendData.date.month != NaN && sendData.date.day != NaN && (!sendData.visibleTo || sendData.visibleTo.length > 0)) {
-            fetch('/misc/events/create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(sendData)
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.message == 'ok') qAlert({ message: "[{(success.eventSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) toggleModal('new-event'); updateEvents() })
-                    if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
-                })
-                .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
-        } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
-    }*/
 })

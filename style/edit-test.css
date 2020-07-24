@@ -19,6 +19,17 @@ footer .spinner { position: relative; top: 2px; }
 .question-answer li * { display: inline-block; margin: 0; }
 .markInput { display: flex; }
 .markInput p { margin: auto 0; }
+input[type=date], input[type=time] { min-width: unset; width: unset; }
+.layout { display: grid; grid-template-columns: 2fr 1fr; }
+#edit-test-modal > div > *:not(:nth-last-child(1)) { margin: 0 0 20px 0; }
+#edit-test-modal h3 i { margin-right: 5px; }
+#edit-test-modal ul {
+    margin: 0;
+    list-style-type: none;
+    padding: 0;
+}
+#edit-test-modal .class input[type=radio] { margin: 0 5px 0 0; }
+#edit-test-modal h3 { display: inline-block; }
 
 @media (min-width: 601px) {
     #controls { display: flex; flex-direction: column; width: fit-content; border: solid 1px var(--bg-alt-nearly-transparent); }

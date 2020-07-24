@@ -3,7 +3,7 @@
 <script src="/scripts/edit-test.js"></script>
 
 <div id="controls">
-    <div title="[{(editTestDetails)}]" onclick="toggleModal('edit-test')"><i class="fad fa-edit"></i><p>[{(editTestDetails)}]</p></div>
+    <div title="[{(editTestDetails)}]" onclick="editTest()"><i class="fad fa-edit"></i><p>[{(editTestDetails)}]</p></div>
     <div title="[{(newQuestion)}]" onclick="newQuestion()"><i class="fad fa-plus"></i><p>[{(newQuestion)}]</p></div>
     <div title="[{(save)}]" onclick="save()"><i class="fad fa-save"></i><p>[{(save)}]</p></div>
 </div>
@@ -18,6 +18,30 @@
             <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
 		    <input id="test-name" type="text">
         </div>
+        <div class="test-start">
+            <p class="hint"><i class="fad fa-i-cursor"></i>[{(startTime)}]</p>
+            <div class="layout">
+                <input id="test-start-date" type="date">
+                <input id="test-start-time" type="time">
+            </div>
+        </div>
+        <div class="test-due">
+            <p class="hint"><i class="fad fa-i-cursor"></i>[{(dueTime)}]</p>
+            <div class="layout">
+                <input id="test-due-date" type="date">
+                <input id="test-due-time" type="time">
+            </div>
+        </div>
+        <div class="myclasses">
+            <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
+            <ul id="my-classes"></ul>
+        </div>
+        <div class="subject-chooser-div" style="display: none;">
+            <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p><br>
+            <select name="subject" id="subject-chooser">
+            </select>
+        </div>
+        <button onclick="editTestSave()"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
     </div>
 </div>
 
@@ -40,7 +64,7 @@
         <ul class="question-answer"></ul>
         <div class="question-value" style="display: block;">
             <p class="hint"><i class="fad fa-i-cursor"></i>[{(value)}]</p>
-		    <div class="markInput" onclick="this.children[0].focus()"><input class="percent" id="question-value" type="number" min="0" max="100"><p>%</p></div>
+		    <div class="markInput" onclick="this.children[0].focus()"><input class="percent" id="question-value" type="number" min="-100" max="100"><p>%</p></div>
         </div>
         <button onclick="editQuestionSave(this.parentElement.parentElement.getAttribute('i'))"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
     </div>

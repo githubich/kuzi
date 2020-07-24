@@ -15,6 +15,7 @@ function editQuestion(i) {
     i = parseInt(i)
     let question = testData.questions[i]
     $('#question-type').value = question.type
+    if (question.type == "single-choice") $('#question-value').value = question.value
     $('#edit-question-modal').setAttribute('i', i)
     updateEditQuestionModal(question.type, i)
     toggleModal('edit-question')
@@ -32,8 +33,7 @@ function editQuestionSave(i) {
             $$('li.single-choice:not(.new-option) input[type=text]').forEach(el => {
                 if (el.value) answers.push(el.value)
                 else invalid = true
-                if (el.previousElementSibling.checked) anyCorrect = true
-                correct = j
+                if (el.previousElementSibling.checked) { anyCorrect = true; correct = j }
                 j++
             })
         } else if (type == "multiple-choice") {
@@ -55,7 +55,108 @@ function editQuestionSave(i) {
         if (type == "single-choice") testData.questions[i].correctAnswer = correct
         toggleModal('edit-question')
         rerender()
-        console.log(testData.questions[i])
+    } else qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+}
+function updateEditQuestionModal(value, readFromTestData) {
+    if (readFromTestData) readFromTestData = parseInt(readFromTestData)
+    let answersE = $('.question-answer')
+    answersE.innerHTML = ''
+    let qQuestion = $('#question-question')
+    $('.question-value').style.display = 'none'
+    qQuestion.value = testData.questions[readFromTestData].question
+    let question = testData.questions[readFromTestData]
+    if (value == "single-choice") {
+        $('.question-value').style.display = ''
+        if (value == question.type && readFromTestData != undefined) {
+            let i = 0
+            question.options.forEach(option => {
+                let optionE = document.createElement('li')
+                answersE.appendChild(optionE)
+                optionE.classList.add('existing-option', 'single-choice')
+                let checked = question.correctAnswer == i ? 'checked' : ''
+                optionE.innerHTML = `
+                    <input type="radio"${checked} name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-${i}"><input type="text" value="${option}">
+                `
+                i++
+            })
+        }
+        let optionE = document.createElement('li')
+        answersE.appendChild(optionE)
+        optionE.classList.add('new-option', 'single-choice')
+        optionE.innerHTML = `
+            <input type="radio" disabled name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]...">
+        `
+    } else if (value == "multiple-choice") {
+        if (value == question.type && readFromTestData) {
+            let i = 0
+            question.options.forEach(option => {
+                let optionE = document.createElement('li')
+                answersE.appendChild(optionE)
+                optionE.classList.add('existing-option', 'multiple-choice')
+                optionE.innerHTML = `
+                    <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-${i}"><input type="text" value="${option.text}"><input type="number" placeholder="" min="-100" max="100" title="" value="${option.value}">
+                `
+                i++
+            })
+        }
+        let optionE = document.createElement('li')
+        answersE.appendChild(optionE)
+        optionE.classList.add('new-option', 'multiple-choice')
+        optionE.innerHTML = `
+            <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled placeholder="" min="-100" max="100" title="" value=0>
+        `
+    }
+    addFunctionality()
+}
+function editTest() {
+    toggleModal('edit-test')
+
+    let startHours = testData.startTime.hours
+    let startMinutes = testData.startTime.minutes
+    let startDay = testData.startTime.day
+    let startMonth = testData.startTime.month
+    if (startHours < 10) startHours = `0${startHours}`
+    if (startMinutes < 10) startMinutes = `0${startMinutes}`
+    if (startDay < 10) startDay = `0${startDay}`
+    if (startMonth < 10) startMonth = `0${startMonth}`
+
+    let dueHours = testData.dueTime.hours
+    let dueMinutes = testData.dueTime.minutes
+    let dueDay = testData.dueTime.day
+    let dueMonth = testData.dueTime.month
+    if (dueHours < 10) dueHours = `0${dueHours}`
+    if (dueMinutes < 10) dueMinutes = `0${dueMinutes}`
+    if (dueDay < 10) dueDay = `0${dueDay}`
+    if (dueMonth < 10) dueMonth = `0${dueMonth}`
+
+    $('#test-name').value = testData.name
+    $('#test-start-date').value = `${testData.startTime.year}-${startMonth}-${startDay}`
+    $('#test-start-time').value = `${startHours}:${startMinutes}`
+    $('#test-due-date').value = `${testData.dueTime.year}-${dueMonth}-${dueDay}`
+    $('#test-due-time').value = `${dueHours}:${dueMinutes}`
+}
+function editTestSave() {
+    if ($('#test-name').value && $('#test-start-date').value &&
+        $('#test-start-time').value && $('#test-due-date').value &&
+        $('#test-due-time').value && $('#edit-test-modal li.class input[type=radio]:checked') &&
+        $('#edit-test-modal #subject-chooser').value) {
+
+        testData.name = $('#test-name').value
+        testData.subjectID = parseInt($('#edit-test-modal #subject-chooser').value)
+        testData.classID = parseInt($('#edit-test-modal li.class input[type=radio]:checked').value)
+        testData.startTime.year = parseInt($('#test-start-date').value.split('-')[0])
+        testData.startTime.month = parseInt($('#test-start-date').value.split('-')[1])
+        testData.startTime.day = parseInt($('#test-start-date').value.split('-')[2])
+        testData.startTime.hours = parseInt($('#test-start-time').value.split(':')[0])
+        testData.startTime.minutes = parseInt($('#test-start-time').value.split(':')[1])
+        testData.dueTime.year = parseInt($('#test-due-date').value.split('-')[0])
+        testData.dueTime.month = parseInt($('#test-due-date').value.split('-')[1])
+        testData.dueTime.day = parseInt($('#test-due-date').value.split('-')[2])
+        testData.dueTime.hours = parseInt($('#test-due-time').value.split(':')[0])
+        testData.dueTime.minutes = parseInt($('#test-due-time').value.split(':')[1])
+
+        setPageTitle("clipboard-check", `[{(editTest)}] (${testData.name})`)
+        toggleModal('edit-test')
     } else qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
 }
 function addFunctionality() {
@@ -131,58 +232,7 @@ function addFunctionality() {
         if (e.value > max) e.value = max
     }))
 }
-function updateEditQuestionModal(value, readFromTestData) {
-    if (readFromTestData) readFromTestData = parseInt(readFromTestData)
-    let answersE = $('.question-answer')
-    answersE.innerHTML = ''
 
-    let qQuestion = $('#question-question')
-    $('.question-value').style.display = 'none'
-    qQuestion.value = testData.questions[readFromTestData].question
-    let question = testData.questions[readFromTestData]
-    if (value == "single-choice") {
-        $('.question-value').style.display = ''
-        if (value == question.type && readFromTestData) {
-            let i = 0
-            question.options.forEach(option => {
-                let optionE = document.createElement('li')
-                answersE.appendChild(optionE)
-                optionE.classList.add('existing-option', 'single-choice')
-                let checked = question.correctAnswer == i ? 'checked' : ''
-                optionE.innerHTML = `
-                    <input type="radio"${checked} name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-${i}"><input type="text" value="${option}">
-                `
-                i++
-            })
-        }
-        let optionE = document.createElement('li')
-        answersE.appendChild(optionE)
-        optionE.classList.add('new-option', 'single-choice')
-        optionE.innerHTML = `
-            <input type="radio" disabled name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]...">
-        `
-    } else if (value == "multiple-choice") {
-        if (value == question.type && readFromTestData) {
-            let i = 0
-            question.options.forEach(option => {
-                let optionE = document.createElement('li')
-                answersE.appendChild(optionE)
-                optionE.classList.add('existing-option', 'multiple-choice')
-                optionE.innerHTML = `
-                    <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-${i}"><input type="text" value="${option.text}"><input type="number" placeholder="" min="-100" max="100" title="" value="${option.value}">
-                `
-                i++
-            })
-        }
-        let optionE = document.createElement('li')
-        answersE.appendChild(optionE)
-        optionE.classList.add('new-option', 'multiple-choice')
-        optionE.innerHTML = `
-            <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled placeholder="" min="-100" max="100" title="" value=0>
-        `
-    }
-    addFunctionality()
-}
 function save() {
     $('footer').style = ''
     $('main').style.marginBottom = "42px"
@@ -237,21 +287,21 @@ window.addEventListener('load', () => {
     
     testData = {
         "name": "Test Test 1",
-        "subjectID": 1,
-        "classID": 1,
+        "subjectID": 2,
+        "classID": 2,
         "testID": 1,
-        "startDate": {
+        "startTime": {
             "year": 2020,
             "month": 7,
             "day": 22,
-            "hour": 0,
+            "hours": 0,
             "minutes": 0
         },
-        "dueDate": {
+        "dueTime": {
             "year": 2020,
             "month": 7,
             "day": 30,
-            "hour": 23,
+            "hours": 23,
             "minutes": 59
         },
         "questions": [
@@ -322,3 +372,37 @@ window.addEventListener('load', () => {
     })
 })
 window.addEventListener('online', save)
+window.addEventListener('toggle-modal-edit-test', () => {
+    fetch('/teachers/getInfo', { method: "POST" })
+        .then(res => res.json()
+        .then(res => {
+            data = res
+            let myClasses = $('#my-classes')
+            myClasses.innerHTML = ""
+            data.forEach(clas => {
+                let clasE = document.createElement('li')
+                myClasses.appendChild(clasE)
+                clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
+            })
+
+            $(`#my-classes li.class input[type=radio][value="${testData.classID}"]`).click()
+            $('#subject-chooser').value = testData.subjectID
+        }))
+        .catch(e => console.error(e))
+    update = updateID => {
+        if (!updateID) return
+        updateID = parseInt(updateID)
+        let subjectChooser = $('#subject-chooser')
+        data.forEach(clas => {
+            if (clas.classID == updateID) {
+                subjectChooser.innerHTML = ''
+                clas.subjects.forEach(subject => {
+                    subjectE = document.createElement('option')
+                    subjectChooser.appendChild(subjectE)
+                    subjectE.outerHTML = `<option value="${subject.subjectID}">${subject.subjectName}</option>`
+                })
+            }
+        })
+        $('.subject-chooser-div').style = ""
+    }
+})

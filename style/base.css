@@ -142,7 +142,7 @@ button i, .picture-label i { font-size: 15px; }
 input, select { border-radius: 0; }
 input[type=text], input[type=password], input[type=date], input[type=number] { width: 100%; }
 input[type=text], input[type=password], input[type=date], textarea { min-width: 275px; }
-input[type=text], input[type=password], input[type=date], input[type=number], textarea, select {
+input[type=text], input[type=password], input[type=date], input[type=time], input[type=number], textarea, select {
     display: block;
     padding: 5px 10px;
     border: solid var(--bg-alt); border-width: 0 0 1px 0;
@@ -153,7 +153,7 @@ input[type=text], input[type=password], input[type=date], input[type=number], te
 input[type=number] { -moz-appearance: textfield; }
 input[type=number]::-webkit-outer-spin-button, .markInput input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 #thanks-modal > .center { text-align: center; width: 100% }
-input[type=date] { height: 33px; }
+input[type=date], input[type=time] { height: 33px; }
 select { height: 33px; width: -webkit-fill-available; }
 @media (min-width: 601px) {
 	a.close:hover::after {
