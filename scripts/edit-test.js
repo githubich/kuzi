@@ -200,30 +200,16 @@ function addFunctionality() {
         if (e.value > max) e.value = max
     }))
     $$('.question .move-question-up').forEach(el => {
-        el.addEventListener('click', function() {
-            let q = el.parentElement.parentElement
-            if (q != q.parentElement.children[0]) {
-                q.parentElement.insertBefore(q, q.previousElementSibling)
-                let i = parseInt(q.getAttribute('i'))
-                let a = testData.questions[i]
-                testData.questions[i] = testData.questions[i - 1]
-                testData.questions[i - 1] = a
-                rerender()
-            }
-        })
+        try {
+            el.removeEventListener('click', moveUp)
+        } catch {}
+        el.addEventListener('click', moveUp)
     })
     $$('.question .move-question-down').forEach(el => {
-        el.addEventListener('click', function() {
-            let q = el.parentElement.parentElement
-            if (q != q.parentElement.children[q.parentElement.children.length]) {
-                q.parentElement.insertBefore(q, q.nextElementSibling.nextElementSibling)
-                let i = parseInt(q.getAttribute('i'))
-                let a = testData.questions[i]
-                testData.questions[i] = testData.questions[i + 1]
-                testData.questions[i + 1] = a
-                rerender()
-            }
-        })
+        try {
+            el.removeEventListener('click', moveDown)
+        } catch {}
+        el.addEventListener('click', moveDown)
     })
     $$('input[type=number]').forEach(e => e.addEventListener('input', () => {
         let min = parseInt(e.getAttribute('min'))
@@ -232,11 +218,10 @@ function addFunctionality() {
         if (e.value > max) e.value = max
     }))
 }
-
 function save() {
     $('footer').style = ''
     $('main').style.marginBottom = "42px"
-    $('footer').innerHTML = `<div><div class="spinner"></div>[{(saving)}]</div>`
+    $('footer').innerHTML = `<div><div class="spinner"></div>[{(saving)}]...</div>`
     fetch('/teachers/tests/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(testData) })
         .then(res => res.json())
         .then(res => {
@@ -275,8 +260,24 @@ function newQuestion() {
     rerender()
     editQuestion($('#question-container').children[$('#question-container').children.length - 1].getAttribute('i'))
 }
+function moveUp(event) {
+    let q = event.path[2]
+    if (q != q.parentElement.children[0]) {
+        q.parentElement.insertBefore(q, q.previousElementSibling)
+        let i = parseInt(q.getAttribute('i'))
+        let a = testData.questions[i]
+        testData.questions[i] = testData.questions[i - 1]
+        testData.questions[i - 1] = a
+        rerender()
+    }
+}
+function moveDown(event) {
+    let q = event.path[2]
+    if (q.nextElementSibling) q.nextElementSibling.querySelector('.move-question-up').click()
+}
+function load() {
+    if ($parseURLArgs().ID == undefined) return qAlert({ message: '[{(wrongID)}]', mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
 
-window.addEventListener('load', () => {
     setPageTitle("clipboard-check", `[{(loading)}]`)
     setActiveTab(2)
     let footer = document.createElement('footer')
@@ -284,93 +285,41 @@ window.addEventListener('load', () => {
     footer.classList.add('blurry-bg')
     footer.style.display = 'none'
     $('main').style.marginBottom = "0"
-    
-    testData = {
-        "name": "Test Test 1",
-        "subjectID": 2,
-        "classID": 2,
-        "testID": 1,
-        "startTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 22,
-            "hours": 0,
-            "minutes": 0
-        },
-        "dueTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 30,
-            "hours": 23,
-            "minutes": 59
-        },
-        "questions": [
-            {
-                "question": "Question 1",
-                "type": "open"
-            },
-            {
-                "question": "Question 2",
-                "type": "single-choice",
-                "options": [ "Choice 1", "Choice 2", "Choice 3", "Choice 4", "Choice 5" ],
-                "correctAnswer": 0,
-                "value": 1.5
-            },
-            {
-                "question": "Question 3",
-                "type": "multiple-choice",
-                "options": [
-                    {
-                        "text": "Choice 1",
-                        "value": 0.33
-                    },
-                    {
-                        "text": "Choice 2",
-                        "value": 0.33
-                    },
-                    {
-                        "text": "Choice 3",
-                        "value": 0.33
-                    },
-                    {
-                        "text": "Choice 4",
-                        "value": 0
-                    },
-                    {
-                        "text": "Choice 5",
-                        "value": -0.33
-                    }
-                ]
-            }
-        ]
-    }
-    setPageTitle("clipboard-check", `[{(editTest)}] (${testData.name})`)
-    let i = 0
-    let qContainer = $('#question-container')
-    testData.questions.forEach(q => {
-        let qE = document.createElement('div')
-        qContainer.appendChild(qE)
-        let type = ''
-        if (q.type == 'open') type = '[{(openAnswer)}]'
-        else if (q.type == 'single-choice') type = '[{(singleChoice)}]'
-        else if (q.type == 'multiple-choice') type = '[{(multipleChoice)}]'
-        qE.outerHTML = `
-            <div class="question" i="${i}">
-                <div class="question-info">
-                    <p class="question-title">${q.question}</p>
-                    <p class="question-type">${type}</p>
-                </div>
-                <div class="question-controls">
-                    <i title="[{(delete)}]" class="fad detele-question fa-trash" onclick="testData.questions.splice(this.parentElement.parentElement.getAttribute('i'), 1); this.parentElement.parentElement.remove(); rerender()"></i>
-                    <i title="[{(moveUp)}]" style="cursor: pointer;" class="fas move-question move-question-up fa-chevron-up"></i>
-                    <i title="[{(edit)}]" class="fad edit-question fa-edit" onclick="editQuestion(this.parentElement.parentElement.getAttribute('i'))"></i>
-                    <i title="[{(moveDown)}]" style="cursor: pointer;" class="fas move-question move-question-down fa-chevron-down"></i>
-                </div>
-            </div>
-        `
-        i++
-    })
-})
+
+    fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) })
+        .then(res => res.json())
+        .then(res => {
+            testData = res
+            setPageTitle("clipboard-check", `[{(editTest)}] (${testData.name})`)
+            let i = 0
+            let qContainer = $('#question-container')
+            testData.questions.forEach(q => {
+                let qE = document.createElement('div')
+                qContainer.appendChild(qE)
+                let type = ''
+                if (q.type == 'open') type = '[{(openAnswer)}]'
+                else if (q.type == 'single-choice') type = '[{(singleChoice)}]'
+                else if (q.type == 'multiple-choice') type = '[{(multipleChoice)}]'
+                qE.outerHTML = `
+                    <div class="question" i="${i}">
+                        <div class="question-info">
+                            <p class="question-title">${q.question}</p>
+                            <p class="question-type">${type}</p>
+                        </div>
+                        <div class="question-controls">
+                            <i title="[{(delete)}]" class="fad detele-question fa-trash" onclick="testData.questions.splice(this.parentElement.parentElement.getAttribute('i'), 1); this.parentElement.parentElement.remove(); rerender()"></i>
+                            <i title="[{(moveUp)}]" style="cursor: pointer;" class="fas move-question move-question-up fa-chevron-up"></i>
+                            <i title="[{(edit)}]" class="fad edit-question fa-edit" onclick="editQuestion(this.parentElement.parentElement.getAttribute('i'))"></i>
+                            <i title="[{(moveDown)}]" style="cursor: pointer;" class="fas move-question move-question-down fa-chevron-down"></i>
+                        </div>
+                    </div>
+                `
+                i++
+            })
+            addFunctionality()
+        })
+        .catch(e => qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back()))
+}
 window.addEventListener('online', save)
 window.addEventListener('toggle-modal-edit-test', () => {
     fetch('/teachers/getInfo', { method: "POST" })

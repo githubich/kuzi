@@ -7,7 +7,7 @@
 ::-webkit-scrollbar-thumb:hover { background: var(--bg-shade3); }
 ::-webkit-scrollbar-thumb:active { background: var(--bg-shade4); }
 html, body, main { margin: 0; background-color: var(--bg); overflow-x: hidden; }
-body.students .teachers-only { display: none; }
+body:not(.teacher) .teachers-only { display: none; }
 main { padding: 20px; margin-top: 60px; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: #0000; color: var(--bg-alt); word-break: break-word; white-space: normal; }
 :not(i) { font-family: 'Open Sans', Arial, Helvetica, sans-serif; outline: none; }
@@ -102,7 +102,7 @@ header .vertical-separator {
     z-index: 9999;
 }
 #picture-modal .center input, #picture-modal .center p { display: inline-block }
-#picture-modal > div :not(:nth-last-child(1)), #password-modal > div :not(:nth-last-child(1)), #new-event-modal > div :not(:nth-last-child(1)) { margin-bottom: 20px; }
+#picture-modal > div :not(:nth-last-child(1)), #password-modal > div :not(:nth-last-child(1)), #new-event-modal > div > :not(:nth-last-child(1)) { margin-bottom: 20px; }
 button { margin: auto; display: block; }
 .picture-label, button {
     background: #0000;

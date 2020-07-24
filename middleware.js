@@ -12,77 +12,25 @@ function kuziMiddleware(req, res, next) {
     let userIDfromCookie = 0
     let i = 0
     let modified = false
-    let currentTime = new Date()
 
     if (req.url.includes("?")) req.url = req.url.split("?")[0]
-
-    if (req.headers.cookie !== undefined && req.headers.cookie !== null && req.headers.cookie !== '') {
+    req.userInfo = {}
+    if (req.headers.cookie) {
         let cookies = {}
         req.headers.cookie.split('&').forEach(cookie => {
-            eval(`cookies.${cookie.split('=')[0]}='${cookie.split('=')[1]}'`)
+            eval(`cookies.${cookie.split('=')[0]} = '${cookie.split('=')[1]}'`)
         })
         req.cookies = cookies
     } else req.cookies = {}
-    req.userInfo = {}
-    activeCookies.forEach(cookie => {
-		if (cookie.cookie == req.cookies.session) {
-            userIDfromCookie = cookie.userID
-            if (req.method == "POST") {
-                cookie.expireTime = Date.now() + 3600000
-                modified = true
+    if (req.headers.cookie) {
+        activeCookies.forEach(cookie => {
+            if (cookie.cookie == req.cookies.session) {
+                userIDfromCookie = cookie.userID
+                if (req.method == "POST") { cookie.expireTime = Date.now() + 3600000; modified = true }
             }
-		}
-    })
-    users.forEach(user => { if (user.userID == userIDfromCookie) req.userInfo = user })
-    if (req.method == "POST" && !req.userInfo) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
-    req.userInfo.class = {}
-    if (req.userInfo.role == "student") {
-        classes.forEach(clas => clas.students.forEach(student => {
-            if (req.userInfo.userID == student) req.userInfo.class = clas
-        }))
-    }
-    req.userInfo.currentSubject = {}
-    scheduling.forEach(connection => {
-        let start = new Date()
-        let end = new Date()
-        start.setHours(connection.time.hours)
-        start.setMinutes(connection.time.minutes)
-        start.setSeconds(0)
-        start.setMilliseconds(0)
-        end.setHours(connection.time.hours + connection.time.duration.hours)
-        end.setMinutes(connection.time.minutes + connection.time.duration.minutes)
-        end.setSeconds(0)
-        end.setMilliseconds(0)
-        if (req.userInfo.role == "student") {
-            if (connection.classID == req.userInfo.class.classID && start.getTime() <= currentTime.getTime() && end.getTime() > currentTime.getTime() && currentTime.getDay() == connection.time.weekDay) subjects.forEach(subject => {
-                if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
-            })
-        } else if (req.userInfo.role == "teacher") {
-            if (connection.teacherID == req.userInfo.userID && start.getTime() <= currentTime.getTime() && end.getTime() > currentTime.getTime() && currentTime.getDay() == connection.time.weekDay) subjects.forEach(subject => {
-                req.userInfo.class = { classID: connection.classID }
-                if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
-            })
-            classes.forEach(clas => {
-                if (clas.classID == req.userInfo.class.classID) req.userInfo.class = clas
-            })
-        }
-    })
-	activeCookies.forEach(cookie => {
-		if (cookie.expireTime <= Date.now()) {
-			activeCookies.splice(i, 1)
-			modified = true
-		}
-		i++
-    })
-	i = 0
-	activeCookies.forEach(cookie => {
-		if (cookie.expireTime <= Date.now()) {
-			activeCookies.splice(i, 1)
-			modified = true
-		}
-		i++
-	})
-	if (modified) saveJSON('active.cookies.json', activeCookies)
+        })
+        req.userInfo = users.find(e => e.userID == userIDfromCookie)
+    }    
     res.respond = (content, file, mime, statusCode) => {
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
@@ -93,6 +41,40 @@ function kuziMiddleware(req, res, next) {
         }
         res.setHeader('Content-Type', mime)
         res.status(statusCode).send(content)
+    }
+    if (req.method == "POST" && (!req.userInfo && req.url != "/user/login")) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+    if (req.userInfo) {
+        req.userInfo.class = {}
+        if (req.userInfo.role == "student") req.userInfo.class = classes.find(e => e.students.includes(req.userInfo.userID))
+        req.userInfo.currentSubject = {}
+        scheduling.forEach(connection => {
+            let start = new Date()
+            let end = new Date()
+            start.setHours(connection.time.hours); start.setMinutes(connection.time.minutes); start.setSeconds(0); start.setMilliseconds(0)
+            end.setHours(connection.time.hours + connection.time.duration.hours); end.setMinutes(connection.time.minutes + connection.time.duration.minutes); end.setSeconds(0); end.setMilliseconds(0)
+            if (req.userInfo.role == "student") {
+                if (connection.classID == req.userInfo.class.classID && start.getTime() <= (new Date()).getTime() && end.getTime() > (new Date()).getTime() && (new Date()).getDay() == connection.time.weekDay) subjects.forEach(subject => {
+                    if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
+                })
+            } else if (req.userInfo.role == "teacher") {
+                if (connection.teacherID == req.userInfo.userID && start.getTime() <= (new Date()).getTime() && end.getTime() > (new Date()).getTime() && (new Date()).getDay() == connection.time.weekDay) subjects.forEach(subject => {
+                    req.userInfo.class = { classID: connection.classID }
+                    if (subject.subjectID == connection.subjectID) req.userInfo.currentSubject = subject
+                })
+                classes.forEach(clas => {
+                    if (clas.classID == req.userInfo.class.classID) req.userInfo.class = clas
+                })
+            }
+        })
+        i = 0
+        activeCookies.forEach(cookie => {
+            if (cookie.expireTime <= Date.now()) {
+                activeCookies.splice(i, 1)
+                modified = true
+            }
+            i++
+        })
+        if (modified) saveJSON('active.cookies.json', activeCookies)
     }
     next()
 }

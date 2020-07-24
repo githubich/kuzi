@@ -19,14 +19,14 @@
 		    <input id="test-name" type="text">
         </div>
         <div class="test-start">
-            <p class="hint"><i class="fad fa-i-cursor"></i>[{(startTime)}]</p>
+            <p class="hint"><i class="fad fa-calendar-alt"></i>[{(startTime)}]</p>
             <div class="layout">
                 <input id="test-start-date" type="date">
                 <input id="test-start-time" type="time">
             </div>
         </div>
         <div class="test-due">
-            <p class="hint"><i class="fad fa-i-cursor"></i>[{(dueTime)}]</p>
+            <p class="hint"><i class="fad fa-calendar-alt"></i>[{(dueTime)}]</p>
             <div class="layout">
                 <input id="test-due-date" type="date">
                 <input id="test-due-time" type="time">
@@ -54,7 +54,7 @@
 		    <input id="question-question" type="text">
         </div>
         <div class="question-type">
-            <p class="hint"><i class="fad fa-i-cursor"></i>[{(type)}]</p>
+            <p class="hint"><i class="fad fa-tasks"></i>[{(type)}]</p>
 		    <select id="question-type" oninput="updateEditQuestionModal(this.value, this.parentElement.parentElement.parentElement.getAttribute('i'))">
                 <option value="single-choice">[{(singleChoice)}]</option>
                 <option value="multiple-choice">[{(multipleChoice)}]</option>
@@ -63,7 +63,7 @@
         </div>
         <ul class="question-answer"></ul>
         <div class="question-value" style="display: block;">
-            <p class="hint"><i class="fad fa-i-cursor"></i>[{(value)}]</p>
+            <p class="hint"><i class="fad fa-arrows-v"></i>[{(value)}]</p>
 		    <div class="markInput" onclick="this.children[0].focus()"><input class="percent" id="question-value" type="number" min="-100" max="100"><p>%</p></div>
         </div>
         <button onclick="editQuestionSave(this.parentElement.parentElement.getAttribute('i'))"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>

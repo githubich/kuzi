@@ -40,7 +40,50 @@ app.get('/users/:id', (req, res) => {
 app.get('/resources/download/:uuid', (req, res) => {
 	let file = importJSON('upload/resources/index.json').find(e => e.uuid == req.params.uuid)
 	if (req.userInfo.userID == file.ownerID || req.userInfo.class.classID == file.classID) res.download(`upload/resources/${file.name}`, file.display.name)
-	else res.respond({ message: 'not allowed' }, '', 'application/json', 401)
+	else res.respond({ message: 'not allowed' }, '', 'application/json', 403)
+})
+app.get('/new-test.html', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond('<script>history.back()</script>', '', 'text/html', 403)
+	let scheduling = importJSON('scheduling.json')
+	let tests = importJSON('tests.json')
+	let i = 0
+	scheduling.forEach(connection => {
+		if (connection.teacherID != req.userInfo.userID) scheduling.splice(i, 1)
+		i++
+	})
+	let schedule = scheduling[0]
+	let ID = 0
+	if (tests.length > 0) ID = tests[tests.length - 1].testID + 1
+	tests.push({
+        name: "Test",
+        subjectID: schedule.subjectID,
+		classID: schedule.classID,
+		ownerID: req.userInfo.userID,
+        testID: ID,
+        startTime: { "year": 2020, "month": 7, "day": 22, "hours": 0, "minutes": 0 },
+        dueTime: { "year": 2020, "month": 7, "day": 27, "hours": 23, "minutes": 59 },
+        questions: [
+            { question: "Question 1", type: "open" },
+            {
+                question: "Question 2",
+                type: "single-choice",
+                options: [ "Choice 1", "Choice 2", "Choice 3" ],
+                correctAnswer: 0,
+                value: 1
+            },
+            {
+                question: "Question 3",
+                type: "multiple-choice",
+                options: [
+                    { text: "Choice 1", value: 1 },
+                    { text: "Choice 2", value: 0 },
+                    { text: "Choice 3", value: -1 }
+                ]
+            }
+        ]
+	})
+	saveJSON('tests.json', tests)
+	res.redirect(`/edit-test.html?ID=${ID}`)
 })
 app.get('/remove_menus.css', (req, res) => {
 	let content = ""
@@ -53,7 +96,7 @@ app.get('/remove_menus.css', (req, res) => {
 })
 app.get('/', (req, res) => res.redirect("/login.html"))
 app.get('*', (req, res) => {
-	if (req.userInfo.userID || req.url === "/login.html" || extname(req.url) !== ".html") {
+	if ((req.userInfo && req.userInfo.userID) || req.url === "/login.html" || extname(req.url) !== ".html") {
 		if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)
 		else if (existsSync(`.${req.url}`)) {
 			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
@@ -82,10 +125,10 @@ app.post('/user/login', (req, res) => {
 	if (found) {
 		let activeCookies = importJSON('active.cookies.json')
 		let newSession = newUUID()
-		res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 401)
+		res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 403)
 		activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
 		saveJSON('active.cookies.json', activeCookies)
-	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
+	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 403)
 })
 app.post('/user/logout', (req, res) => {
 	let activeCookies = importJSON('active.cookies.json')
@@ -126,12 +169,12 @@ app.post('/user/changePassword', (req, res) => {
 	if (changed) {
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 		saveJSON('users.json', users)
-	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 401)
+	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 403)
 })
 
 // Students
 app.post('/students/marks/get', (req, res) => {
-	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 403)
 	try {
 		let exists = false
 		let marks = importJSON('marks.json')
@@ -183,7 +226,7 @@ app.post('/students/marks/get', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/students/marks/graph', (req, res) => {
-	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 401)
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: 'logout' }), '', 'application/json', 403)
 	try {
 		let exists = false
 		let marks = importJSON('marks.json')
@@ -257,10 +300,19 @@ app.post('/students/resources/get', (req, res) => {
 	})
 	res.respond(JSON.stringify(theirFiles), '', 'application/json', 200)
 })
+app.post('/students/tests/list', (req, res) => {
+	let tests = importJSON('tests.json')
+	let i = 0
+	tests.forEach(test => {
+		if (test.classID != req.userInfo.class.classID) tests.splice(i, 1)
+		i++
+	})
+	res.respond(JSON.stringify(tests), '', 'application/json', 200)
+})
 
 // Teachers
 app.post('/teachers/marks/create', (req, res) => {
-	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	try {
 		let marks = importJSON('marks.json')
 		req.body.markID = marks.length
@@ -275,7 +327,7 @@ app.post('/teachers/marks/create', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/teachers/getInfo', (req, res) => {
-	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	try {
 		let classes = importJSON('classes.json')
 		let exists = false
@@ -329,7 +381,7 @@ app.post('/teachers/getInfo', (req, res) => {
 })
 app.post('/teachers/resources/upload', (req, res) => {
 	req.body = JSON.parse(req.body.data)
-	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 401)
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (!req.files || !req.files.file || !req.body.classID || !req.body.subjectID) return res.respond({ message: 'unknown error' }, '', 'application/json', 500)
 	let file = req.files.file
 	let uuid = newUUID()
@@ -388,6 +440,31 @@ app.post('/teachers/resources/delete', (req, res) => {
 	index.splice(index.findIndex(e => e.uuid == req.body.uuid), 1)
 	saveJSON('upload/resources/index.json', index)
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
+})
+app.post('/teachers/tests/get', (req, res) => {
+	let test = {}
+	importJSON('tests.json').forEach(t => {
+		if (t.ownerID == req.userInfo.userID && t.testID == req.body.ID) test = t
+	})
+	res.respond(JSON.stringify(test), '', 'application/json', 200)
+})
+app.post('/teachers/tests/list', (req, res) => {
+	let tests = importJSON('tests.json')
+	let i = 0
+	tests.forEach(test => {
+		if (test.ownerID != req.userInfo.userID) tests.splice(i, 1)
+		i++
+	})
+	res.respond(JSON.stringify(tests), '', 'application/json', 200)
+})
+app.post('/teachers/tests/edit', (req, res) => {
+	let tests = importJSON('tests.json')
+	let editIndex = tests.findIndex(e => e.testID == req.body.testID)
+	if (tests[editIndex].ownerID == req.userInfo.userID && tests[editIndex].ownerID == req.body.ownerID) {
+		tests[editIndex] = req.body
+		saveJSON('tests.json', tests)
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)
 })
 
 // Misc
@@ -485,7 +562,7 @@ app.post('/misc/events/details', (req, res) => {
 		})
 	}
 	if (event.owner.userID == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user.userID == req.userInfo.userID) != -1)) res.respond(JSON.stringify(event), '', 'application/json', 200)
-	else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
+	else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 })
 app.post('/misc/events/delete', (req, res) => {
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
@@ -495,7 +572,7 @@ app.post('/misc/events/delete', (req, res) => {
 		events.splice(events.findIndex(eventF => event.eventID == eventF.eventID), 1)
 		saveJSON('events.json', events)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 })
 app.post('/misc/events/edit', (req, res) => {
 	let events = importJSON('events.json')
@@ -508,7 +585,7 @@ app.post('/misc/events/edit', (req, res) => {
 		events[eventIndex].date.day = parseInt(req.body.date.split('-')[2])
 		saveJSON('events.json', events)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 401)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 })
 
 app.post('/misc/schedule/get', (req, res) => {

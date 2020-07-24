@@ -1,4 +1,5 @@
 window.addEventListener('load', () => {
+    $$('#dropdown i, #more i').forEach(el => el.classList.add('fa-fw'))
     headerDropdown = $('#dropdown')
     headerDropdownArrow = $("#dropdown-arrow")
     more = $("#more")
@@ -14,6 +15,7 @@ window.addEventListener('load', () => {
                 if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `[{(teacher)}]`
                 if ($('#markGraph')) $('#markGraph').remove()
+                $$('.teachers-only').forEach(el => el.style = '')
             } else if (userInfo.role == "student") {
                 if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
