@@ -55,14 +55,15 @@ app.get('/new-test.html', (req, res) => {
 	let ID = 0
 	if (tests.length > 0) ID = tests[tests.length - 1].testID + 1
 	tests.push({
-        name: "Test",
+		name: "Test",
         subjectID: schedule.subjectID,
 		classID: schedule.classID,
 		ownerID: req.userInfo.userID,
         testID: ID,
         startTime: { "year": 2020, "month": 7, "day": 22, "hours": 0, "minutes": 0 },
         dueTime: { "year": 2020, "month": 7, "day": 27, "hours": 23, "minutes": 59 },
-        questions: [
+		visible: false,
+		questions: [
             { question: "Question 1", type: "open" },
             {
                 question: "Question 2",
@@ -301,13 +302,20 @@ app.post('/students/resources/get', (req, res) => {
 	res.respond(JSON.stringify(theirFiles), '', 'application/json', 200)
 })
 app.post('/students/tests/list', (req, res) => {
+	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
 	let tests = importJSON('tests.json')
-	let i = 0
+	let theirTests = []
 	tests.forEach(test => {
-		if (test.classID != req.userInfo.class.classID) tests.splice(i, 1)
-		i++
+		if (test.classID == req.userInfo.class.classID && test.visible === true) {
+			test.subject = subjects.find(e => e.subjectID == test.subjectID)
+			delete test.subjectID
+			test.class = classes.find(e => e.classID == test.classID)
+			delete test.classID
+			theirTests.push(test)
+		}
 	})
-	res.respond(JSON.stringify(tests), '', 'application/json', 200)
+	res.respond(JSON.stringify(theirTests), '', 'application/json', 200)
 })
 
 // Teachers
@@ -449,19 +457,35 @@ app.post('/teachers/tests/get', (req, res) => {
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
 app.post('/teachers/tests/list', (req, res) => {
+	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
 	let tests = importJSON('tests.json')
-	let i = 0
+	let theirTests = []
 	tests.forEach(test => {
-		if (test.ownerID != req.userInfo.userID) tests.splice(i, 1)
-		i++
+		if (test.ownerID == req.userInfo.userID) {
+			test.subject = subjects.find(e => e.subjectID == test.subjectID)
+			delete test.subjectID
+			test.class = classes.find(e => e.classID == test.classID)
+			delete test.classID
+			theirTests.push(test)
+		}
 	})
-	res.respond(JSON.stringify(tests), '', 'application/json', 200)
+	res.respond(JSON.stringify(theirTests), '', 'application/json', 200)
 })
 app.post('/teachers/tests/edit', (req, res) => {
 	let tests = importJSON('tests.json')
 	let editIndex = tests.findIndex(e => e.testID == req.body.testID)
-	if (tests[editIndex].ownerID == req.userInfo.userID && tests[editIndex].ownerID == req.body.ownerID) {
+	if (tests[editIndex].ownerID == req.userInfo.userID) {
 		tests[editIndex] = req.body
+		saveJSON('tests.json', tests)
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)
+})
+app.post('/teachers/tests/setVisibility', (req, res) => {
+	let tests = importJSON('tests.json')
+	let editIndex = tests.findIndex(e => e.testID == req.body.ID)
+	if (tests[editIndex].ownerID == req.userInfo.userID) {
+		tests[editIndex].visible = req.body.set
 		saveJSON('tests.json', tests)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)

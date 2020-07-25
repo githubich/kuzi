@@ -47,6 +47,5 @@
 :root { --accent-dark: #0050a0; --accent: #0070c0; --accent-light: #2090e0; }
 
 body { background: var(--bg); }
-*:not(input):not(textarea):not(button) { color: var(--bg-alt); }
-:not(a) { color: var(--bg-alt); }
-a, a * { color: var(--accent) !important; text-decoration: none; }
+*:not(input):not(textarea):not(button):not(a):not(a *) { color: var(--bg-alt); }
+a, a * { color: var(--accent); text-decoration: none; }

@@ -52,10 +52,11 @@
                     }
                 ]
             }
-        ]
+        ],
+        "visible": true
     },
     {
-        "name": "Test",
+        "name": "This is a pretty long test name to check if text wrapping is good or not",
         "subjectID": 1,
         "classID": 1,
         "ownerID": 1,
@@ -108,6 +109,64 @@
                     }
                 ]
             }
-        ]
+        ],
+        "visible": true
+    },
+    {
+        "name": "Test",
+        "subjectID": 1,
+        "classID": 1,
+        "ownerID": 1,
+        "testID": 2,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 27,
+            "hours": 23,
+            "minutes": 59
+        },
+        "questions": [
+            {
+                "question": "Question 1",
+                "type": "open"
+            },
+            {
+                "question": "Question 2",
+                "type": "single-choice",
+                "options": [
+                    "Choice 1",
+                    "Choice 2",
+                    "Choice 3"
+                ],
+                "correctAnswer": 0,
+                "value": 1
+            },
+            {
+                "question": "Question 3",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Choice 1",
+                        "value": 1
+                    },
+                    {
+                        "text": "Choice 2",
+                        "value": 0
+                    },
+                    {
+                        "text": "Choice 3",
+                        "value": -1
+                    }
+                ]
+            }
+        ],
+        "visible": true
     }
 ]
