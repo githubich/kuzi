@@ -1,5 +1,9 @@
-main p { margin: 0; display: inline-block; }
+#test-info p { margin: 0; }
+#test-info h3:not(:nth-last-child(1)), #test-info p:not(:nth-last-child(1)) { margin-bottom: 2.5px; }
+#start-test { margin: 20px 0 0 0; }
+
 #question-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+#question-container p { margin: 0; display: inline-block; }
 .question { display: flex; }
 .question .question-side {
     display: inline-flex;
@@ -14,8 +18,11 @@ main p { margin: 0; display: inline-block; }
 .question .question-side .separator::after { content: ''; display: block; background-color: #7a7a7a; width: 100%; height: 1px; }
 .answer { margin: 10px 0 0; }
 .option { display: flex;  }
-.option, .option * { cursor: pointer; }
+.option, .option *:not(input[type=text]) { cursor: pointer; }
 .option label { width: 100%; padding: 0 0 0 2.5px; }
+
+#submit { margin-top: 20px; }
 @media (max-width: 600px) {
+    #start-test { width: 100%; }
     #question-container { grid-template-columns: 1fr; }
 }

@@ -2,9 +2,10 @@
 main p { margin: 0; }
 #question-container { display: grid; gap: 20px; }
 .question { display: flex; flex-direction: row; width: 100%; background-color: var(--bg-shade1); padding: 12.5px; border-radius: 10px; border: solid 1px var(--bg-alt-nearly-transparent); }
-.question > .question-info { display: flex; flex-direction: column; }
-.question > .question-info > .question-type { font-size: 0.9em; }
-.question > .question-controls { margin: auto 0 auto auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.question-info { display: flex; flex-direction: column; }
+.question-info > .question-type { font-size: 0.9em; }
+.question-controls { margin: auto 0 auto auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.move-question { cursor: pointer; }
 footer { display: flex; }
 footer * { margin: auto 0; }
 footer > div > :nth-child(1) { margin: auto 0.3em auto 0; }

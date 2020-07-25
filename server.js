@@ -319,22 +319,93 @@ app.post('/students/tests/list', (req, res) => {
 	})
 	res.respond(JSON.stringify(theirTests), '', 'application/json', 200)
 })
+app.post('/students/tests/getQuestions', (req, res) => {
+	if (req.userInfo.role != "student" ||
+		!existsSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) ||
+		importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`).finished == true) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
+	let users = importJSON('users.json')
+	let test = {}
+	importJSON('tests.json').forEach(t => {
+		if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t
+	})
+	test.class = classes.find(e => e.classID == test.classID)
+	delete test.classID
+	test.subject = subjects.find(e => e.subjectID == test.subjectID)
+	delete test.subjectID
+	test.owner = users.find(e => e.userID == test.ownerID)
+	delete test.owner.password
+	delete test.ownerID
+	let i = 0
+	test.questions.forEach(q => {
+		if (q.type == 'single-choice') {
+			test.questions[i].totalValue = test.questions[i].value
+			delete test.questions[i].value
+		}
+		else if (q.type == 'multiple-choice') {
+			let totalValue = 0
+			q.options.forEach(o => { if (o.value > 0) totalValue += o.value })
+			test.questions[i].totalValue = totalValue
+		}
+
+		delete test.questions[i].correctAnswer
+		let j = 0
+		if (q.type != 'open') q.options.forEach(o => {
+			delete test.questions[i].options[j].value
+			j++
+		})
+		i++
+	})
+	res.respond(JSON.stringify(test), '', 'application/json', 200)
+})
+app.post('/students/tests/getMinimal', (req, res) => {
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
+	let users = importJSON('users.json')
+	let test = {}
+	importJSON('tests.json').forEach(t => {
+		if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t
+	})
+	test.class = classes.find(e => e.classID == test.classID)
+	delete test.classID
+	test.subject = subjects.find(e => e.subjectID == test.subjectID)
+	delete test.subjectID
+	test.owner = users.find(e => e.userID == test.ownerID)
+	delete test.owner.password
+	delete test.ownerID
+	let qs = [ ...test.questions ]
+	test.questions = []
+	qs.forEach(() => test.questions.push(0))
+	res.respond(JSON.stringify(test), '', 'application/json', 200)
+})
+app.post('/students/tests/progress/get', (req, res) => {
+	if (!existsSync('test-progress/')) mkdirSync('test-progress')
+	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
+	if (existsSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) && readFileSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`)) res.respond(JSON.stringify(importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`)), '', 'application/json', 200)
+	else res.respond({ message: 'not started' }, '', 'application/json', 200)
+})
+app.post('/students/tests/start', (req, res) => {
+	if (!existsSync('test-progress/')) mkdirSync('test-progress')
+	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
+	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, JSON.stringify({ progress: [], finished: false }))
+	res.respond({ message: 'ok' }, '', 'application/json', 200)
+})
 
 // Teachers
 app.post('/teachers/marks/create', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
-	try {
-		let marks = importJSON('marks.json')
-		req.body.markID = marks.length
-		marks.push(req.body)
-		saveJSON('marks.json', marks)
-		res.respond({ message: 'ok' }, '', 'application/json', 200)
-		req.body.marks.forEach(mark => {
-			let notifications = importJSON(`notifications/${mark.studentID}.json`)
-			notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}%`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
-			saveJSON(`notifications/${mark.studentID}.json`, notifications)
-		})
-	} catch(e) { console.error(e) }
+	let marks = importJSON('marks.json')
+	req.body.markID = marks.length
+	marks.push(req.body)
+	saveJSON('marks.json', marks)
+	req.body.marks.forEach(mark => {
+		let notifications = importJSON(`notifications/${mark.studentID}.json`)
+		notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}%`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
+		saveJSON(`notifications/${mark.studentID}.json`, notifications)
+	})
+	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 
 app.post('/teachers/getInfo', (req, res) => {

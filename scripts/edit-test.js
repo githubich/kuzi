@@ -306,10 +306,10 @@ function load() {
                             <p class="question-type">${type}</p>
                         </div>
                         <div class="question-controls">
-                            <i title="[{(delete)}]" class="fad detele-question fa-trash" onclick="testData.questions.splice(this.parentElement.parentElement.getAttribute('i'), 1); this.parentElement.parentElement.remove(); rerender()"></i>
-                            <i title="[{(moveUp)}]" style="cursor: pointer;" class="fas move-question move-question-up fa-chevron-up"></i>
+                            <i title="[{(delete)}]" class="fad delete-question fa-trash" onclick="testData.questions.splice(this.parentElement.parentElement.getAttribute('i'), 1); this.parentElement.parentElement.remove(); rerender()"></i>
+                            <i title="[{(moveUp)}]" class="fas move-question move-question-up fa-chevron-up"></i>
                             <i title="[{(edit)}]" class="fad edit-question fa-edit" onclick="editQuestion(this.parentElement.parentElement.getAttribute('i'))"></i>
-                            <i title="[{(moveDown)}]" style="cursor: pointer;" class="fas move-question move-question-down fa-chevron-down"></i>
+                            <i title="[{(moveDown)}]" class="fas move-question move-question-down fa-chevron-down"></i>
                         </div>
                     </div>
                 `
