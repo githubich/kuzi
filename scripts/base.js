@@ -79,9 +79,9 @@ function toggleMore() {
     }
 }
 function setPageTitle(icon, title) { $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
-function setActiveTab(index) {
+function setActiveTab(index, preserveHref) {
     $$('.header-action')[index].classList.add('selected')
-    $$('.header-action a')[index].removeAttribute('href')
+    if (!preserveHref) $$('.header-action a')[index].removeAttribute('href')
 }
 function changePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))

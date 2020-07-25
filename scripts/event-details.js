@@ -1,5 +1,6 @@
 function load() {
     setPageTitle("calendar-alt", "[{(eventDetails)}]")
+    setActiveTab(0, true)
     fetch('/misc/events/details', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

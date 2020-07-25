@@ -269,6 +269,7 @@ app.post('/students/marks/graph', (req, res) => {
 		res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
+
 app.post('/students/resources/get', (req, res) => {
 	let classes = importJSON('classes.json')
 	let subjects = importJSON('subjects.json')
@@ -301,6 +302,7 @@ app.post('/students/resources/get', (req, res) => {
 	})
 	res.respond(JSON.stringify(theirFiles), '', 'application/json', 200)
 })
+
 app.post('/students/tests/list', (req, res) => {
 	let classes = importJSON('classes.json')
 	let subjects = importJSON('subjects.json')
@@ -334,6 +336,7 @@ app.post('/teachers/marks/create', (req, res) => {
 		})
 	} catch(e) { console.error(e) }
 })
+
 app.post('/teachers/getInfo', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	try {
@@ -387,6 +390,7 @@ app.post('/teachers/getInfo', (req, res) => {
 		res.respond(JSON.stringify(resClasses), '', 'application/json', 200)
 	} catch(e) { console.error(e) }
 })
+
 app.post('/teachers/resources/upload', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	req.body = JSON.parse(req.body.data)
@@ -451,6 +455,7 @@ app.post('/teachers/resources/delete', (req, res) => {
 	saveJSON('upload/resources/index.json', index)
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
+
 app.post('/teachers/tests/get', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let test = {}

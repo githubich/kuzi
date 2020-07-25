@@ -8,9 +8,7 @@
     "express-fileupload": "^1.1.7-alpha.4"
   },
   "scripts": {
-    "run": "node server.js",
-    "runSudo": "sudo node server.js",
-    "test": "sudo node server.js -v"
+    "run": "node server.js"
   },
   "repository": {
     "type": "git",

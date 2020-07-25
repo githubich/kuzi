@@ -277,9 +277,8 @@ function moveDown(event) {
 }
 function load() {
     if ($parseURLArgs().ID == undefined) return qAlert({ message: '[{(wrongID)}]', mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
-
     setPageTitle("clipboard-check", `[{(loading)}]`)
-    setActiveTab(2)
+    setActiveTab(2, true)
     let footer = document.createElement('footer')
     document.body.appendChild(footer)
     footer.classList.add('blurry-bg')
