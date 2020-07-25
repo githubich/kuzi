@@ -2,6 +2,19 @@ window.addEventListener('load', () => {
     setPageTitle("clipboard-check", `[{(tests)}]`)
     setActiveTab(2)
 })
+function deleteTest(element, ID) {
+    qAlert({ message: '[{(areYouSure)}]', mode: 'question', buttons: { ok: { text: '[{(yes)}]' }, cancel: { text: '[{(no)}]' } } })
+        .then(a => {
+            if (a) {
+                element.parentElement.parentElement.parentElement.remove()
+                fetch('/teachers/tests/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ID: ID })
+                })
+            }
+        })
+}
 function load() {
     fetch(`${userInfo.role}s/tests/list`, { method: 'POST' })
         .then(res => res.json())
@@ -31,8 +44,14 @@ function load() {
                         <p class="question-count">[{(questionCount)}]: ${test.questions.length}</p>
                         <p class="start">[{(startTime)}]: ${startHours}:${startMinutes} ${test.startTime.day}/${test.startTime.month}/${test.startTime.year}</p>
                         <p class="due">[{(dueTime)}]: ${dueHours}:${dueMinutes} ${test.dueTime.day}/${test.dueTime.month}/${test.dueTime.year}</p>
-                        <p class="controls"><a href="/perform-test.html?ID=${test.testID}" class="perform-test students-only" title="[{(perform)}]"><i class="fad fa-play"></i></a><a href="/edit-test.html?ID=${test.testID}" class="edit-test teachers-only" title="[{(edit)}]"><i class="fad fa-edit"></i></a><a class="delete-test teachers-only" title="[{(delete)}]"><i class="fad fa-trash"></i></a></p>
-                        <div class="visibility teachers-only"><input type="checkbox" id="visibility-${test.testID}" ${(() => { if (test.visible === true) return 'checked'; else return '' })()} oninput="this.disabled = true; fetch('/teachers/tests/setVisibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: ${test.testID}, set: this.checked }) }).then(res => { this.disabled = false })"><label for="visibility-${test.testID}">Visible</label></div>
+                        <p class="controls">
+                            <a title="[{(perform)}]" class="perform-test students-only" href="/perform-test.html?ID=${test.testID}"><i class="fad fa-play"></i></a>
+                            <a title="[{(edit)}]" class="edit-test teachers-only" href="/edit-test.html?ID=${test.testID}"><i class="fad fa-edit"></i></a>
+                            <a title="[{(delete)}]" class="delete-test teachers-only" onclick="deleteTest(this, ${test.testID})"><i class="fad fa-trash"></i></a></p>
+                        <div class="visibility teachers-only">
+                            <input type="checkbox" id="visibility-${test.testID}" ${(() => { if (test.visible === true) return 'checked'; else return '' })()} oninput="this.disabled = true; fetch('/teachers/tests/setVisibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: ${test.testID}, set: this.checked }) }).then(res => { this.disabled = false })">
+                            <label for="visibility-${test.testID}">Visible</label>
+                        </div>
                     </div>
                 `
                 if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) testE.classList.add('green')

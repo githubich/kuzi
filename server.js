@@ -388,8 +388,8 @@ app.post('/teachers/getInfo', (req, res) => {
 	} catch(e) { console.error(e) }
 })
 app.post('/teachers/resources/upload', (req, res) => {
-	req.body = JSON.parse(req.body.data)
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	req.body = JSON.parse(req.body.data)
 	if (!req.files || !req.files.file || !req.body.classID || !req.body.subjectID) return res.respond({ message: 'unknown error' }, '', 'application/json', 500)
 	let file = req.files.file
 	let uuid = newUUID()
@@ -411,6 +411,7 @@ app.post('/teachers/resources/upload', (req, res) => {
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/teachers/resources/get', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let classes = importJSON('classes.json')
 	let subjects = importJSON('subjects.json')
 	let i = 0
@@ -443,13 +444,15 @@ app.post('/teachers/resources/get', (req, res) => {
 	res.respond(JSON.stringify(theirFiles), '', 'application/json', 200)
 })
 app.post('/teachers/resources/delete', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let index = importJSON('upload/resources/index.json')
-	//unlinkSync(`upload/resources/${index.find(e => e.uuid == req.body.uuid).name}`)
+	unlinkSync(`upload/resources/${index.find(e => e.uuid == req.body.uuid).name}`)
 	index.splice(index.findIndex(e => e.uuid == req.body.uuid), 1)
 	saveJSON('upload/resources/index.json', index)
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/teachers/tests/get', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let test = {}
 	importJSON('tests.json').forEach(t => {
 		if (t.ownerID == req.userInfo.userID && t.testID == req.body.ID) test = t
@@ -457,6 +460,7 @@ app.post('/teachers/tests/get', (req, res) => {
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
 app.post('/teachers/tests/list', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let classes = importJSON('classes.json')
 	let subjects = importJSON('subjects.json')
 	let tests = importJSON('tests.json')
@@ -473,10 +477,20 @@ app.post('/teachers/tests/list', (req, res) => {
 	res.respond(JSON.stringify(theirTests), '', 'application/json', 200)
 })
 app.post('/teachers/tests/edit', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let tests = importJSON('tests.json')
 	let editIndex = tests.findIndex(e => e.testID == req.body.testID)
 	if (tests[editIndex].ownerID == req.userInfo.userID) {
 		tests[editIndex] = req.body
+		saveJSON('tests.json', tests)
+		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
+})
+app.post('/teachers/tests/delete', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let tests = importJSON('tests.json')
+	if (tests.find(e => e.testID == req.body.ID).ownerID == req.userInfo.userID) {
+		tests.splice(req.body.ID, 1)
 		saveJSON('tests.json', tests)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)
@@ -488,7 +502,7 @@ app.post('/teachers/tests/setVisibility', (req, res) => {
 		tests[editIndex].visible = req.body.set
 		saveJSON('tests.json', tests)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 })
 
 // Misc
