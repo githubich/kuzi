@@ -139,9 +139,11 @@ function editTestSave() {
     if ($('#test-name').value && $('#test-start-date').value &&
         $('#test-start-time').value && $('#test-due-date').value &&
         $('#test-due-time').value && $('#edit-test-modal li.class input[type=radio]:checked') &&
-        $('#edit-test-modal #subject-chooser').value) {
+        $('#edit-test-modal #subject-chooser').value &&
+        $('#edit-test-modal #period-chooser').value) {
 
         testData.name = $('#test-name').value
+        testData.periodID = parseInt($('#edit-test-modal #period-chooser').value)
         testData.subjectID = parseInt($('#edit-test-modal #subject-chooser').value)
         testData.classID = parseInt($('#edit-test-modal li.class input[type=radio]:checked').value)
         testData.startTime.year = parseInt($('#test-start-date').value.split('-')[0])
@@ -326,7 +328,7 @@ window.addEventListener('toggle-modal-edit-test', () => {
         .then(res => {
             data = res
             let myClasses = $('#my-classes')
-            myClasses.innerHTML = ""
+            myClasses.innerHTML = ''
             data.forEach(clas => {
                 let clasE = document.createElement('li')
                 myClasses.appendChild(clasE)
@@ -335,6 +337,21 @@ window.addEventListener('toggle-modal-edit-test', () => {
 
             $(`#my-classes li.class input[type=radio][value="${testData.classID}"]`).click()
             $('#subject-chooser').value = testData.subjectID
+        }))
+        .catch(e => console.error(e))
+    fetch('/misc/periods/list', { method: "POST" })
+        .then(res => res.json()
+        .then(res => {
+            let periodChooser = $('#period-chooser')
+            periodChooser.innerHTML = ''
+            res.forEach(period => {
+                let periodE = document.createElement('option')
+                periodChooser.appendChild(periodE)
+                let periodDisplayName = period.periodName
+                if (period.current === true) { periodDisplayName = `${periodDisplayName} ([{(current)}])` }
+                periodE.outerHTML = `<option value="${period.periodID}">${periodDisplayName}</option>`
+                if (period.current === true) { periodChooser.value = period.periodID }
+            })
         }))
         .catch(e => console.error(e))
     update = updateID => {

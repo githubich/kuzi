@@ -111,7 +111,8 @@
                 ]
             }
         ],
-        "visible": true
+        "visible": true,
+        "periodID": 3
     },
     {
         "name": "Test",
