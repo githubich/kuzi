@@ -1,4 +1,20 @@
 window.addEventListener('load', () => {
+    if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
+    else $('#theme + label').innerText = '[{(lightMode)}]'
+    $('#theme').checked = localStorage.getItem('theme') != 'light'
+    $('#theme').addEventListener('click', e => {
+        if (!$('#theme').checked) localStorage.setItem('theme', 'light')
+        else localStorage.setItem('theme', 'dark')
+        document.documentElement.setAttribute('theme', localStorage.getItem('theme'))
+        if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
+        else $('#theme + label').innerText = '[{(lightMode)}]'
+    })
+    /*$$('#theme, #theme + label').forEach(el => el.addEventListener('contextmenu', e => {
+        e.preventDefault()
+        $('#theme').checked = true
+        localStorage.setItem('theme', 'blackpink')
+        document.documentElement.setAttribute('theme', 'blackpink')
+    }))*/
     $$('#dropdown i, #more i').forEach(el => el.classList.add('fa-fw'))
     headerDropdown = $('#dropdown')
     headerDropdownArrow = $("#dropdown-arrow")

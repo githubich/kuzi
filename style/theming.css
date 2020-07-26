@@ -1,4 +1,4 @@
-@media (prefers-color-scheme: light) { :root {
+:root[theme=light] {
     --bg: #fff;
     --bg-shade1: #eee;
     --bg-shade2: #ddd;
@@ -20,8 +20,8 @@
     --bg-alt-alpha: #0000007a;
     --bg-alt-super-alpha: #00000040;
     --bg-alt-nearly-transparent: #00000020;
-} }
-@media (prefers-color-scheme: dark), (prefers-color-scheme: nopreference) { :root {
+}
+:root:not([theme=light]) {
     --bg: #000;
     --bg-shade1: #111;
     --bg-shade2: #222;
@@ -42,10 +42,40 @@
     --bg-alt-semi-alpha: #ffffffbf;
     --bg-alt-alpha: #ffffff7a;
     --bg-alt-super-alpha: #ffffff40;
-    --bg-alt-nearly-transparent: #ffffff20;        
-} }
-:root { --accent-dark: #0050a0; --accent: #0070c0; --accent-light: #2090e0; }
+    --bg-alt-nearly-transparent: #ffffff20;
+}
+/*:root[theme=blackpink] {
+    --bg: #000;
+    --bg-shade1: #111;
+    --bg-shade2: #222;
+    --bg-shade3: #333;
+    --bg-shade4: #444;
+    --bg-nearly-opaque: #000000df;
+    --bg-semi-alpha: #000000bf;
+    --bg-alpha: #0000007a;
+    --bg-super-alpha: #00000040;
+    --bg-nearly-transparent: #00000020;
 
+    --bg-alt: #fff;
+    --bg-alt-shade1: #eee;
+    --bg-alt-shade2: #ddd;
+    --bg-alt-shade3: #ccc;
+    --bg-alt-shade4: #bbb;
+    --bg-alt-nearly-opaque: #ffffffdf;
+    --bg-alt-semi-alpha: #ffffffbf;
+    --bg-alt-alpha: #ffffff7a;
+    --bg-alt-super-alpha: #ffffff40;
+    --bg-alt-nearly-transparent: #ffffff20;
+
+    --accent-dark: #cb8494;
+    --accent: #eda6b6;
+    --accent-light: #ffc8d8;
+}*/
+:root/*:not([theme=blackpink])*/ {
+    --accent-dark: #0050a0;
+    --accent: #0070c0;
+    --accent-light: #2292e2;
+}
 body { background: var(--bg); }
 *:not(input):not(textarea):not(button):not(a):not(a *) { color: var(--bg-alt); }
 a, a * { color: var(--accent); text-decoration: none; }

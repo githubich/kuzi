@@ -33,6 +33,13 @@
                     setTimeout(refresh, 0)
                 }
             }
+            /*setColor = () => {
+                if (markGraph.data.datasets[0].backgroundColor != `#${getComputedStyle(parent.document.documentElement).getPropertyValue('--accent').slice(2, Infinity)}7a`) {
+                    markGraph.data.datasets[0].backgroundColor = `#${getComputedStyle(parent.document.documentElement).getPropertyValue('--accent').slice(2, Infinity)}7a`
+                    markGraph.update()
+                }
+                setTimeout(setColor, 100)
+            }*/
             window.addEventListener('load', resize)
             window.addEventListener('resize', resize)
             window.addEventListener('load', () => {
@@ -42,14 +49,14 @@
                             resData = res
                             c = 0
                             let subject = resData[c]
-                            let ctx = $('#graph').getContext('2d');
+                            let ctx = $('#graph').getContext('2d')
                             markGraph = new Chart(ctx, {
                                 type: 'line',
                                 data: {
                                     labels: [],
                                     datasets: [{
                                         data: [],
-                                        backgroundColor: '#0070c07a',
+                                        backgroundColor: `#${getComputedStyle(parent.document.documentElement).getPropertyValue('--accent').slice(2, Infinity)}7a`,
                                         borderWidth: 1
                                     }]
                                 },
@@ -91,6 +98,7 @@
                                 
                             })
                             mouseOver = false
+                            //setColor()
                             refresh(0)
                         }))
             })

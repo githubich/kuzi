@@ -125,7 +125,10 @@
         "september|September",
         "october|October",
         "november|November",
-        "december|December"
+        "december|December",
+        
+        "darkMode|Dark mode",
+        "lightMode|Light mode"
     ],
     "es": [
         "langcode|es",
@@ -253,7 +256,10 @@
         "september|Septiembre",
         "october|Octubre",
         "november|Noviembre",
-        "december|Diciembre"
+        "december|Diciembre",
+        
+        "darkMode|Modo oscuro",
+        "lightMode|Modo claro"
     ],
     
     "ca": [
@@ -382,6 +388,9 @@
         "september|Setembre",
         "october|Octubre",
         "november|Novembre",
-        "december|Decembre"
+        "december|Decembre",
+        
+        "darkMode|Mode fosc",
+        "lightMode|Mode clar"
     ]
 }

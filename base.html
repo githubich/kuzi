@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="[{(langcode)}]">
     <head>
+		<script async="false" src="/scripts/theming.js"></script>
         <meta charset="UTF-8">
 		<meta name="viewport" content="height=device-height,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-		<meta name="theme-color" content="#0070c0">
 		<link rel="prefetch" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 		<link rel="prefetch" href="/remove_menus.css">
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -52,6 +52,7 @@
 			<ul class="dropdown-actions">
 				<li class="dropdown-action messages-action"><a href="javascript: alert('Coming soon :D')"><i class="fad fa-comments"></i><span>[{(messages)}]</span></a></li>
 				<li class="dropdown-action my-schedule-action"><a href="/my-schedule.html"><i class="fad fa-clock"></i><span>[{(mySchedule)}]</span></a></li>
+				<li class="dropdown-action theme-chooser"><input type="checkbox" id="theme"><label for="theme">[{(theme)}]</label></li>
 			</ul>
 		</div>
 		<div id="hamburger-menu-modal" class="modal blurry-bg">
