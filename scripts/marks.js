@@ -62,6 +62,8 @@ function load() {
                     if (URLparams && URLparams.highlightID) {
                         $(`.mark-${URLparams.highlightID}`).classList.add('highlighted')
                         $('.highlighted').scrollIntoView()
+                        console.log($('.highlighted').getBoundingClientRect().top)
+                        if ($('.highlighted').getBoundingClientRect().top < 65) window.scrollBy(0, $('.highlighted').getBoundingClientRect().top - 65)
                     }
                 })
             )

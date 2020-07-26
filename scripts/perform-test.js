@@ -2,7 +2,7 @@ window.addEventListener('load', () => {
     if ($parseURLArgs().ID == undefined) history.back()
     setActiveTab(2, true)
 })
-function loadTest(hasProgress) {
+function loadTest(progress) {
     setPageTitle("clipboard-check", "[{(loading)}]")
     $('#test-info').innerHTML = ''
     fetch('/students/tests/getQuestions', {
@@ -13,13 +13,12 @@ function loadTest(hasProgress) {
         .then(res => res.json())
         .then(test => {
             setPageTitle("clipboard-check", `[{(performTest)}] (${test.name})`)
-            console.log(test)
             let qContainer = $('#question-container')
             let i = 0
             test.questions.forEach(q => {
                 let qE = document.createElement('div')
                 qContainer.appendChild(qE)
-                qE.classList.add('question')
+                qE.classList.add('question', q.type)
                 qE.id = `question-${i}`
                 qE.innerHTML = `
                     <div class="question-side">
@@ -32,9 +31,7 @@ function loadTest(hasProgress) {
                         <div class="question-question">
                             <p>${q.question}</p>
                         </div>
-                        <div class="answer">
-                            
-                        </div>
+                        <div class="answer"></div>
                     </div>
                 `
                 let answerE = qE.querySelector('.answer')
@@ -45,7 +42,7 @@ function loadTest(hasProgress) {
                         answerE.appendChild(oE)
                         oE.outerHTML = `
                             <div class="option">
-                                <input type="radio" name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o}</label>
+                                <input type="radio" ${(() => { if (progress[i] == j) return 'checked'; return '' })()} name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o}</label>
                             </div>
                         `
                         j++
@@ -56,7 +53,7 @@ function loadTest(hasProgress) {
                         answerE.appendChild(oE)
                         oE.outerHTML = `
                             <div class="option">
-                                <input type="checkbox" name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o.text}</label>
+                                <input type="checkbox" ${(() => { if (progress[i].includes(j)) return 'checked'; return '' })()} name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o.text}</label>
                             </div>
                         `
                         j++
@@ -66,7 +63,7 @@ function loadTest(hasProgress) {
                     answerE.appendChild(oE)
                     oE.outerHTML = `
                         <div class="option">
-                            <input type="text" id="question-${i}-answer">
+                            <input type="text" id="question-${i}-answer"${(() => { if (typeof progress[i] == "string") return ` value="${progress[i]}"`; return '' })()}>
                         </div>
                     `
                 }
@@ -74,9 +71,10 @@ function loadTest(hasProgress) {
             })
             let submitBtn = document.createElement('button')
             $('#root').appendChild(submitBtn)
-            submitBtn.outerHTML = `<button id="submit"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>`
+            submitBtn.outerHTML = `<button id="submit" onclick="save(true)"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>`
+            $$('input').forEach(input => input.addEventListener('input', () => { save(false)} ))
         })
-    if (hasProgress) {  }
+        .catch(e => history.back())
 }
 function startTest() {
     fetch('/students/tests/start', {
@@ -86,8 +84,41 @@ function startTest() {
     })
     loadTest(false)
 }
+function save(final) {
+    let answers = []
+    $$('.question').forEach(q => {
+        if (q.classList.contains('open')) {
+            answers.push(q.querySelector('input[type=text]').value)
+        } else if (q.classList.contains('single-choice')) {
+            let answer = null
+            let i = 0
+            q.querySelectorAll('input[type=radio]').forEach(input => {
+                if (input.checked) answer = i
+                i++
+            })
+            answers.push(answer)
+        } else if (q.classList.contains('multiple-choice')) {
+            let answer = []
+            let i = 0
+            q.querySelectorAll('input[type=checkbox]').forEach(input => {
+                if (input.checked) answer.push(i)
+                i++
+            })
+            answers.push(answer)
+        }
+    })
+    fetch('/students/tests/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ progress: answers, finish: final, ID: $parseURLArgs().ID })
+    })
+        .then(res => res.json())
+        .then(res => {
+            if (final && res.message == 'ok') qAlert({ message: '[{(success.tests.submit)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(a => history.back())
+        })
+}
 function load() {
-    fetch('/students/tests/progress/get', {
+    fetch('/students/tests/getProgress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID: $parseURLArgs().ID })
@@ -121,6 +152,6 @@ function load() {
                             <button id="start-test" onclick="startTest()"><i class="fad fa-play"></i>[{(startTest)}]</button>
                         `
                     })
-            } else loadTest(true)
+            } else loadTest(progress)
         })
 }

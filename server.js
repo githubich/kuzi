@@ -310,6 +310,15 @@ app.post('/students/tests/list', (req, res) => {
 	let theirTests = []
 	tests.forEach(test => {
 		if (test.classID == req.userInfo.class.classID && test.visible === true) {
+			let status = 'red'
+			if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) {
+				status = 'green'
+				if (existsSync(`test-progress/${req.userInfo.userID}/${test.testID}.json`)) {
+					status = 'orange'
+					if (importJSON(`test-progress/${req.userInfo.userID}/${test.testID}.json`).finished === true) status = 'blue'
+				}
+			}
+			test.status = status
 			test.subject = subjects.find(e => e.subjectID == test.subjectID)
 			delete test.subjectID
 			test.class = classes.find(e => e.classID == test.classID)
@@ -342,16 +351,14 @@ app.post('/students/tests/getQuestions', (req, res) => {
 		if (q.type == 'single-choice') {
 			test.questions[i].totalValue = test.questions[i].value
 			delete test.questions[i].value
-		}
-		else if (q.type == 'multiple-choice') {
+		} else if (q.type == 'multiple-choice') {
 			let totalValue = 0
 			q.options.forEach(o => { if (o.value > 0) totalValue += o.value })
 			test.questions[i].totalValue = totalValue
 		}
-
 		delete test.questions[i].correctAnswer
 		let j = 0
-		if (q.type != 'open') q.options.forEach(o => {
+		if (q.type == 'multiple-choice') q.options.forEach(o => {
 			delete test.questions[i].options[j].value
 			j++
 		})
@@ -380,16 +387,26 @@ app.post('/students/tests/getMinimal', (req, res) => {
 	qs.forEach(() => test.questions.push(0))
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
-app.post('/students/tests/progress/get', (req, res) => {
+app.post('/students/tests/getProgress', (req, res) => {
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (!existsSync('test-progress/')) mkdirSync('test-progress')
 	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
-	if (existsSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) && readFileSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`)) res.respond(JSON.stringify(importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`)), '', 'application/json', 200)
+	if (existsSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) && readFileSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) != '') res.respond(JSON.stringify(importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`).progress), '', 'application/json', 200)
 	else res.respond({ message: 'not started' }, '', 'application/json', 200)
 })
 app.post('/students/tests/start', (req, res) => {
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let test = importJSON('tests.json').find(e => e.testID == req.body.ID)
+	if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) {}
+	else return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (!existsSync('test-progress/')) mkdirSync('test-progress')
 	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
 	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, JSON.stringify({ progress: [], finished: false }))
+	res.respond({ message: 'ok' }, '', 'application/json', 200)
+})
+app.post('/students/tests/save', (req, res) => {
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: req.body.progress, finished: req.body.finish })
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 

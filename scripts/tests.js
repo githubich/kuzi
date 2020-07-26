@@ -15,14 +15,33 @@ function deleteTest(element, ID) {
             }
         })
 }
+function testSort(a, b) {
+    let statusA = 0
+    let statusB = 0
+    if (a.status == 'orange') statusA = 3
+    else if (a.status == 'green') statusA = 2
+    else if (a.status == 'blue') statusA = 1
+    if (b.status == 'green') statusB = 1
+    else if (b.status == 'orange') statusB = 2
+    else if (b.status == 'blue') statusB = 3
+    if (statusA > statusB) return -1
+    else if (statusA < statusB) return 1
+
+    let textA = a.name.toLowerCase
+    let textB = b.name.toLowerCase
+    if (textA > textB) return -1
+    else if (textA > textB) return 1
+
+    return 0
+}
 function load() {
     fetch(`${userInfo.role}s/tests/list`, { method: 'POST' })
         .then(res => res.json())
         .then(res => {
-            //if (userInfo.role = 'student') res.sort()
+            if (userInfo.role = 'student') res.sort(testSort)
             let testContainer = $('#test-container')
             res.forEach(test => {
-                let testE = document.createElement('tr')
+                let testE = document.createElement('div')
                 testContainer.appendChild(testE)
                 testE.classList.add('test')
                 testE.setAttribute('testID', test.testID)                
@@ -54,8 +73,8 @@ function load() {
                         </div>
                     </div>
                 `
-                if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) testE.classList.add('green')
-                else testE.classList.add('red')
+                if (userInfo.role == 'student') testE.classList.add(test.status)
+                else $$('.line').forEach(line => line.remove())
             })
         })
 }
