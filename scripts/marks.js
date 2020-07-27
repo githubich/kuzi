@@ -9,63 +9,64 @@ function load() {
         $('#manager').remove()
         fetch('/students/marks/get', { method: "POST" })
             .then(res => res.json()
-                .then(periods => {
-                    let periodContainer = document.createElement('div')
-                    $('#root').appendChild(periodContainer)
-                    periodContainer.id = "period-container"
+            .then(periods => {
+                let periodContainer = document.createElement('div')
+                $('#root').appendChild(periodContainer)
+                periodContainer.id = "period-container"
 
-                    periods.forEach(period => {
-                        let periodE = document.createElement('div')
-                        periodContainer.appendChild(periodE)
-                        periodE.classList.add("period", `period-${period.periodID}`)
+                periods.forEach(period => {
+                    let periodE = document.createElement('div')
+                    periodContainer.appendChild(periodE)
+                    periodE.classList.add("period", `period-${period.periodID}`)
 
-                        let periodETitle = document.createElement('div')
-                        periodE.appendChild(periodETitle)
-                        periodETitle.classList.add("period-title", `period-${period.periodID}-title`)
-                        periodETitle.innerHTML = `<h2 class="period-title-inner">${period.periodName}</h2>`
+                    let periodETitle = document.createElement('div')
+                    periodE.appendChild(periodETitle)
+                    periodETitle.classList.add("period-title", `period-${period.periodID}-title`)
+                    periodETitle.innerHTML = `<h2 class="period-title-inner">${period.periodName}</h2>`
 
-                        let periodEContent = document.createElement('div')
-                        periodE.appendChild(periodEContent)
-                        periodEContent.classList.add("period-content", `period-${period.periodID}-content`)
+                    let periodEContent = document.createElement('div')
+                    periodE.appendChild(periodEContent)
+                    periodEContent.classList.add("period-content", `period-${period.periodID}-content`)
 
-                        period.subjects.forEach(subject => {
-                            let subjectE = document.createElement('div')
-                            periodEContent.appendChild(subjectE)
-                            subjectE.classList.add("subject", `subject-${subject.subjectID}`)
+                    period.subjects.forEach(subject => {
+                        let subjectE = document.createElement('div')
+                        periodEContent.appendChild(subjectE)
+                        subjectE.classList.add("subject", `subject-${subject.subjectID}`)
 
-                            let subjectETitle = document.createElement('div')
-                            subjectE.appendChild(subjectETitle)
-                            subjectETitle.classList.add("subject-title", `subject-${subject.subjectID}-title`)
-                            subjectETitle.innerHTML = `<h3 class="subject-title-inner">${subject.subjectName}</h3>`
+                        let subjectETitle = document.createElement('div')
+                        subjectE.appendChild(subjectETitle)
+                        subjectETitle.classList.add("subject-title", `subject-${subject.subjectID}-title`)
+                        subjectETitle.innerHTML = `<h3 class="subject-title-inner">${subject.subjectName}</h3>`
 
-                            let subjectEContent = document.createElement('div')
-                            subjectE.appendChild(subjectEContent)
-                            subjectEContent.classList.add("subject-content", `subject-${subject.subjectID}-content`)
+                        let subjectEContent = document.createElement('div')
+                        subjectE.appendChild(subjectEContent)
+                        subjectEContent.classList.add("subject-content", `subject-${subject.subjectID}-content`)
 
-                            subject.marks.forEach(mark => {
-                                let markE = document.createElement('div')
-                                subjectEContent.appendChild(markE)
-                                markE.classList.add("mark", `mark-${mark.markID}`)
+                        subject.marks.forEach(mark => {
+                            let markE = document.createElement('div')
+                            subjectEContent.appendChild(markE)
+                            markE.classList.add("mark", `mark-${mark.markID}`)
 
-                                let markEName = document.createElement('div')
-                                markE.appendChild(markEName)
-                                markEName.classList.add("mark-title")
-                                markEName.innerHTML = `${mark.name}`
+                            let markEName = document.createElement('div')
+                            markE.appendChild(markEName)
+                            markEName.classList.add("mark-title")
+                            markEName.innerHTML = `${mark.name}`
 
-                                let markEContent = document.createElement('div')
-                                markE.appendChild(markEContent)
-                                markEContent.classList.add("mark-content", "do-not-break")
-                                markEContent.innerHTML = `${mark.mark}%`
-                            })
+                            let markEContent = document.createElement('div')
+                            markE.appendChild(markEContent)
+                            markEContent.classList.add("mark-content", "do-not-break")
+                            markEContent.innerHTML = `${mark.mark}%`
+                            if (mark.definitive === false) markEContent.innerHTML += `<i class="fad fa-info-circle mark-not-definitive" title="[{(thisMarkIsntDefinitive)}]"></i>`
                         })
                     })
-                    if (URLparams && URLparams.highlightID) {
-                        $(`.mark-${URLparams.highlightID}`).classList.add('highlighted')
-                        $('.highlighted').scrollIntoView()
-                        console.log($('.highlighted').getBoundingClientRect().top)
-                        if ($('.highlighted').getBoundingClientRect().top < 65) window.scrollBy(0, $('.highlighted').getBoundingClientRect().top - 65)
-                    }
                 })
+                if (URLparams && URLparams.highlightID) {
+                    $(`.mark-${URLparams.highlightID}`).classList.add('highlighted')
+                    $('.highlighted').scrollIntoView()
+                    console.log($('.highlighted').getBoundingClientRect().top)
+                    if ($('.highlighted').getBoundingClientRect().top < 65) window.scrollBy(0, $('.highlighted').getBoundingClientRect().top - 65)
+                }
+            })
             )
     } else {
         fetch('/teachers/getInfo', { method: "POST" })

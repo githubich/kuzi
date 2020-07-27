@@ -51,7 +51,7 @@ header .vertical-separator {
 .user-photo, .user-info { display: inline-block; }
 #dropdown-arrow {
 	margin-left: 10px;
-	transition: .2s;
+	transition: .2s transform;
 	height: 14px;
 	font-size: 14px; line-height: 15px;
 }

@@ -191,24 +191,20 @@ app.post('/students/marks/get', (req, res) => {
 		marks.forEach(mark => {
 			exists = false
 			if (mark.periodID == a.periodID && mark.marks.findIndex(i => i.studentID == req.userInfo.userID) != -1) {
-				usefulSubjects.forEach(usefulSubject => {
-					if (mark.subjectID == usefulSubject) exists = true
-				})
+				usefulSubjects.forEach(usefulSubject => { if (mark.subjectID == usefulSubject) exists = true })
 				if (!exists) usefulSubjects.push(mark.subjectID)
 			}
 		})
-		/*test.forEach(mark => {
+		tests.forEach(test => {
 			exists = false
-			if (mark.periodID == a.periodID && mark.marks.findIndex(i => i.studentID == req.userInfo.userID) != -1) {
-				usefulSubjects.forEach(usefulSubject => {
-					if (mark.subjectID == usefulSubject) exists = true
-				})
-				if (!exists) usefulSubjects.push(mark.subjectID)
+			if (test.periodID == a.periodID) {
+				usefulSubjects.forEach(usefulSubject => { if (test.subjectID == usefulSubject) exists = true })
+				if (!exists) usefulSubjects.push(test.subjectID)
 			}
-		})*/
+		})
 		j = 0
 		usefulSubjects.forEach(usefulSubject => {
-			resContent[i].subjects.push({ subjectID: usefulSubject, marks: [] })
+			resContent[i].subjects.push({ subjectID: usefulSubject, marks: [], tests: [] })
 			marks.forEach(mark => {
 				if (mark.periodID == a.periodID && mark.subjectID == usefulSubject && mark.marks.findIndex(i => i.studentID == req.userInfo.userID) != -1) {
 					let pMark = mark.marks.find(i => i.studentID == req.userInfo.userID)
@@ -216,6 +212,37 @@ app.post('/students/marks/get', (req, res) => {
 					pMark.name = mark.name
 					pMark.markID = mark.markID
 					resContent[i].subjects[j].marks.push(pMark)
+				}
+			})
+			tests.forEach(test => {
+				if (test.periodID == a.periodID && test.subjectID == usefulSubject) {
+					let answers = importJSON(`test-progress/${req.userInfo.userID}/${test.testID}.json`)
+					if (answers.finished === true) {
+						answers = answers.progress
+						let corrections = importJSON('tests.json').find(i => i.testID == test.testID).questions
+						let definitive = true
+						let k = 0
+						let mark = 0
+
+						corrections.forEach(correction => {
+							if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[k]) mark += correction.value
+							} else if (correction.type == 'multiple-choice') {
+								let l = 0
+								correction.options.forEach(o => {
+									if (answers[k].includes(l)) mark += o.value
+									l++
+								})
+							} else if (correction.type == 'open' && typeof answers[k] == 'string') definitive = false
+							else {
+								mark += answers[k][1]
+							}
+							k++
+						})
+						test.mark = mark
+						test.definitive = definitive
+						resContent[i].subjects[j].marks.push(test)
+					}
+					
 				}
 			})
 			j++
@@ -592,6 +619,7 @@ app.post('/teachers/tests/delete', (req, res) => {
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)
 })
 app.post('/teachers/tests/setVisibility', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let tests = importJSON('tests.json')
 	let editIndex = tests.findIndex(e => e.testID == req.body.ID)
 	if (tests[editIndex].ownerID == req.userInfo.userID) {
@@ -599,6 +627,16 @@ app.post('/teachers/tests/setVisibility', (req, res) => {
 		saveJSON('tests.json', tests)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
+})
+app.post('/teachers/tests/getAnswers', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (!req.body.studentID || !req.body.testID) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 400)
+	let answers = importJSON(`test-progress/${req.body.studentID}/${req.body.testID}.json`).progress
+	let test = importJSON('tests.json').find(e => e.testID == req.body.testID)
+	test.answers = answers
+	test.student = importJSON('users.json').find(e => e.userID == req.body.studentID)
+	delete test.student.password
+	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
 
 // Misc
