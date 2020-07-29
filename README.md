@@ -1,4 +1,5 @@
 # Kuzi
+ ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/ezarcel/kuzi?include_prereleases) ![GitHub last commit](https://img.shields.io/github/last-commit/ezarcel/kuzi) ![GitHub issues by-label](https://img.shields.io/github/issues/ezarcel/kuzi/bug)  
 A work-in-progress open-source alternative to make a simple and reliable (high)school platform. **This software is still in development**, this might won't work as expected or not work at all, in addition **it's not adviceable to use non-RFP** (Ready For Production) versions on production, since they may contain bugs and/or security risks
 
 ## Installation 
