@@ -21,6 +21,7 @@
     --bg-alt-super-alpha: #00000040;
     --bg-alt-nearly-transparent: #00000020;
 }
+:root[theme=light] .alt-logo { filter: grayscale(1) brightness(0); }
 :root:not([theme=light]) {
     --bg: #000;
     --bg-shade1: #111;
@@ -44,6 +45,7 @@
     --bg-alt-super-alpha: #ffffff40;
     --bg-alt-nearly-transparent: #ffffff20;
 }
+:root:not([theme=light]) .alt-logo { filter: grayscale(1) brightness(5); }
 /*:root[theme=blackpink] {
     --bg: #000;
     --bg-shade1: #111;

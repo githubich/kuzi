@@ -1,20 +1,20 @@
 # Kuzi
 ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/ezarcel/kuzi?include_prereleases) ![GitHub last commit](https://img.shields.io/github/last-commit/ezarcel/kuzi) ![GitHub issues by-label](https://img.shields.io/github/issues/ezarcel/kuzi/bug)  
-An open-source & free alternative to make a simple, reliable & beautiful (high)school platform. **It's recommended to only use PR** (Production-ready) versions on production, since non-PR versions may contain bugs &/or security risks
+A free alternative to make a reliable & beautiful (high)school platform
 
-## Installation 
+## Installation
 ### Install node.js & npm
 Skip this step if issuing `node -v` shows a version number  
 For Arch Linux & its derivatives: `sudo pacman -S nodejs npm`  
 For Debian & Ubuntu & their derivatives: `sudo apt install nodejs npm`  
-For macOS 10.10+: [Click here](https://nodejs.org/es/download/package-manager/#macos)  
-For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/es/download/package-manager/#windows). In Windows, remove `sudo` in the commands shown below  
+For macOS 10.10+: [Click here](https://nodejs.org/en/download/package-manager/#macos)  
+For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/en/download/package-manager/#windows). In Windows, remove `sudo` in the commands shown below
 
 ### Get Kuzi Server on your device
-#### Method 1. Using the latest PR release (recommended)
-Go to the [releases page](https://github.com/ezarcel/kuzi/releases), look for the latest release that contains (RP) in the first lines of the description, download the zip file named `<version number>.zip` and unzip it
+#### Method 1. Using the latest release (recommended)
+Go to the [releases page](https://github.com/ezarcel/kuzi/releases), look for the latest release that contains (RP) in the first lines of the description, download the zip file named `<version number>.zip` & unzip it
 
-#### Method 2. Cloning the repo
+#### Method 2. Cloning the repo (aka latest & buggiest version)
 [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you haven't already  
 Run `git clone https://github.com/ezarcel/kuzi.git` in a terminal/command prompt window
 
@@ -25,7 +25,7 @@ Install all of this project's dependencies with `sudo npm i`
 There are some pre-made users, but if you want you can add yours [here](#create-users)
 
 ### Set the language & other settings
-Open `settings.json` & change the values you considering modifying. There are 3 available languages: English, Catalan & Castillian Spanish
+Open `settings.json` & change the values you considering modifying. There are 3 available languages: English (en), Catalan (ca) & Spanish (es)
 
 ### Recommended step for linux users
 ***Run these commands as root*** (`sudo su`)***, not as sudo***
@@ -33,10 +33,10 @@ Open `settings.json` & change the values you considering modifying. There are 3 
 echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-unprivileged-ports.conf
 sysctl --system
 ```
-This allows non-root users to run any server in any port they want, since usually port 80 is locked to be used only as root.
+This allows all users to run any server in any port they want, since usually port 80 is locked to be used only as root. If you run this, you won't need to type `sudo` in almost every command
 
 ### Run the server & test
-Run `sudo node server.js` (run without `sudo` if you are on Windows or if you followed [this](#recommended-step-for-linux-users)) & open `http://localhost/` on a web browser or click [here](http://localhost/)
+Run `sudo node server.js` & open `http://localhost/` on a web browser or click [here](http://localhost/). Using HTTPS is up to you
 
 ## Set up
 ### Create users

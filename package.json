@@ -1,7 +1,7 @@
 {
   "name": "kuzi",
   "version": "0.0.1",
-  "description": "A work-in-progress open-source alternative to make a simple and reliable (high)school platform",
+  "description": "A free alternative to make a reliable & beautiful (high)school platform",
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
@@ -15,24 +15,14 @@
     "url": "git+https://github.com/ezarcel/kuzi.git"
   },
   "keywords": [
-    "javascript",
-    "js",
-    "node",
-    "nodejs",
-    "platform",
-    "school",
-    "highschool",
-    "high-school",
     "education",
-    "educate",
-    "student",
-    "teacher"
+    "nodejs",
+    "expressjs"
   ],
   "author": "ezarcel",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/ezarcel/kuzi/issues"
   },
-  "homepage": "https://github.com/ezarcel/kuzi#readme",
-  "devDependencies": {}
+  "homepage": "https://github.com/ezarcel/kuzi#readme"
 }

@@ -1,12 +1,9 @@
-a.new-test i { margin: 0 0.3em 20px 0; }
+a.new-test i { margin: 0 .3em 20px 0; }
 main p { margin: 0; }
 #test-container { display: grid; gap: 20px }
 .test { display: flex; flex-direction: column; }
 .test > * { background-color: var(--bg-shade1); padding: 12.5px; border: solid 1px var(--bg-alt-super-alpha); }
 .test .title { border-radius: 10px 10px 0 0; border-width: 1px 1px 0 1px; }
-/*.test.green .title { background-color: #2d24; }
-.test.orange .title { background-color: #d6f2244; }
-.test.red .title { background-color: #d224; }*/
 .test .line { min-height: 1.5px !important; max-height: 1.5px; height: 1.5px !important; border-width: 0 1px; padding: 0; }
 .test.green .line { background-color: #22dd227a; }
 .test.orange .line { background-color: #dd6f227a; }
@@ -18,7 +15,7 @@ main p { margin: 0; }
 .test .visibility { display: flex; }
 .test .visibility > * { margin: auto 0; }
 .test .visibility label { padding-left: .3em; width: 100%; }
-.controls { margin: auto 0 0 0; }
-.controls a:not(:nth-last-child(1)) { margin-right: 0.5em; }
+.controls { margin: auto 0 0 0; padding: 10px 0 0 0; }
+.controls a:not(:nth-last-child(1)) { margin-right: .5em; }
 
 @media (min-width: 601px) { #test-container { grid-template-columns: 1fr 1fr 1fr; } }
