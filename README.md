@@ -23,7 +23,7 @@ Open `settings.json` and change the values you considering modifying. There are 
 echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-unprivileged-ports.conf
 sysctl --system
 ```
-This allows non-root users to run any server in any port they want, since usually port 80 (the port used everywhere) is locked to be used only as root.
+This allows non-root users to run any server in any port they want, since usually port 80 is locked to be used only as root.
 
 ### Run the server and test
 Run `sudo node server.js` (run without `sudo` if you are on Windows or if you followed [this](#recommended-step-for-linux-users)) and open `http://localhost/` on a web browser or click [here](http://localhost/)

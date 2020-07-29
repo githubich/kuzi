@@ -64,8 +64,7 @@ function createSchedule() {
         if (prettyMinutes < 10) prettyMinutes = `0${prettyMinutes}`
         if (prettyMinutes2 < 10) prettyMinutes2 = `0${prettyMinutes2}`
         element.innerHTML = `<div class="contents"><p>${c.subject.prettyName}</p></div>`
-        element.title = `${c.time.hours}:${(prettyMinutes)} - ${c.time.hours + c.time.duration.hours}:${prettyMinutes2}\n[{(teacher)}]: ${c.teacher.prettyName}`
-
+        
         element.style.top = $(`tr:nth-child(${c.time.hours - hours[0] + 2})`).getBoundingClientRect().top + ($(`tr:nth-child(${c.time.hours - hours[0] + 2})`).offsetHeight * c.time.minutes / 60) + window.scrollY + "px"
         element.style.left = $(`tr:nth-child(2) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`).getBoundingClientRect().left + "px"
 

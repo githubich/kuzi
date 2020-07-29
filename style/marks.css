@@ -82,7 +82,7 @@ h3, .title-controls { display: inline-block; }
 .control:not(:nth-last-child(1)) { margin-right: 10px; }
 .submit-block button.submit { margin-top: 10px; }
 .mark-info { margin-bottom: 20px; }
-.mark-info-inner { display: grid; gap: 20px; grid-template-columns: 2fr 1fr 1fr; }
+.mark-info-inner { display: grid; gap: 20px; }
 .students--header { display: flex; }
 
 @media (min-width: 601px) {
@@ -90,6 +90,7 @@ h3, .title-controls { display: inline-block; }
     .myClassesAndStudents { grid-template-columns: 1fr 1fr; }
     .control i { margin-right: 5px; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
+    .mark-info-inner { grid-template-columns: 2fr 1fr 1fr; }
 }
 @media (max-width: 600px) {
     .tab { padding: 10px; }

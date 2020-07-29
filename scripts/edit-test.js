@@ -43,7 +43,7 @@ function editQuestionSave(i) {
                 if (el.querySelector('input[type=number]').value > 0) anyCorrect = true
             })
         }
-        if (invalid || (type != "open" && (answers.length <= 1 || anyCorrect == false)) || (type == "single-choice" && !$('#question-value').value)) return qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+        if (invalid || (type != "open" && (answers.length <= 1 || anyCorrect == false)) || ((type == "single-choice" || type == 'open') && !$('#question-value').value)) return qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
 
         delete testData.questions[i].correctAnswer
         delete testData.questions[i].options
@@ -105,7 +105,7 @@ function updateEditQuestionModal(value, readFromTestData) {
         optionE.innerHTML = `
             <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled placeholder="" min="-100" max="100" title="" value=0>
         `
-    }
+    } else if (value == 'open') $('.question-value').style.display = ''
     addFunctionality()
 }
 function editTest() {
@@ -229,12 +229,12 @@ function save() {
         .then(res => {
             if (res.message = 'ok') $('footer').innerHTML = `<div><i class="fad fa-check-circle"></i>[{(saved)}]</div>`
             else $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`
-            setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 3000)
+            setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 2500)
         })
         .catch(e => { $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`; setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 3000) })
 }
 function autoSave() {
-    setTimeout(() => { save(); autoSave() }, 60000)
+    setTimeout(() => { save(); autoSave() }, 10000)
 }
 autoSave()
 function newQuestion() {
@@ -323,6 +323,7 @@ function load() {
 }
 window.addEventListener('online', save)
 window.addEventListener('toggle-modal-edit-test', () => {
+    if ($('#edit-test-modal').style.display = 'none') return
     fetch('/teachers/getInfo', { method: "POST" })
         .then(res => res.json()
         .then(res => {

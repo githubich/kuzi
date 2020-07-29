@@ -21,19 +21,12 @@
         },
         "questions": [
             {
-                "question": "Question 1",
+                "question": "Question 2",
                 "type": "open"
             },
             {
-                "question": "Question 2",
-                "type": "single-choice",
-                "options": [
-                    "Choice 1",
-                    "Choice 2",
-                    "Choice 3"
-                ],
-                "correctAnswer": 0,
-                "value": 1
+                "question": "Question 1",
+                "type": "open"
             },
             {
                 "question": "Question 3",
@@ -194,10 +187,6 @@
         "visible": true,
         "questions": [
             {
-                "question": "Question 1",
-                "type": "open"
-            },
-            {
                 "question": "Question 2",
                 "type": "single-choice",
                 "options": [
@@ -225,6 +214,10 @@
                         "value": -1
                     }
                 ]
+            },
+            {
+                "question": "Question 1",
+                "type": "open"
             }
         ]
     }

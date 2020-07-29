@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
-@keyframes crop-in { 0% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } 100% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } }
-@keyframes crop-out { 0% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } 100% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } }
+@keyframes crop { 0% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } 100% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } }
+/*@keyframes fade { 0% { opacity: 0 } 100% { opacity: 1 } }*/
 ::-webkit-scrollbar { width: 7.5px; }
 ::-webkit-scrollbar-track { background: var(--bg-shade1); border-radius: 3.25px; }
 ::-webkit-scrollbar-thumb { background: var(--bg-shade2); border-radius: 3.25px; }
@@ -12,6 +12,7 @@ body:not(.student) .students-only { display: none; }
 body:not(.teacher) .teachers-only { display: none; }
 main { padding: 20px; margin-top: 60px; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: #0000; color: var(--bg-alt); word-break: break-word; white-space: normal; }
+option { color: var(--bg-alt); background-color: var(--bg); }
 :not(i) { font-family: 'Open Sans', Arial, Helvetica, sans-serif; outline: none; }
 :not(.allowSelect) { user-select: none; }
 [onclick], [href] { cursor: pointer; }
@@ -169,8 +170,8 @@ select { height: 33px; width: -webkit-fill-available; }
     }
     .phone-close, .hamburger-menu, .dropdown-close, #hamburger-menu-modal { display: none; }
     #dropdown, #more { top: 60px; border-radius: 0 0 10px 10px; }
-    #dropdown.showing, #more.showing { animation: crop-in .2s ease-in-out running; display: block; }
-    #dropdown.hiding, #more.hiding { animation: crop-out .2s ease-in-out running; display: block; }
+    #dropdown.showing, #more.showing { animation: crop .2s ease-in-out running; display: block; }
+    #dropdown.hiding, #more.hiding { animation: crop .2s ease-in-out running reverse; display: block; }
 }
 @media (max-width: 600px) {
 	#dropdown, #more {
@@ -182,6 +183,8 @@ select { height: 33px; width: -webkit-fill-available; }
     #dropdown li:not(:nth-last-child(1)), #more li:not(:nth-last-child(1)) { margin-bottom: 20px; }
     #dropdown .dropdown-close, #more .dropdown-close { display: inline-block; }
     #dropdown .dropdown-actions, #more .dropdown-actions { display: inline-block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: fit-content; }
+    #dropdown.showing, #more.showing { animation: fade .2s ease-in-out running; display: block; }
+    #dropdown.hiding, #more.hiding { animation: fade .2s ease-in-out running reverse; display: block; }
     header :nth-child(4), header :nth-child(5) { display: none; }
     header .header-action a span { display: block; }
 	.dropdown-link { min-width: 100%; padding-right: 130px; }

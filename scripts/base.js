@@ -15,7 +15,6 @@ window.addEventListener('load', () => {
         localStorage.setItem('theme', 'blackpink')
         document.documentElement.setAttribute('theme', 'blackpink')
     }))*/
-    $$('#dropdown i, #more i').forEach(el => el.classList.add('fa-fw'))
     headerDropdown = $('#dropdown')
     headerDropdownArrow = $("#dropdown-arrow")
     more = $("#more")
