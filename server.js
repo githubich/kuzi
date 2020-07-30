@@ -638,6 +638,14 @@ app.post('/teachers/tests/getAnswers', (req, res) => {
 	delete test.student.password
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
+app.post('/teachers/tests/setOpenAnswerAs', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (!req.body.studentID || !req.body.testID || !req.body.questionI || !req.body.set) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 400)
+	let answers = importJSON(`test-progress/${req.body.studentID}/${req.body.testID}.json`)
+	answers.progress[questionI] = [ answers.progress[questionI], req.body.set === true ]
+	saveJSON(`test-progress/${req.body.studentID}/${req.body.testID}.json`, answers)
+	res.respond(JSON.stringify(test), '', 'application/json', 200)
+})
 
 // Misc
 app.post('/misc/periods/list', (req, res) => {

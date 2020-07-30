@@ -17,9 +17,7 @@ function kuziMiddleware(req, res, next) {
         res.status(statusCode).send(content)
     }
     if (req.url.includes("?")) { req.fullUrl = req.url.split()[0]; req.url = req.url.split("?")[0] }
-    if (req.url == '/' ||
-        req.url == '/login.html' ||
-        (req.method == 'GET' && extname(req.url) != '.html')) return next()
+    if (req.url == '/' || req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html')) return next()
     
     let activeCookies = importJSON('active.cookies.json')
     let classes = importJSON('classes.json')

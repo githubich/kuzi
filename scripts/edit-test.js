@@ -53,64 +53,57 @@ function editQuestionSave(i) {
         testData.questions[i].type = type
         if (type != "open") testData.questions[i].options = answers
         if (type == "single-choice") testData.questions[i].correctAnswer = correct
+        if (type != "multiple-choice") testData.questions[i].value = parseInt($('.question-value input').value)
         toggleModal('edit-question')
         rerender()
     } else qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
 }
-function updateEditQuestionModal(value, readFromTestData) {
-    if (readFromTestData) readFromTestData = parseInt(readFromTestData)
+function updateEditQuestionModal(value, testDataI) {
+    if (testDataI) testDataI = parseInt(testDataI)
     let answersE = $('.question-answer')
+    let question = testData.questions[testDataI]
     answersE.innerHTML = ''
-    let qQuestion = $('#question-question')
     $('.question-value').style.display = 'none'
-    qQuestion.value = testData.questions[readFromTestData].question
-    let question = testData.questions[readFromTestData]
+    $('#question-question').value = testData.questions[testDataI].question
     if (value == "single-choice") {
         $('.question-value').style.display = ''
-        if (value == question.type && readFromTestData != undefined) {
+        if (testDataI != undefined) $('.question-value').value = question.value
+        if (value == question.type && testDataI != undefined) {
             let i = 0
             question.options.forEach(option => {
                 let optionE = document.createElement('li')
                 answersE.appendChild(optionE)
                 optionE.classList.add('existing-option', 'single-choice')
-                let checked = question.correctAnswer == i ? 'checked' : ''
-                optionE.innerHTML = `
-                    <input type="radio"${checked} name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-${i}"><input type="text" value="${option}">
-                `
+                optionE.innerHTML = `<input type="radio" ${question.correctAnswer == i ? 'checked' : ''}><input type="text" value="${option}">`
                 i++
             })
         }
         let optionE = document.createElement('li')
         answersE.appendChild(optionE)
         optionE.classList.add('new-option', 'single-choice')
-        optionE.innerHTML = `
-            <input type="radio" disabled name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]...">
-        `
+        optionE.innerHTML = `<input type="radio" disabled><input type="text" placeholder="[{(typeToAddAnOption)}]...">`
     } else if (value == "multiple-choice") {
-        if (value == question.type && readFromTestData) {
+        if (value == question.type && testDataI) {
             let i = 0
             question.options.forEach(option => {
                 let optionE = document.createElement('li')
                 answersE.appendChild(optionE)
                 optionE.classList.add('existing-option', 'multiple-choice')
-                optionE.innerHTML = `
-                    <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-${i}"><input type="text" value="${option.text}"><input type="number" placeholder="" min="-100" max="100" title="" value="${option.value}">
-                `
+                optionE.innerHTML = `<input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;"><input type="text" value="${option.text}"><input type="number" min="-100" max="100" title="" value="${option.value}">`
                 i++
             })
         }
         let optionE = document.createElement('li')
         answersE.appendChild(optionE)
         optionE.classList.add('new-option', 'multiple-choice')
-        optionE.innerHTML = `
-            <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled placeholder="" min="-100" max="100" title="" value=0>
-        `
-    } else if (value == 'open') $('.question-value').style.display = ''
+        optionE.innerHTML = `<input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled min="-100" max="100" title="" value=0>`
+    } else if (value == 'open') {
+        $('.question-value').style.display = ''
+        if (testDataI != undefined) $('.question-value').value = question.value
+    }
     addFunctionality()
 }
 function editTest() {
-    toggleModal('edit-test')
-
     let startHours = testData.startTime.hours
     let startMinutes = testData.startTime.minutes
     let startDay = testData.startTime.day
@@ -134,6 +127,8 @@ function editTest() {
     $('#test-start-time').value = `${startHours}:${startMinutes}`
     $('#test-due-date').value = `${testData.dueTime.year}-${dueMonth}-${dueDay}`
     $('#test-due-time').value = `${dueHours}:${dueMinutes}`
+
+    toggleModal('edit-test')
 }
 function editTestSave() {
     if ($('#test-name').value && $('#test-start-date').value &&
@@ -323,7 +318,7 @@ function load() {
 }
 window.addEventListener('online', save)
 window.addEventListener('toggle-modal-edit-test', () => {
-    if ($('#edit-test-modal').style.display = 'none') return
+    if ($('#edit-test-modal').style.display == 'none') return
     fetch('/teachers/getInfo', { method: "POST" })
         .then(res => res.json()
         .then(res => {

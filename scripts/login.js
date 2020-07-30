@@ -2,7 +2,7 @@ document.cookie='session=;max-age=0'
 window.addEventListener('keypress', e => {
     if (e.key == "Enter") {
         if (document.activeElement === document.querySelector('#kuzi-username')) document.querySelector('#kuzi-password').focus()
-        else if (document.activeElement === document.querySelector('#kuzi-password')) document.querySelector('#login-button').click()
+        else if (document.activeElement === document.querySelector('#kuzi-password')) document.querySelector('#submit').click()
         return false
     }
 })

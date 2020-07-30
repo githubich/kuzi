@@ -4,7 +4,7 @@ A free alternative to make a reliable & beautiful (high)school platform
 
 ## Installation
 ### Install node.js & npm
-Skip this step if issuing `node -v` shows a version number  
+***Skip this step if issuing `node -v` shows a version number***
 For Arch Linux & its derivatives: `sudo pacman -S nodejs npm`  
 For Debian & Ubuntu & their derivatives: `sudo apt install nodejs npm`  
 For macOS 10.10+: [Click here](https://nodejs.org/en/download/package-manager/#macos)  
@@ -12,11 +12,10 @@ For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/en/downl
 
 ### Get Kuzi Server on your device
 #### Method 1. Using the latest release (recommended)
-Go to the [releases page](https://github.com/ezarcel/kuzi/releases), look for the latest release that contains (RP) in the first lines of the description, download the zip file named `<version number>.zip` & unzip it
+Go to the [releases page](https://github.com/ezarcel/kuzi/releases), look for the latest release that contains (RP) in the first lines of the description, download the zip file named `Kuzi_<version number>.zip` & unzip it
 
 #### Method 2. Cloning the repo (aka latest & buggiest version)
-[Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you haven't already  
-Run `git clone https://github.com/ezarcel/kuzi.git` in a terminal/command prompt window
+[Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you haven't already & run `git clone https://github.com/ezarcel/kuzi.git` in a terminal/command prompt window
 
 ### Install the dependencies
 Install all of this project's dependencies with `sudo npm i`

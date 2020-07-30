@@ -72,7 +72,8 @@
         "questions": [
             {
                 "question": "Question 1",
-                "type": "open"
+                "type": "open",
+                "value": 100
             },
             {
                 "question": "Question 2",
@@ -83,7 +84,7 @@
                     "Choice 3"
                 ],
                 "correctAnswer": 0,
-                "value": 1
+                "value": 100
             },
             {
                 "question": "Question 3",
@@ -102,6 +103,10 @@
                         "value": -1
                     }
                 ]
+            },
+            {
+                "question": "New question",
+                "type": "open"
             }
         ],
         "visible": true,

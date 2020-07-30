@@ -1,12 +1,13 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
-function random(min,max) {return Math.floor(Math.random()*(max-min+1)+min)}
-function newUUID() {try{return random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)+random(0,15).toString(16)}catch(e){console.error(e)}}
-importJSON = (location) => {
+random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
+ran16 = () => {return random(0,15).toString(16)}
+newUUID =() => {return ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()}
+importJSON = location => {
 	if (!existsSync(location)) { console.warn(`[Kuzi|Warning] ${location} is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
 	else return JSON.parse(readFileSync(location).toString('utf8'))
 }
-saveJSON = (file, JSONobject) => {writeFileSync(file, JSON.stringify(JSONobject, null, 4))}
-function extensionToMime(ext) {
+saveJSON = (file, JSONobject) => writeFileSync(file, JSON.stringify(JSONobject, null, 4))
+extensionToMime = ext => {
 	if (ext.slice(0,2) == "./") ext = ext.slice(ext.lastIndexOf('.'), ext.length)
 	if (ext == ".jpg" || ext == ".jpeg") return 'image/jpeg'
 	else if (ext == ".png") return 'image/png'
@@ -17,7 +18,7 @@ function extensionToMime(ext) {
 	else if (ext == '.ico') return 'image/x-icon'
 	else return 'text/html'
 }
-function importLocale() {
+importLocale = () => {
 	let settings = importJSON('settings.json')
 	let localizationStrings = eval(`importJSON('localization.json').${settings.language}`)
 	let version = ""
