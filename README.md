@@ -4,7 +4,7 @@ A free alternative to make a reliable & beautiful (high)school platform
 
 ## Installation
 ### Install node.js & npm
-***Skip this step if issuing ***`node -v`*** shows a version number***  
+***Skip this step if issuing*** `node -v` ***shows a version number***  
 For Arch Linux & its derivatives: `sudo pacman -S nodejs npm`  
 For Debian & Ubuntu & their derivatives: `sudo apt install nodejs npm`  
 For macOS 10.10+: [Click here](https://nodejs.org/en/download/package-manager/#macos)  

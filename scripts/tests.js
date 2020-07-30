@@ -67,7 +67,7 @@ function load() {
                         <p class="due">[{(dueTime)}]: ${dueHours}:${dueMinutes} ${test.dueTime.day}/${test.dueTime.month}/${test.dueTime.year}</p>
                         <p class="controls">
                             <a title="[{(perform)}]" class="perform-test students-only" href="/perform-test.html?ID=${test.testID}"><i class="fad fa-play"></i></a>
-                            <a title="[{(viewSubmissions)}]" class="view-test-submissions teachers-only" href="/test-submissions.html?ID=${test.testID}"><i class="fad fa-tasks"></i></a>
+                            <a title="[{(viewSubmissions)}]" ${(() => { if (test.submissions <= 0) return 'style="display: none;"'; return ''})()} class="view-test-submissions teachers-only" href="/test-submissions.html?ID=${test.testID}"><i class="fad fa-tasks"></i></a>
                             <a title="[{(edit)}]" class="edit-test teachers-only" href="/edit-test.html?ID=${test.testID}"><i class="fad fa-edit"></i></a>
                             <a title="[{(delete)}]" class="delete-test teachers-only" onclick="deleteTest(this, ${test.testID})"><i class="fad fa-trash"></i></a></p>
                         <div class="visibility teachers-only">

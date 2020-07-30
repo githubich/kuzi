@@ -164,7 +164,7 @@ app.post('/user/changePassword', (req, res) => {
 
 // Students
 app.post('/students/marks/get', (req, res) => {
-	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.userInfo.role != "student" && req.userInfo.role != "parent") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let exists = false
 	let marks = importJSON('marks.json')
 	let resContent = importJSON('periods.json')
@@ -193,7 +193,7 @@ app.post('/students/marks/get', (req, res) => {
 		})
 		j = 0
 		usefulSubjects.forEach(usefulSubject => {
-			resContent[i].subjects.push({ subjectID: usefulSubject, marks: [], tests: [] })
+			resContent[i].subjects.push({ subjectID: usefulSubject, marks: [] })
 			marks.forEach(mark => {
 				if (mark.periodID == a.periodID && mark.subjectID == usefulSubject && mark.marks.findIndex(i => i.studentID == req.userInfo.userID) != -1) {
 					let pMark = mark.marks.find(i => i.studentID == req.userInfo.userID)
@@ -205,33 +205,41 @@ app.post('/students/marks/get', (req, res) => {
 			})
 			tests.forEach(test => {
 				if (test.periodID == a.periodID && test.subjectID == usefulSubject) {
-					let answers = importJSON(`test-progress/${req.userInfo.userID}/${test.testID}.json`)
-					if (answers.finished === true) {
-						answers = answers.progress
-						let corrections = importJSON('tests.json').find(i => i.testID == test.testID).questions
-						let definitive = true
-						let k = 0
-						let mark = 0
-
-						corrections.forEach(correction => {
-							if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[k]) mark += correction.value
-							} else if (correction.type == 'multiple-choice') {
-								let l = 0
-								correction.options.forEach(o => {
-									if (answers[k].includes(l)) mark += o.value
-									l++
-								})
-							} else if (correction.type == 'open' && typeof answers[k] == 'string') definitive = false
-							else {
-								mark += answers[k][1]
-							}
-							k++
-						})
-						test.mark = mark
-						test.definitive = definitive
+					if (existsSync(`test-progress/${req.userInfo.userID}/${test.testID}.json`)) {
+						let answers = importJSON(`test-progress/${req.userInfo.userID}/${test.testID}.json`)
+						if (answers.finished === true) {
+							answers = answers.progress
+							let corrections = importJSON('tests.json').find(i => i.testID == test.testID).questions
+							let definitive = true
+							let k = 0
+							let mark = 0
+	
+							corrections.forEach(correction => {
+								if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[k]) mark += correction.value
+								} else if (correction.type == 'multiple-choice') {
+									let l = 0
+									correction.options.forEach(o => {
+										if (answers[k].includes(l)) mark += o.value
+										l++
+									})
+								} else if (correction.type == 'open' && typeof answers[k] == 'string') definitive = false
+								else if (correction.value) mark += correction.value
+								k++
+							})
+							test.mark = mark
+							test.definitive = definitive
+							test.finished = true
+							resContent[i].subjects[j].marks.push(test)
+						} else {
+							test.finished = false
+							test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
+							resContent[i].subjects[j].marks.push(test)
+						}
+					} else {
+						test.finished = false
+						test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
 						resContent[i].subjects[j].marks.push(test)
 					}
-					
 				}
 			})
 			j++
@@ -249,7 +257,7 @@ app.post('/students/marks/get', (req, res) => {
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/students/marks/graph', (req, res) => {
-	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.userInfo.role != "student" && req.userInfo.role != "parent") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let exists = false
 	let marks = importJSON('marks.json')
 	let resContent = []
@@ -355,9 +363,7 @@ app.post('/students/tests/getQuestions', (req, res) => {
 	let subjects = importJSON('subjects.json')
 	let users = importJSON('users.json')
 	let test = {}
-	importJSON('tests.json').forEach(t => {
-		if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t
-	})
+	importJSON('tests.json').forEach(t => { if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t })
 	test.class = classes.find(e => e.classID == test.classID)
 	delete test.classID
 	test.subject = subjects.find(e => e.subjectID == test.subjectID)
@@ -391,9 +397,9 @@ app.post('/students/tests/getMinimal', (req, res) => {
 	let subjects = importJSON('subjects.json')
 	let users = importJSON('users.json')
 	let test = {}
-	importJSON('tests.json').forEach(t => {
-		if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t
-	})
+	importJSON('tests.json').forEach(t => { if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t })
+	if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) {}
+	else return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	test.class = classes.find(e => e.classID == test.classID)
 	delete test.classID
 	test.subject = subjects.find(e => e.subjectID == test.subjectID)
@@ -407,11 +413,15 @@ app.post('/students/tests/getMinimal', (req, res) => {
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
 app.post('/students/tests/getProgress', (req, res) => {
+	let test = {}
+	importJSON('tests.json').forEach(t => { if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t })
+	if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) {}
+	else return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (!existsSync('test-progress/')) mkdirSync('test-progress')
 	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
 	if (existsSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) && readFileSync(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`) != '') res.respond(JSON.stringify(importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`).progress), '', 'application/json', 200)
-	else res.respond({ message: 'not started' }, '', 'application/json', 200)
+	else res.respond(JSON.stringify({ message: 'not started' }), '', 'application/json', 200)
 })
 app.post('/students/tests/start', (req, res) => {
 	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
@@ -420,12 +430,12 @@ app.post('/students/tests/start', (req, res) => {
 	else return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (!existsSync('test-progress/')) mkdirSync('test-progress')
 	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
-	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, JSON.stringify({ progress: [], finished: false, start: (new Date()).getTime() }))
+	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: [], finished: false, start: (new Date()).getTime() })
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/students/tests/save', (req, res) => {
 	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
-	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: req.body.progress, finished: req.body.finish, end: (new Date()).getTime() })
+	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: req.body.progress, finished: req.body.finish, start: importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`).start, end: (new Date()).getTime() })
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 

@@ -1,15 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
 @keyframes crop { 0% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } 100% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } }
-/*@keyframes fade { 0% { opacity: 0 } 100% { opacity: 1 } }*/
 ::-webkit-scrollbar { width: 7.5px; }
 ::-webkit-scrollbar-track { background: var(--bg-shade1); border-radius: 3.25px; }
 ::-webkit-scrollbar-thumb { background: var(--bg-shade2); border-radius: 3.25px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--bg-shade3); }
 ::-webkit-scrollbar-thumb:active { background: var(--bg-shade4); }
 html, body, main { margin: 0; background-color: var(--bg); overflow-x: hidden; }
-body:not(.student):not(.teacher):not(.parent) #root { display: none; }
-body:not(.student) .students-only { display: none; }
-body:not(.teacher) .teachers-only { display: none; }
+body:not(.student):not(.teacher):not(.parent) #root, body:not(.student):not(.teacher):not(.parent) .header--actions,
+body:not(.student) .students-only, body:not(.teacher) .teachers-only, body:not(.parent) .parents-only,
+.parent .tests-action, .parent .resources-action { display: none; }
 main { padding: 20px; margin-top: 60px; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: #0000; color: var(--bg-alt); word-break: break-word; white-space: normal; }
 option { color: var(--bg-alt); background-color: var(--bg); }

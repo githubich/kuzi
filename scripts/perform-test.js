@@ -42,7 +42,7 @@ function loadTest(progress) {
                         answerE.appendChild(oE)
                         oE.outerHTML = `
                             <div class="option">
-                                <input type="radio" ${(() => { if (progress[i] == j) return 'checked'; return '' })()} name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o}</label>
+                                <input type="radio" ${(() => { if (progress && progress[i] && progress[i] == j) return 'checked'; return '' })()} name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o}</label>
                             </div>
                         `
                         j++
@@ -53,7 +53,7 @@ function loadTest(progress) {
                         answerE.appendChild(oE)
                         oE.outerHTML = `
                             <div class="option">
-                                <input type="checkbox" ${(() => { if (progress[i].includes(j)) return 'checked'; return '' })()} name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o.text}</label>
+                                <input type="checkbox" ${(() => { if (progress && progress[i] && progress[i].includes(j)) return 'checked'; return '' })()} name="question-${i}" id="question-${i}-option-${j}"><label for="question-${i}-option-${j}">${o.text}</label>
                             </div>
                         `
                         j++
@@ -63,7 +63,7 @@ function loadTest(progress) {
                     answerE.appendChild(oE)
                     oE.outerHTML = `
                         <div class="option">
-                            <input type="text" id="question-${i}-answer"${(() => { if (typeof progress[i] == "string") return ` value="${progress[i]}"`; return '' })()}>
+                            <input type="text" id="question-${i}-answer"${(() => { if (progress && progress[i] && typeof progress[i] == "string") return ` value="${progress[i]}"`; return '' })()}>
                         </div>
                     `
                 }
@@ -125,6 +125,7 @@ function load() {
     })
         .then(progress => progress.json())
         .then(progress => {
+            console.log(progress)
             if (progress.message == 'not started') {
                 setPageTitle("clipboard-check", "[{(testInfo)}]")
                 fetch('/students/tests/getMinimal', {
@@ -154,4 +155,5 @@ function load() {
                     })
             } else loadTest(progress)
         })
+        .catch(e => history.back())
 }

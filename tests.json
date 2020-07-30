@@ -1,6 +1,6 @@
 [
     {
-        "name": "Test 1",
+        "name": "Test",
         "subjectID": 1,
         "classID": 1,
         "ownerID": 1,
@@ -15,215 +15,55 @@
         "dueTime": {
             "year": 2020,
             "month": 7,
-            "day": 27,
+            "day": 31,
             "hours": 23,
             "minutes": 59
         },
+        "visible": true,
         "questions": [
             {
-                "question": "Question 2",
-                "type": "open"
-            },
-            {
-                "question": "Question 1",
-                "type": "open"
-            },
-            {
-                "question": "Question 3",
-                "type": "multiple-choice",
-                "options": [
-                    {
-                        "text": "Choice 1",
-                        "value": 1
-                    },
-                    {
-                        "text": "Choice 2",
-                        "value": 0
-                    },
-                    {
-                        "text": "Choice 3",
-                        "value": -1
-                    }
-                ]
-            }
-        ],
-        "visible": true
-    },
-    {
-        "name": "This is a pretty long test name to check if text wrapping is good or not",
-        "subjectID": 1,
-        "classID": 1,
-        "ownerID": 1,
-        "testID": 1,
-        "startTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 22,
-            "hours": 0,
-            "minutes": 0
-        },
-        "dueTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 27,
-            "hours": 23,
-            "minutes": 59
-        },
-        "questions": [
-            {
-                "question": "Question 1",
+                "question": "What is your favorite feature of Kuzi?",
                 "type": "open",
-                "value": 100
+                "value": 25
             },
             {
-                "question": "Question 2",
+                "question": "Is Kuzi the best platform of them all?",
                 "type": "single-choice",
                 "options": [
-                    "Choice 1",
-                    "Choice 2",
-                    "Choice 3"
+                    "Yes",
+                    "No"
                 ],
                 "correctAnswer": 0,
-                "value": 100
+                "value": 25
             },
             {
-                "question": "Question 3",
+                "question": "What's the Kuzi creator's name?",
                 "type": "multiple-choice",
                 "options": [
                     {
-                        "text": "Choice 1",
-                        "value": 1
+                        "text": "Adam (Name)",
+                        "value": 12.5
                     },
                     {
-                        "text": "Choice 2",
+                        "text": "Ezarcel (Name)",
                         "value": 0
                     },
                     {
-                        "text": "Choice 3",
-                        "value": -1
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
                     }
                 ]
             },
             {
-                "question": "New question",
-                "type": "open"
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
             }
         ],
-        "visible": true,
         "periodID": 3
-    },
-    {
-        "name": "Test",
-        "subjectID": 1,
-        "classID": 1,
-        "ownerID": 1,
-        "testID": 2,
-        "startTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 22,
-            "hours": 0,
-            "minutes": 0
-        },
-        "dueTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 24,
-            "hours": 23,
-            "minutes": 59
-        },
-        "visible": true,
-        "questions": [
-            {
-                "question": "Question 1",
-                "type": "open"
-            },
-            {
-                "question": "Question 2",
-                "type": "single-choice",
-                "options": [
-                    "Choice 1",
-                    "Choice 2",
-                    "Choice 3"
-                ],
-                "correctAnswer": 0,
-                "value": 1
-            },
-            {
-                "question": "Question 3",
-                "type": "multiple-choice",
-                "options": [
-                    {
-                        "text": "Choice 1",
-                        "value": 1
-                    },
-                    {
-                        "text": "Choice 2",
-                        "value": 0
-                    },
-                    {
-                        "text": "Choice 3",
-                        "value": -1
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "name": "Testjekskcnd",
-        "subjectID": 2,
-        "classID": 1,
-        "ownerID": 1,
-        "testID": 3,
-        "startTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 22,
-            "hours": 0,
-            "minutes": 0
-        },
-        "dueTime": {
-            "year": 2020,
-            "month": 7,
-            "day": 27,
-            "hours": 23,
-            "minutes": 59
-        },
-        "visible": true,
-        "questions": [
-            {
-                "question": "Question 2",
-                "type": "single-choice",
-                "options": [
-                    "Choice 1",
-                    "Choice 2",
-                    "Choice 3"
-                ],
-                "correctAnswer": 0,
-                "value": 1
-            },
-            {
-                "question": "Question 3",
-                "type": "multiple-choice",
-                "options": [
-                    {
-                        "text": "Choice 1",
-                        "value": 1
-                    },
-                    {
-                        "text": "Choice 2",
-                        "value": 0
-                    },
-                    {
-                        "text": "Choice 3",
-                        "value": -1
-                    }
-                ]
-            },
-            {
-                "question": "Question 1",
-                "type": "open"
-            }
-        ]
     }
 ]

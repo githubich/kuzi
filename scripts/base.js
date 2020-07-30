@@ -1,3 +1,5 @@
+headerDropdownVisible = false
+moreVisible = false
 window.addEventListener('load', () => {
     if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
     else $('#theme + label').innerText = '[{(lightMode)}]'
@@ -30,10 +32,12 @@ window.addEventListener('load', () => {
                 if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `[{(teacher)}]`
                 if ($('#markGraph')) $('#markGraph').remove()
-                $$('.teachers-only').forEach(el => el.style = '')
             } else if (userInfo.role == "student") {
                 if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
+                if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
+            } else if (userInfo.role == "parent") {
+                $('.user-info .status').innerText = `Admin Student`
                 if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
             }
             if (typeof load == "function") load()
@@ -57,8 +61,6 @@ window.addEventListener('keydown', e => {
         })
     } //else if (e.key == "F12" || (e.ctrlKey && e.shiftKey && e.key == "C") || (e.ctrlKey && e.shiftKey && e.key == "J")) e.preventDefault()
 })
-headerDropdownVisible = false
-moreVisible = false
 function toggleDropdown() {
     if (!$("#dropdown.hiding") && !$("#dropdown.showing")) {
         headerDropdown.classList.remove("shown","hidden")
@@ -114,8 +116,7 @@ function changePhoto() {
 }
 function toggleModal(modalName) {
     let modal = $(`#${modalName}-modal`)
-    if (modal.style.display == "block") modal.style.display = "none"
-    else modal.style.display = "block"
+    modal.style.display == "block" ? modal.style.display = "none" : modal.style.display = "block"
     window.dispatchEvent(new Event(`toggle-modal-${modalName}`))
 }
 function verifyAndChangePassword() {

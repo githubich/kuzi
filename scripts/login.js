@@ -1,4 +1,5 @@
 document.cookie='session=;max-age=0'
+document.cookie='selectedStudent=;max-age=0'
 window.addEventListener('keypress', e => {
     if (e.key == "Enter") {
         if (document.activeElement === document.querySelector('#kuzi-username')) document.querySelector('#kuzi-password').focus()

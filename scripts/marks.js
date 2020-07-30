@@ -3,20 +3,18 @@ window.addEventListener('load', () => {
     setActiveTab(1)
 })
 function load() {
-    if (userInfo.role == "student") {
+    if (userInfo.role == "student" || userInfo.role == "parent") {
         let URLparams = {}
         if (window.location.toString().includes("?")) URLparams = $parseURLArgs()
         $('#manager').remove()
-        fetch('/students/marks/get', { method: "POST" })
+        $('#period-container').style = ''
+        fetch(`/${userInfo.role}s/marks/get`, { method: "POST" })
             .then(res => res.json()
             .then(periods => {
-                let periodContainer = document.createElement('div')
-                $('#root').appendChild(periodContainer)
-                periodContainer.id = "period-container"
-
+                console.log(periods)
                 periods.forEach(period => {
                     let periodE = document.createElement('div')
-                    periodContainer.appendChild(periodE)
+                    $('#period-container').appendChild(periodE)
                     periodE.classList.add("period", `period-${period.periodID}`)
 
                     let periodETitle = document.createElement('div')
@@ -56,8 +54,10 @@ function load() {
 
                             let markEContent = document.createElement('div')
                             markE.appendChild(markEContent)
-                            markEContent.classList.add("mark-content", "do-not-break")
-                            markEContent.innerHTML = `${mark.mark}%`
+                            markEContent.classList.add("mark-content")
+                            if (mark.testID == undefined) markEContent.innerHTML = `${mark.mark}%`
+                            else if (mark.finished === true) markEContent.innerHTML = `${mark.mark}%`
+                            else if (mark.canBePerformed === true) markEContent.innerHTML = `<a href="/perform-test.html?ID=${mark.testID}"><i class="fad fa-play"></i>Perform Test</a>`
                             if (mark.definitive === false) markEContent.innerHTML += `<i class="fad fa-info-circle mark-not-definitive" title="[{(thisMarkIsntDefinitive)}]"></i>`
                         })
                     })
@@ -70,7 +70,9 @@ function load() {
                 }
             })
             )
-    } else {
+    } else if (userInfo.role == "teacher") {
+        $('#period-container').remove()
+        $('#manager').style = ''
         fetch('/teachers/getInfo', { method: "POST" })
             .then(res => res.json()
             .then(res => {
@@ -131,7 +133,6 @@ function load() {
             $('.students').style = ""
             $('.mark-info').style = ""
         }
-        $('#manager').style.display = ""
         submit = () => {
             let sendData = { name: $('#mark-name').value, subjectID: parseInt($('#subject-chooser').value), periodID: parseInt($('#period-chooser').value), marks: [] }
             $$('#students-in-class .markInput input').forEach(e => {

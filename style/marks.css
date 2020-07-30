@@ -27,6 +27,7 @@
 .mark > * { display: inline-block; }
 .mark .mark-title { margin: auto 0; }
 .mark .mark-content { margin: auto 0 auto auto; padding-left: 10px; }
+.mark .mark-content a i { margin-right: .3em; }
 .mark-content { float: right; min-width: max-content; }
 .highlighted { font-weight: bold; }
 .mark-not-definitive { margin-left: .3em; }
