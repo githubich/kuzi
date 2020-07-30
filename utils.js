@@ -1,7 +1,7 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
 random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
 ran16 = () => {return random(0,15).toString(16)}
-newUUID =() => {return ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()}
+newUUID = () => {return ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()}
 importJSON = location => {
 	if (!existsSync(location)) { console.warn(`[Kuzi|Warning] ${location} is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
 	else return JSON.parse(readFileSync(location).toString('utf8'))
@@ -19,13 +19,10 @@ extensionToMime = ext => {
 	else return 'text/html'
 }
 importLocale = () => {
-	let settings = importJSON('settings.json')
-	let localizationStrings = eval(`importJSON('localization.json').${settings.language}`)
-	let version = ""
-	try {
-		version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
-	} catch { version = "alpha" }
-	console.log(`[Kuzi] Using version ${version}`)
+	let { language } = importJSON('settings.json')
+	let localizationStrings = importJSON('localization.json')[language]
+	let version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
+	console.log(`[Kuzi] Using Kuzi ${version}`)
 	return [`global.version|${version}`, ...localizationStrings]
 }
 module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale }

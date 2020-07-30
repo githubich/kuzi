@@ -1,0 +1,2 @@
+table { border-collapse: collapse; }
+th, td { border: 1px var(--bg-shade4) solid; padding: 12.5px; }

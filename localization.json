@@ -2,6 +2,7 @@
     "en": [
         "langcode|en",
 
+        "actions|Actions",
         "areYouSure|Are you sure?",
         "birthdayList|Birthday list",
         "cancel|Cancel",
@@ -87,7 +88,7 @@
         "studentsIn|Students in",
         "subject|Subject",
         "submit|Submit",
-        "endTime|Ends at",
+        "endTime|End time",
         "success.delete.event|Event deleted successfully!",
         "success.eventSubmit|Event created successfully!",
         "success.markSubmit|Mark submitted successfully!",
@@ -133,6 +134,7 @@
     "es": [
         "langcode|es",
 
+        "actions|Aciones",
         "areYouSure|¿Estás segur@?",
         "birthdayList|Cumpleaños",
         "cancel|Cancelar",
@@ -265,6 +267,7 @@
     "ca": [
         "langcode|ca",
 
+        "actions|Accions",
         "areYouSure|Estàs segur(a)?",
         "birthdayList|Aniversaris",
         "cancel|Cancel·lar",

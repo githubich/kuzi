@@ -65,9 +65,8 @@ function load() {
                 } else if (q.type == 'open') {
                     let oE = document.createElement('div')
                     answerE.appendChild(oE)
-                    console.log(typeof test.answers[i])
                     oE.classList.add('option')
-                    oE.innerHTML = `<input type="text" value="${(() => { if (typeof test.answers[i] == 'object') return test.answers[i][0] || ''; return test.answers[i] || '' })()}" id="question-${i}-answer" disabled>`
+                    oE.innerHTML = `<input type="text" value="${(() => { if (typeof test.answers[i] == 'object' && test.answers[i] !== null) return test.answers[i][0] || ''; return test.answers[i] || '' })()}" id="question-${i}-answer" disabled>`
                     if (typeof test.answers[i] != 'object') {
                         oE.innerHTML += `
                             <button class="mark-as-correct" onclick="markOpenAnswer(${i}, true)">

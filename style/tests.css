@@ -3,6 +3,7 @@ main p { margin: 0; }
 #test-container { display: grid; gap: 20px }
 .test { display: flex; flex-direction: column; }
 .test > * { background-color: var(--bg-shade1); padding: 12.5px; border: solid 1px var(--bg-alt-super-alpha); }
+.teacher .test .content { padding-top: 0; }
 .test .title { border-radius: 10px 10px 0 0; border-width: 1px 1px 0 1px; }
 .test .line { min-height: 1.5px !important; max-height: 1.5px; height: 1.5px !important; border-width: 0 1px; padding: 0; }
 .test.green .line { background-color: #22dd227a; }
@@ -12,7 +13,7 @@ main p { margin: 0; }
 .test.blue .controls, .test.red .controls { display: none; }
 .test .content { border-radius: 0 0 10px 10px; border-width: 0 1px 1px 1px; height: 100%; display: flex; flex-direction: column; }
 .test .content > :not(:nth-last-child(1)) { margin-bottom: 2.5px; }
-.test .visibility { display: flex; }
+.test .visibility { display: flex; margin: 5px 0 0 0; }
 .test .visibility > * { margin: auto 0; }
 .test .visibility label { padding-left: .3em; width: 100%; }
 .controls { margin: auto 0 0 0; padding: 10px 0 0 0; }

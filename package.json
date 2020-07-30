@@ -1,28 +1,28 @@
 {
-  "name": "kuzi",
-  "version": "0.0.1",
-  "description": "A free alternative to make a reliable & beautiful (high)school platform",
-  "main": "server.js",
-  "dependencies": {
-    "express": "^4.17.1",
-    "express-fileupload": "^1.1.7-alpha.4"
-  },
-  "scripts": {
-    "run": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ezarcel/kuzi.git"
-  },
-  "keywords": [
-    "education",
-    "nodejs",
-    "expressjs"
-  ],
-  "author": "ezarcel",
-  "license": "SEE LICENSE IN LICENSE",
-  "bugs": {
-    "url": "https://github.com/ezarcel/kuzi/issues"
-  },
-  "homepage": "https://github.com/ezarcel/kuzi#readme"
+	"name": "kuzi",
+	"version": "0.0.1",
+	"description": "A free alternative to make a reliable & beautiful (high)school platform",
+	"main": "server.js",
+	"dependencies": {
+		"express": "^4.17.1",
+		"express-fileupload": "^1.1.8"
+	},
+	"scripts": {
+		"start": "node server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ezarcel/kuzi.git"
+	},
+	"keywords": [
+		"education",
+		"nodejs",
+		"expressjs"
+	],
+	"author": "ezarcel",
+	"license": "SEE LICENSE IN LICENSE",
+	"bugs": {
+		"url": "https://github.com/ezarcel/kuzi/issues"
+	},
+	"homepage": "https://github.com/ezarcel/kuzi#readme"
 }

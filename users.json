@@ -30,5 +30,21 @@
         "userID": 4,
         "role": "student",
         "isAdmin": false
+    },
+    {
+        "username": "admin.parent",
+        "password": "kuzi",
+        "prettyName": "Admin Parent",
+        "userID": 5,
+        "role": "parent",
+        "isAdmin": true
+    },
+    {
+        "username": "nonadmin.parent",
+        "password": "kuzi",
+        "prettyName": "Non-Admin Parent",
+        "userID": 6,
+        "role": "parent",
+        "isAdmin": false
     }
 ]

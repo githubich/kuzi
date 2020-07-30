@@ -3,7 +3,7 @@ console.log(`[Kuzi] Starting... (${require('os').platform()} ${require('os').rel
 const express = require('express')
 const app = express()
 const { extname } = require('path')
-const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync } = require('fs')
+const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
 const { newUUID, importJSON, saveJSON } = require('./utils')
 const settings = importJSON('settings.json')
 
@@ -12,17 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(require('express-fileupload')({ createParentPath: true }))
 app.use(require('./middleware'))
 
-if (!existsSync('active.cookies.json') || readFileSync('active.cookies.json') == "") writeFileSync('active.cookies.json', JSON.stringify([]))
-if (!existsSync('events.json') || readFileSync('events.json') == "") writeFileSync('events.json', JSON.stringify([]))
-if (!existsSync('marks.json') || readFileSync('marks.json') == "") writeFileSync('marks.json', JSON.stringify([]))
-if (!existsSync('tests.json') || readFileSync('tests.json') == "") writeFileSync('tests.json', JSON.stringify([]))
-if (!existsSync('notifications/')) mkdirSync('notifications')
-if (!existsSync('test-progress/')) mkdirSync('test-progress')
-if (!existsSync('upload/')) mkdirSync('upload')
-if (!existsSync('upload/messages/')) mkdirSync('upload/messages')
-if (!existsSync('upload/messages/index.json') || readFileSync('upload/messages/index.json') == "") writeFileSync('upload/messages/index.json', JSON.stringify([]))
-if (!existsSync('upload/resources/')) mkdirSync('upload/resources')
-if (!existsSync('upload/resources/index.json') || readFileSync('upload/resources/index.json') == "") writeFileSync('upload/resources/index.json', JSON.stringify([]))
+let folders = ['notifications', 'test-progress', 'upload', 'upload/messages', 'upload/resources']
+folders.forEach(f => { if (!existsSync(`${f}/`)) mkdirSync(f) })
+
+let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json', 'upload/messages/index.json', 'upload/resources/index.json']
+files.forEach(f => { if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([])) })
 
 
 
@@ -114,22 +108,15 @@ app.get('*', (req, res) => {
 
 // User-related stuff
 app.post('/user/login', (req, res) => {
-	let users = importJSON('users.json')
-	let found = false
-	let userID = 0
-	users.forEach(userKey => {
-		if (userKey.username == req.body.username && userKey.password == req.body.password) {
-			found = true
-			userID = userKey.userID
+	importJSON('users.json').forEach(user => {
+		if (user.username == req.body.username && user.password == req.body.password) {
+			let activeCookies = importJSON('active.cookies.json')
+			let newSession = newUUID()
+			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: user.userID })
+			saveJSON('active.cookies.json', activeCookies)
+			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 200)
 		}
 	})
-	if (found) {
-		let activeCookies = importJSON('active.cookies.json')
-		let newSession = newUUID()
-		res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 403)
-		activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: userID })
-		saveJSON('active.cookies.json', activeCookies)
-	} else res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 403)
 })
 app.post('/user/logout', (req, res) => {
 	let activeCookies = importJSON('active.cookies.json')
@@ -144,8 +131,10 @@ app.post('/user/logout', (req, res) => {
 	res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
 })
 app.post('/user/getInfo', (req, res) => {
-	delete req.userInfo.password
-	res.respond(JSON.stringify({ userInfo: req.userInfo }), '', 'application/json', 200)
+	try {
+		delete req.userInfo.password
+		res.respond(JSON.stringify({ userInfo: req.userInfo }), '', 'application/json', 200)
+	} catch { res.respond(JSON.stringify({ message: 'not logged in' }), '', 'application/json', 401) }
 })
 app.post('/user/changePicture', (req, res) => {
 	if (existsSync(`./users/${req.userInfo.userID}.png`)) unlinkSync(`./users/${req.userInfo.userID}.png`)
@@ -431,12 +420,12 @@ app.post('/students/tests/start', (req, res) => {
 	else return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	if (!existsSync('test-progress/')) mkdirSync('test-progress')
 	if (!existsSync(`test-progress/${req.userInfo.userID}`)) mkdirSync(`test-progress/${req.userInfo.userID}`)
-	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, JSON.stringify({ progress: [], finished: false }))
+	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, JSON.stringify({ progress: [], finished: false, start: (new Date()).getTime() }))
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/students/tests/save', (req, res) => {
 	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
-	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: req.body.progress, finished: req.body.finish })
+	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: req.body.progress, finished: req.body.finish, end: (new Date()).getTime() })
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 
@@ -577,9 +566,7 @@ app.post('/teachers/resources/delete', (req, res) => {
 app.post('/teachers/tests/get', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let test = {}
-	importJSON('tests.json').forEach(t => {
-		if (t.ownerID == req.userInfo.userID && t.testID == req.body.ID) test = t
-	})
+	importJSON('tests.json').forEach(t => { if (t.ownerID == req.userInfo.userID && t.testID == req.body.ID) test = t })
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
 app.post('/teachers/tests/list', (req, res) => {
@@ -590,6 +577,13 @@ app.post('/teachers/tests/list', (req, res) => {
 	let theirTests = []
 	tests.forEach(test => {
 		if (test.ownerID == req.userInfo.userID) {
+			test.submissions = 0
+			readdirSync('test-progress').forEach(student => {
+				let testList = readdirSync(`test-progress/${student}`)
+				if (testList.includes(`${test.testID}.json`)) {
+					if (importJSON(`test-progress/${student}/${test.testID}.json`).finished) test.submissions++
+				}
+			})
 			test.subject = subjects.find(e => e.subjectID == test.subjectID)
 			delete test.subjectID
 			test.class = classes.find(e => e.classID == test.classID)
@@ -645,6 +639,18 @@ app.post('/teachers/tests/setOpenAnswerAs', (req, res) => {
 	answers.progress[req.body.questionI] = [ answers.progress[req.body.questionI], req.body.correct === true ]
 	saveJSON(`test-progress/${req.body.studentID}/${req.body.testID}.json`, answers)
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/teachers/tests/listSubmissions', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.body.testID == undefined) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 400)
+	let submissions = []
+	let users = importJSON('users.json')
+	readdirSync('test-progress').forEach(student => {
+		if (readdirSync(`test-progress/${student}`).includes(`${req.body.testID}.json`) &&
+		importJSON(`test-progress/${student}/${req.body.testID}.json`).finished)
+		submissions.push({ student: users.find(e => e.userID == parseInt(student)), start: importJSON(`test-progress/${student}/${req.body.testID}.json`).start, end: importJSON(`test-progress/${student}/${req.body.testID}.json`).end })
+	})
+	res.respond(JSON.stringify(submissions), '', 'application/json', 200)
 })
 
 // Misc

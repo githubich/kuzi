@@ -7,7 +7,7 @@
 ::-webkit-scrollbar-thumb:hover { background: var(--bg-shade3); }
 ::-webkit-scrollbar-thumb:active { background: var(--bg-shade4); }
 html, body, main { margin: 0; background-color: var(--bg); overflow-x: hidden; }
-body:not(.student):not(.teacher) #root { display: none; }
+body:not(.student):not(.teacher):not(.parent) #root { display: none; }
 body:not(.student) .students-only { display: none; }
 body:not(.teacher) .teachers-only { display: none; }
 main { padding: 20px; margin-top: 60px; }

@@ -38,7 +38,8 @@ function load() {
     fetch(`${userInfo.role}s/tests/list`, { method: 'POST' })
         .then(res => res.json())
         .then(res => {
-            if (userInfo.role = 'student') res.sort(testSort)
+            console.log(res)
+            if (userInfo.role == 'student') res.sort(testSort)
             let testContainer = $('#test-container')
             res.forEach(test => {
                 let testE = document.createElement('div')
@@ -61,10 +62,12 @@ function load() {
                     <div class="content">
                         <p class="subjectAndClass">[{(subject)}]: ${(() => { if (userInfo.role == "teacher") return `${test.subject.prettyName} | [{(class)}]: ${test.class.prettyName}`; return test.subject.prettyName})()}</p>
                         <p class="question-count">[{(questionCount)}]: ${test.questions.length}</p>
+                        <p class="submissions">[{(submissions)}]: ${test.submissions}</p>
                         <p class="start">[{(startTime)}]: ${startHours}:${startMinutes} ${test.startTime.day}/${test.startTime.month}/${test.startTime.year}</p>
                         <p class="due">[{(dueTime)}]: ${dueHours}:${dueMinutes} ${test.dueTime.day}/${test.dueTime.month}/${test.dueTime.year}</p>
                         <p class="controls">
                             <a title="[{(perform)}]" class="perform-test students-only" href="/perform-test.html?ID=${test.testID}"><i class="fad fa-play"></i></a>
+                            <a title="[{(viewSubmissions)}]" class="view-test-submissions teachers-only" href="/test-submissions.html?ID=${test.testID}"><i class="fad fa-tasks"></i></a>
                             <a title="[{(edit)}]" class="edit-test teachers-only" href="/edit-test.html?ID=${test.testID}"><i class="fad fa-edit"></i></a>
                             <a title="[{(delete)}]" class="delete-test teachers-only" onclick="deleteTest(this, ${test.testID})"><i class="fad fa-trash"></i></a></p>
                         <div class="visibility teachers-only">
