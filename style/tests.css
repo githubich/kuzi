@@ -20,4 +20,6 @@ main p { margin: 0; }
 .controls a:not(:nth-last-child(1)) { margin-right: .5em; }
 .student .test .submissions { display: none; }
 
-@media (min-width: 601px) { #test-container { grid-template-columns: 1fr 1fr 1fr; } }
+@media (min-width: 801px) { #test-container { grid-template-columns: 1fr 1fr 1fr; } }
+@media (max-width: 800px) { #test-container { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { #test-container { grid-template-columns: 1fr; } }
