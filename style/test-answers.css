@@ -15,30 +15,13 @@
 .answer { margin: 10px 0 0; }
 .question:not(.open) .option { display: flex;  }
 .question.open button { display: inline-block; }
-.question.open button.mark-as-correct { margin: 20px 20px 0 0; }
+.question.open button.mark-as-correct { margin: 20px 15px 0 0; }
 .question.open button.mark-as-correct i { color: #22dd22; }
 .question.open button.mark-as-incorrect i { color: #dd2222; }
 .question .question-content { width: 100%; }
 .option, .option *:not(input[type=text]) { cursor: pointer; }
 .option label { width: 100%; padding: 0 0 0 2.5px; }
 input[type=radio], input[type=checkbox], input[type=text] { pointer-events: none; }
-.markInput {
-	display: flex;
-	padding: 5px 10px;
-    border: solid var(--bg-alt);
-	border-width: 0 0 1px 0;
-	margin-left: auto;
-    white-space: nowrap;
-    cursor: text;
-}
-.markInput * { color: var(--bg-alt); font-size: 16px; }
-.markInput input[type=number] {
-	background: #0000;
-	border: none;
-    margin-right: 2.5px;
-    padding: 0;
-}
-.markInput p { margin: auto 0; }
 
 @media (max-width: 600px) {
     #question-container { grid-template-columns: 1fr; }

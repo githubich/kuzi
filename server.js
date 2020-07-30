@@ -640,11 +640,11 @@ app.post('/teachers/tests/getAnswers', (req, res) => {
 })
 app.post('/teachers/tests/setOpenAnswerAs', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
-	if (!req.body.studentID || !req.body.testID || !req.body.questionI || !req.body.set) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 400)
+	if (req.body.studentID == undefined || req.body.testID == undefined || req.body.questionI == undefined || req.body.correct == undefined) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 400)
 	let answers = importJSON(`test-progress/${req.body.studentID}/${req.body.testID}.json`)
-	answers.progress[questionI] = [ answers.progress[questionI], req.body.set === true ]
+	answers.progress[req.body.questionI] = [ answers.progress[req.body.questionI], req.body.correct === true ]
 	saveJSON(`test-progress/${req.body.studentID}/${req.body.testID}.json`, answers)
-	res.respond(JSON.stringify(test), '', 'application/json', 200)
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 
 // Misc
