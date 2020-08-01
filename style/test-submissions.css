@@ -1,2 +1,9 @@
 table { border-collapse: collapse; }
 th, td { border: 1px var(--bg-shade4) solid; padding: 12.5px; }
+td.actions { text-align: center; }
+td.actions > a:not(:nth-last-child(1)) { margin-right: .3em; }
+table, table * { width: max-content; }
+#root { overflow-x: auto; }
+
+@media (min-width: 601px) { table { margin: 0 auto; } }
+@media (max-width: 600px) { table { min-width: 100%; } }

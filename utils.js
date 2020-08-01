@@ -1,4 +1,5 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
+const { finished } = require('stream')
 random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
 ran16 = () => {return random(0,15).toString(16)}
 newUUID = () => {return ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()}
@@ -25,4 +26,33 @@ importLocale = () => {
 	console.log(`[Kuzi] Using Kuzi ${version}`)
 	return [`global.version|${version}`, ...localizationStrings]
 }
-module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale }
+calcMark = (testID, studentID) => {
+	if (testID == undefined || studentID == undefined) return
+	let progress = importJSON(`test-progress/${studentID}/${testID}.json`)
+	let answers = progress.progress || undefined
+	let test = importJSON('tests.json').find(e => e.testID == testID)
+	let corrections = test.questions
+	if (answers == undefined || corrections == undefined || test == undefined) return
+
+	let canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
+	let definitive = true
+	let i = 0
+	let mark = 0
+
+	corrections.forEach(correction => {
+		if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[i]) mark += correction.value
+		} else if (correction.type == 'multiple-choice') {
+			let j = 0
+			correction.options.forEach(o => {
+				if (answers[i].includes(j)) mark += o.value
+				j++
+			})
+		} else if (correction.type == 'open' && typeof answers[i] == 'string') definitive = false
+		else if (correction.value) mark += correction.value
+		i++
+	})
+	if (definitive === true) canBePerformed = false
+
+	return { canBePerformed: canBePerformed, definitive: definitive, finished: progress.finished, mark: mark }
+}
+module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark }

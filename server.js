@@ -4,8 +4,10 @@ const express = require('express')
 const app = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
-const { newUUID, importJSON, saveJSON } = require('./utils')
+const { newUUID, importJSON, saveJSON, calcMark } = require('./utils')
 const settings = importJSON('settings.json')
+
+console.log(calcMark(0, 3))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -342,6 +344,7 @@ app.post('/students/resources/get', (req, res) => {
 })
 
 app.post('/students/tests/list', (req, res) => {
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let classes = importJSON('classes.json')
 	let subjects = importJSON('subjects.json')
 	let tests = importJSON('tests.json')
@@ -424,6 +427,7 @@ app.post('/students/tests/getMinimal', (req, res) => {
 	res.respond(JSON.stringify(test), '', 'application/json', 200)
 })
 app.post('/students/tests/getProgress', (req, res) => {
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let test = {}
 	importJSON('tests.json').forEach(t => { if (t.classID == req.userInfo.class.classID && t.testID == req.body.ID && t.visible) test = t })
 	if ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime()) {}
@@ -492,43 +496,7 @@ app.post('/parents/marks/get', (req, res) => {
 				}
 			})
 			tests.forEach(test => {
-				if (test.periodID == a.periodID && test.subjectID == usefulSubject) {
-					if (existsSync(`test-progress/${req.body.studentID}/${test.testID}.json`)) {
-						let answers = importJSON(`test-progress/${req.body.studentID}/${test.testID}.json`)
-						if (answers.finished === true) {
-							answers = answers.progress
-							let corrections = importJSON('tests.json').find(i => i.testID == test.testID).questions
-							let definitive = true
-							let k = 0
-							let mark = 0
-	
-							corrections.forEach(correction => {
-								if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[k]) mark += correction.value
-								} else if (correction.type == 'multiple-choice') {
-									let l = 0
-									correction.options.forEach(o => {
-										if (answers[k].includes(l)) mark += o.value
-										l++
-									})
-								} else if (correction.type == 'open' && typeof answers[k] == 'string') definitive = false
-								else if (correction.value) mark += correction.value
-								k++
-							})
-							test.mark = mark
-							test.definitive = definitive
-							test.finished = true
-							resContent[i].subjects[j].marks.push(test)
-						} else {
-							test.finished = false
-							test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
-							resContent[i].subjects[j].marks.push(test)
-						}
-					} else {
-						test.finished = false
-						test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
-						resContent[i].subjects[j].marks.push(test)
-					}
-				}
+				if (test.periodID == a.periodID && test.subjectID == usefulSubject) resContent[i].subjects[j].marks.push([ ...test, calcMark(test.testID)])
 			})
 			j++
 		})

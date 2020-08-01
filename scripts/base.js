@@ -50,6 +50,7 @@ window.addEventListener('load', () => {
                 childSelector.value = $parseCookies().selectedChild
             }
             if (typeof load == "function") load()
+            $().classList.add('loaded')
         })
 })
 window.addEventListener('click', e => {
@@ -98,13 +99,12 @@ function toggleMore() {
         } else {
             moreVisible = true
             more.classList.add("showing")
-            more.style.top = `${$('main').offsetTop}px`
             more.style.left = `${$('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth}px`
             setTimeout(() => { more.classList.remove("showing"); more.classList.add("shown") }, 200)
         }
     }
 }
-function setPageTitle(icon, title) { $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}` }
+setPageTitle = (icon, title) => $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}`
 function setActiveTab(index, preserveHref) {
     $$('.header-action')[index].classList.add('selected')
     if (!preserveHref) $$('.header-action a')[index].removeAttribute('href')

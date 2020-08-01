@@ -41,7 +41,7 @@
 		<div id="dropdown" class="blurry-bg hidden">
 			<a class="close phone-close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
 			<ul class="dropdown-actions">
-				<li class="dropdown-action"><select id="child-selector" oninput="updateChild(this.value)"></select></li>
+				<li class="dropdown-action parents-only"><select id="child-selector" oninput="updateChild(this.value)"></select></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>[{(changePicture)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>[{(changePassword)}]</span></a></li>
 				<li class="dropdown-action"><a onclick='fetch("/user/logout", { method: "POST" }).then(() => { document.cookie="session=;max-age=0"; location = "/" })'><i class="fad fa-times-circle"></i><span>[{(logout)}]</span></a></li>
