@@ -65,5 +65,611 @@
                 "value": 25
             }
         ]
+    },
+    {
+        "name": "Test",
+        "subjectID": 1,
+        "classID": 1,
+        "ownerID": 1,
+        "testID": 1,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": true,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 100
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No",
+                    "fghj",
+                    "dfghjk",
+                    "fghj"
+                ],
+                "correctAnswer": 4,
+                "value": 50
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": 0
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "New question",
+                "type": "single-choice",
+                "options": [
+                    "ghjk",
+                    "fghjk",
+                    "fgbnm",
+                    "ghjk",
+                    "fghjk",
+                    "ghnm"
+                ],
+                "correctAnswer": 4,
+                "value": 100
+            }
+        ]
+    },
+    {
+        "name": "Test",
+        "subjectID": 1,
+        "classID": 1,
+        "ownerID": 1,
+        "testID": 2,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": true,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No"
+                ],
+                "correctAnswer": 1,
+                "value": 25
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": 0
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "New question",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "fvgbnm",
+                        "value": 0
+                    },
+                    {
+                        "text": "gbhnjm,",
+                        "value": 0
+                    },
+                    {
+                        "text": "fghjk",
+                        "value": 100
+                    },
+                    {
+                        "text": "fghbnjm",
+                        "value": 100
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Test",
+        "subjectID": 2,
+        "classID": 1,
+        "ownerID": 2,
+        "testID": 3,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": true,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No"
+                ],
+                "correctAnswer": 1,
+                "value": 25
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": -10
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": -50
+                    },
+                    {
+                        "text": "werwee",
+                        "value": 0
+                    },
+                    {
+                        "text": "wrwer",
+                        "value": -50
+                    },
+                    {
+                        "text": "werew",
+                        "value": 0
+                    },
+                    {
+                        "text": "erwe",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "New question",
+                "type": "open",
+                "value": 0
+            },
+            {
+                "question": "New question",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "123",
+                        "value": 0
+                    },
+                    {
+                        "text": "123",
+                        "value": 10
+                    },
+                    {
+                        "text": "123",
+                        "value": -89
+                    },
+                    {
+                        "text": "123",
+                        "value": 0
+                    },
+                    {
+                        "text": "123",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "New question",
+                "type": "open",
+                "value": 0
+            }
+        ]
+    },
+    {
+        "name": "Test",
+        "subjectID": 1,
+        "classID": 1,
+        "ownerID": 1,
+        "testID": 4,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": true,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No"
+                ],
+                "correctAnswer": 1,
+                "value": 25
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": 0
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "New question",
+                "type": "single-choice",
+                "options": [
+                    "ghjmk,",
+                    "ghjk",
+                    "fghj",
+                    "ghjk",
+                    "hsdfghjk",
+                    "gbnm"
+                ],
+                "correctAnswer": 4,
+                "value": 0
+            },
+            {
+                "question": "New question",
+                "type": "open",
+                "value": 0
+            },
+            {
+                "question": "New question",
+                "type": "open",
+                "value": 0
+            },
+            {
+                "question": "New question",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "FGHJK",
+                        "value": 0
+                    },
+                    {
+                        "text": "FGBN",
+                        "value": 0
+                    },
+                    {
+                        "text": "FGHJ",
+                        "value": -89
+                    },
+                    {
+                        "text": "ERTYHJUK",
+                        "value": 100
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Test",
+        "subjectID": 1,
+        "classID": 1,
+        "ownerID": 1,
+        "testID": 5,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": true,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No"
+                ],
+                "correctAnswer": 1,
+                "value": 25
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": 0
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            }
+        ]
+    },
+    {
+        "name": "Test",
+        "subjectID": 1,
+        "classID": 1,
+        "ownerID": 1,
+        "testID": 6,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": true,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No"
+                ],
+                "correctAnswer": 1,
+                "value": 25
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": 0
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            }
+        ]
+    },
+    {
+        "name": "Test Template 7",
+        "subjectID": 2,
+        "classID": 1,
+        "ownerID": 2,
+        "testID": 7,
+        "periodID": 3,
+        "startTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 22,
+            "hours": 0,
+            "minutes": 0
+        },
+        "dueTime": {
+            "year": 2020,
+            "month": 7,
+            "day": 31,
+            "hours": 23,
+            "minutes": 59
+        },
+        "visible": false,
+        "questions": [
+            {
+                "question": "What is your favorite feature of Kuzi?",
+                "type": "open",
+                "value": 25
+            },
+            {
+                "question": "Is Kuzi the best platform of them all?",
+                "type": "single-choice",
+                "options": [
+                    "Yes",
+                    "No"
+                ],
+                "correctAnswer": 1,
+                "value": 25
+            },
+            {
+                "question": "What's the Kuzi creator's name?",
+                "type": "multiple-choice",
+                "options": [
+                    {
+                        "text": "Adam (Name)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Ezarcel (Name)",
+                        "value": 0
+                    },
+                    {
+                        "text": "Ezarcel (Surname)",
+                        "value": 12.5
+                    },
+                    {
+                        "text": "Adams (Surname)",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "question": "What's your opinion on Kuzi?",
+                "type": "open",
+                "value": 25
+            }
+        ]
     }
 ]

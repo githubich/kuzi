@@ -49,7 +49,7 @@ app.get('/new-test.html', (req, res) => {
 	let ID = 0
 	if (tests.length > 0) ID = tests[tests.length - 1].testID + 1
 	tests.push({
-        name: "Test",
+        name: `Test Template ${ID}`,
         subjectID: schedule.subjectID,
 		classID: schedule.classID,
 		ownerID: req.userInfo.userID,
@@ -57,7 +57,7 @@ app.get('/new-test.html', (req, res) => {
         periodID: 3,
         startTime: { year: 2020, month: 7, day: 22, hours: 0, minutes: 0 },
         dueTime: { year: 2020, month: 7, day: 31, hours: 23, minutes: 59 },
-        visible: true,
+        visible: false,
         questions: [
             {
                 question: "What is your favorite feature of Kuzi?",

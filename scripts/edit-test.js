@@ -85,7 +85,7 @@ function updateEditQuestionModal(value, testDataI) {
         answersE.appendChild(optionE)
         optionE.classList.add('new-option', 'single-choice')
         optionE.innerHTML = `
-            <input type="radio" disabled>
+            <input type="radio" disabled name="edit-question-modal-single-choice">
             <input type="text" placeholder="[{(typeToAddAnOption)}]...">
         `
     } else if (value == "multiple-choice") {
@@ -276,8 +276,9 @@ function newQuestion() {
         </div>
     `
     testData.questions.push({
-        "question": "[{(newQuestion)}]",
-        "type": "open"
+        question: "[{(newQuestion)}]",
+        type: "open",
+        value: 0
     })
     addFunctionality()
     rerender()
