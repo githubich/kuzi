@@ -7,8 +7,6 @@ const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirS
 const { newUUID, importJSON, saveJSON, calcMark } = require('./utils')
 const settings = importJSON('settings.json')
 
-console.log(calcMark(0, 3))
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require('express-fileupload')({ createParentPath: true }))
@@ -216,57 +214,16 @@ app.post('/students/marks/get', (req, res) => {
 					resContent[i].subjects[j].marks.push(pMark)
 				}
 			})
-			tests.forEach(test => {
-				if (test.periodID == a.periodID && test.subjectID == usefulSubject) {
-					if (existsSync(`test-progress/${req.userInfo.userID}/${test.testID}.json`)) {
-						let answers = importJSON(`test-progress/${req.userInfo.userID}/${test.testID}.json`)
-						if (answers.finished === true) {
-							answers = answers.progress
-							let corrections = importJSON('tests.json').find(i => i.testID == test.testID).questions
-							let definitive = true
-							let k = 0
-							let mark = 0
-	
-							corrections.forEach(correction => {
-								if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[k]) mark += correction.value
-								} else if (correction.type == 'multiple-choice') {
-									let l = 0
-									correction.options.forEach(o => {
-										if (answers[k].includes(l)) mark += o.value
-										l++
-									})
-								} else if (correction.type == 'open' && typeof answers[k] == 'string') definitive = false
-								else if (correction.value) mark += correction.value
-								k++
-							})
-							test.mark = mark
-							test.definitive = definitive
-							test.finished = true
-							resContent[i].subjects[j].marks.push(test)
-						} else {
-							test.finished = false
-							test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
-							resContent[i].subjects[j].marks.push(test)
-						}
-					} else {
-						test.finished = false
-						test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
-						resContent[i].subjects[j].marks.push(test)
-					}
-				}
-			})
+			tests.forEach(test => { if (test.periodID == a.periodID && test.subjectID == usefulSubject) resContent[i].subjects[j].marks.push({ ...test, ...calcMark(test.testID, req.userInfo.userID) }) })
 			j++
 		})
 		j = 0
 		resContent[i].subjects.forEach(subjectResContent => {
-			subjects.forEach(subjectJSON => {
-				if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjects[j].subjectName = subjectJSON.prettyName
-			})
+			subjects.forEach(subjectJSON => { if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjects[j].subjectName = subjectJSON.prettyName })
 			j++
 		})
 		i++
 	})
-	i = 0
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/students/marks/graph', (req, res) => {
@@ -496,20 +453,17 @@ app.post('/parents/marks/get', (req, res) => {
 				}
 			})
 			tests.forEach(test => {
-				if (test.periodID == a.periodID && test.subjectID == usefulSubject) resContent[i].subjects[j].marks.push([ ...test, calcMark(test.testID)])
+				if (test.periodID == a.periodID && test.subjectID == usefulSubject) resContent[i].subjects[j].marks.push({ ...test, ...calcMark(test.testID, req.body.studentID) })
 			})
 			j++
 		})
 		j = 0
 		resContent[i].subjects.forEach(subjectResContent => {
-			subjects.forEach(subjectJSON => {
-				if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjects[j].subjectName = subjectJSON.prettyName
-			})
+			subjects.forEach(subjectJSON => { if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjects[j].subjectName = subjectJSON.prettyName })
 			j++
 		})
 		i++
 	})
-	i = 0
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/parents/marks/graph', (req, res) => {
@@ -772,7 +726,7 @@ app.post('/teachers/tests/listSubmissions', (req, res) => {
 	readdirSync('test-progress').forEach(student => {
 		if (readdirSync(`test-progress/${student}`).includes(`${req.body.testID}.json`) &&
 		importJSON(`test-progress/${student}/${req.body.testID}.json`).finished)
-		submissions.push({ student: users.find(e => e.userID == parseInt(student)), start: importJSON(`test-progress/${student}/${req.body.testID}.json`).start, end: importJSON(`test-progress/${student}/${req.body.testID}.json`).end })
+		submissions.push({ student: users.find(e => e.userID == parseInt(student)), mark: calcMark(parseInt(req.body.testID), parseInt(student)), start: importJSON(`test-progress/${student}/${req.body.testID}.json`).start, end: importJSON(`test-progress/${student}/${req.body.testID}.json`).end })
 	})
 	res.respond(JSON.stringify(submissions), '', 'application/json', 200)
 })

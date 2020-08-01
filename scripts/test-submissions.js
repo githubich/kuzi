@@ -31,6 +31,8 @@ function load() {
                         if (submitMinutes < 10) submitMinutes = `0${submitMinutes}`
                         submissionE.innerHTML += `<td>${submitHours}:${submitMinutes} ${submitTime.getDate()}/${submitTime.getMonth()}/${submitTime.getFullYear()}</td>`
 
+                        submissionE.innerHTML += `<td class="mark">${submission.mark.mark}%</td>`
+
                         submissionE.innerHTML += `
                             <td class="actions">
                                 <a href="/test-answers.html?testID=${test.testID}&studentID=${submission.student.userID}" title="[{(view)}]"><i class="fad fa-eye"></i></a>
