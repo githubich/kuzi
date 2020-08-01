@@ -8,7 +8,10 @@ function load() {
         if (window.location.toString().includes("?")) URLparams = $parseURLArgs()
         $('#manager').remove()
         $('#period-container').style = ''
-        fetch(`/${userInfo.role}s/marks/get`, { method: "POST" })
+        let options = {}
+        if (userInfo.role == 'parent') options = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
+        else options = { method: 'POST' }
+        fetch(`/${userInfo.role}s/marks/get`, options)
             .then(res => res.json()
             .then(periods => {
                 console.log(periods)

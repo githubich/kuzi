@@ -49,34 +49,45 @@ app.get('/new-test.html', (req, res) => {
 	let ID = 0
 	if (tests.length > 0) ID = tests[tests.length - 1].testID + 1
 	tests.push({
-		name: "Test",
+        name: "Test",
         subjectID: schedule.subjectID,
 		classID: schedule.classID,
 		ownerID: req.userInfo.userID,
         testID: ID,
-        startTime: { "year": 2020, "month": 7, "day": 22, "hours": 0, "minutes": 0 },
-        dueTime: { "year": 2020, "month": 7, "day": 27, "hours": 23, "minutes": 59 },
-		visible: false,
-		questions: [
-            { question: "Question 1", type: "open" },
+        periodID: 3,
+        startTime: { year: 2020, month: 7, day: 22, hours: 0, minutes: 0 },
+        dueTime: { year: 2020, month: 7, day: 31, hours: 23, minutes: 59 },
+        visible: true,
+        questions: [
             {
-                question: "Question 2",
-                type: "single-choice",
-                options: [ "Choice 1", "Choice 2", "Choice 3" ],
-                correctAnswer: 0,
-                value: 1
+                question: "What is your favorite feature of Kuzi?",
+                type: "open",
+                value: 25
             },
             {
-                question: "Question 3",
+                question: "Is Kuzi the best platform of them all?",
+                type: "single-choice",
+                options: [ "Yes", "No" ],
+                correctAnswer: 1,
+                value: 25
+            },
+            {
+                question: "What's the Kuzi creator's name?",
                 type: "multiple-choice",
                 options: [
-                    { text: "Choice 1", value: 1 },
-                    { text: "Choice 2", value: 0 },
-                    { text: "Choice 3", value: -1 }
+                    { text: "Adam (Name)", value: 12.5 },
+                    { text: "Ezarcel (Name)", value: 0 },
+                    { text: "Ezarcel (Surname)", value: 12.5 },
+                    { text: "Adams (Surname)", value: 0 }
                 ]
+            },
+            {
+                question: "What's your opinion on Kuzi?",
+                type: "open",
+                value: 25
             }
         ]
-	})
+    })
 	saveJSON('tests.json', tests)
 	res.redirect(`/edit-test.html?ID=${ID}`)
 })
@@ -164,7 +175,7 @@ app.post('/user/changePassword', (req, res) => {
 
 // Students
 app.post('/students/marks/get', (req, res) => {
-	if (req.userInfo.role != "student" && req.userInfo.role != "parent") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let exists = false
 	let marks = importJSON('marks.json')
 	let resContent = importJSON('periods.json')
@@ -257,7 +268,7 @@ app.post('/students/marks/get', (req, res) => {
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/students/marks/graph', (req, res) => {
-	if (req.userInfo.role != "student" && req.userInfo.role != "parent") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let exists = false
 	let marks = importJSON('marks.json')
 	let resContent = []
@@ -437,6 +448,141 @@ app.post('/students/tests/save', (req, res) => {
 	if (req.userInfo.role != "student") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	saveJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`, { progress: req.body.progress, finished: req.body.finish, start: importJSON(`test-progress/${req.userInfo.userID}/${req.body.ID}.json`).start, end: (new Date()).getTime() })
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
+})
+
+// Parents
+app.post('/parents/marks/get', (req, res) => {
+	if (req.userInfo.role != "parent" || req.userInfo.children.findIndex(e => e.userID == req.body.studentID) == -1) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let exists = false
+	let marks = importJSON('marks.json')
+	let resContent = importJSON('periods.json')
+	let subjects = importJSON('subjects.json')
+	let tests = importJSON('tests.json')
+	let i = 0
+	let j = 0
+	resContent.forEach(a => {
+		delete resContent[i].startDate
+		delete resContent[i].endDate
+		resContent[i].subjects = []
+		let usefulSubjects = []
+		marks.forEach(mark => {
+			exists = false
+			if (mark.periodID == a.periodID && mark.marks.findIndex(i => i.studentID == req.body.studentID) != -1) {
+				usefulSubjects.forEach(usefulSubject => { if (mark.subjectID == usefulSubject) exists = true })
+				if (!exists) usefulSubjects.push(mark.subjectID)
+			}
+		})
+		tests.forEach(test => {
+			exists = false
+			if (test.periodID == a.periodID) {
+				usefulSubjects.forEach(usefulSubject => { if (test.subjectID == usefulSubject) exists = true })
+				if (!exists) usefulSubjects.push(test.subjectID)
+			}
+		})
+		j = 0
+		usefulSubjects.forEach(usefulSubject => {
+			resContent[i].subjects.push({ subjectID: usefulSubject, marks: [] })
+			marks.forEach(mark => {
+				if (mark.periodID == a.periodID && mark.subjectID == usefulSubject && mark.marks.findIndex(i => i.studentID == req.body.studentID) != -1) {
+					let pMark = mark.marks.find(i => i.studentID == req.body.studentID)
+					delete pMark.studentID
+					pMark.name = mark.name
+					pMark.markID = mark.markID
+					resContent[i].subjects[j].marks.push(pMark)
+				}
+			})
+			tests.forEach(test => {
+				if (test.periodID == a.periodID && test.subjectID == usefulSubject) {
+					if (existsSync(`test-progress/${req.body.studentID}/${test.testID}.json`)) {
+						let answers = importJSON(`test-progress/${req.body.studentID}/${test.testID}.json`)
+						if (answers.finished === true) {
+							answers = answers.progress
+							let corrections = importJSON('tests.json').find(i => i.testID == test.testID).questions
+							let definitive = true
+							let k = 0
+							let mark = 0
+	
+							corrections.forEach(correction => {
+								if (correction.type == 'single-choice') { if (correction.correctAnswer == answers[k]) mark += correction.value
+								} else if (correction.type == 'multiple-choice') {
+									let l = 0
+									correction.options.forEach(o => {
+										if (answers[k].includes(l)) mark += o.value
+										l++
+									})
+								} else if (correction.type == 'open' && typeof answers[k] == 'string') definitive = false
+								else if (correction.value) mark += correction.value
+								k++
+							})
+							test.mark = mark
+							test.definitive = definitive
+							test.finished = true
+							resContent[i].subjects[j].marks.push(test)
+						} else {
+							test.finished = false
+							test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
+							resContent[i].subjects[j].marks.push(test)
+						}
+					} else {
+						test.finished = false
+						test.canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
+						resContent[i].subjects[j].marks.push(test)
+					}
+				}
+			})
+			j++
+		})
+		j = 0
+		resContent[i].subjects.forEach(subjectResContent => {
+			subjects.forEach(subjectJSON => {
+				if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjects[j].subjectName = subjectJSON.prettyName
+			})
+			j++
+		})
+		i++
+	})
+	i = 0
+	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
+})
+app.post('/parents/marks/graph', (req, res) => {
+	if (req.userInfo.role != "parent" || req.userInfo.children.findIndex(e => e.userID == req.body.studentID) == -1) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let exists = false
+	let marks = importJSON('marks.json')
+	let resContent = []
+	let subjects = importJSON('subjects.json')
+	let i = 0
+	let usefulSubjects = []
+
+	marks.forEach(mark => {
+		exists = false
+		if (mark.marks.findIndex(item => item.studentID == req.body.studentID) != -1) {
+			usefulSubjects.forEach(usefulSubject => {
+				if (mark.subjectID == usefulSubject) exists = true
+			})
+			if (!exists) usefulSubjects.push(mark.subjectID)
+		}
+	})
+	i = 0
+	usefulSubjects.forEach(usefulSubject => {
+		resContent.push({ subjectID: usefulSubject, marks: [] })
+		marks.forEach(mark => {
+			if (mark.subjectID == usefulSubject && mark.marks.findIndex(item => item.studentID == req.body.studentID) != -1) {
+				let pMark = mark.marks.find(i => i.studentID == req.body.studentID)
+				delete pMark.studentID
+				pMark.name = mark.name
+				resContent[i].marks.push(pMark)
+			}
+		})
+		i++
+	})
+	i = 0
+	resContent.forEach(subjectResContent => {
+		subjects.forEach(subjectJSON => {
+			if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjectName = subjectJSON.prettyName
+		})
+		i++
+	})
+	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 
 // Teachers
@@ -808,7 +954,7 @@ app.post('/misc/schedule/get', (req, res) => {
 	res.respond(JSON.stringify(theirScheduling), '', 'application/json', 200)
 })
 
-function runAtMidnight() {
+/*function runAtMidnight() {
 	let now = new Date()
 	if (now.getHours() == 0 &&
 		now.getMinutes() == 1 &&
@@ -819,5 +965,5 @@ function runAtMidnight() {
 	}
 	setTimeout(runAtMidnight, 10)
 }
-setTimeout(runAtMidnight, 0)
+setTimeout(runAtMidnight, 0)*/
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`))

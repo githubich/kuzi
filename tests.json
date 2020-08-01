@@ -1,10 +1,11 @@
 [
     {
         "name": "Test",
-        "subjectID": 1,
+        "subjectID": 2,
         "classID": 1,
-        "ownerID": 1,
+        "ownerID": 2,
         "testID": 0,
+        "periodID": 3,
         "startTime": {
             "year": 2020,
             "month": 7,
@@ -33,7 +34,7 @@
                     "Yes",
                     "No"
                 ],
-                "correctAnswer": 0,
+                "correctAnswer": 1,
                 "value": 25
             },
             {
@@ -63,7 +64,6 @@
                 "type": "open",
                 "value": 25
             }
-        ],
-        "periodID": 3
+        ]
     }
 ]

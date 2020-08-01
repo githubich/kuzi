@@ -25,6 +25,7 @@ window.addEventListener('load', () => {
         .then(res => {
             if (!res.userInfo.userID) location = '/'
             userInfo = res.userInfo
+            if (userInfo.role == "parent" && $parseCookies().selectedChild == undefined) document.cookie = `selectedChild=${userInfo.children[0].userID}`
             $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
             $('.user-info .name').innerText = userInfo.prettyName
             $().classList.add(userInfo.role)
@@ -37,8 +38,16 @@ window.addEventListener('load', () => {
                 else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
                 if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
             } else if (userInfo.role == "parent") {
-                $('.user-info .status').innerText = `Admin Student`
+                $('.user-info .status').innerText = userInfo.children.find(e => e.userID == parseInt($parseCookies().selectedChild)).prettyName
                 if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
+                let childSelector = $('#child-selector')
+                userInfo.children.forEach(child => {
+                    let childE = document.createElement('option')
+                    childSelector.appendChild(childE)
+                    childE.innerText = child.prettyName
+                    childE.value = child.userID
+                })
+                childSelector.value = $parseCookies().selectedChild
             }
             if (typeof load == "function") load()
         })
@@ -146,4 +155,8 @@ function verifyAndChangePassword() {
             if (res.message == 'ok') { qAlert({ message: "[{(success.passwordUpdate)}]", mode: "ok" , buttons: { cancel: { invisible: true } } }); toggleModal('password') }
             else qAlert({ message: "[{(error.oldPasswordNotCorrect)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
         })
+}
+function updateChild(ID) {
+    document.cookie = `selectedChild=${ID}`
+    location.reload()
 }

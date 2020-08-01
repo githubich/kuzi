@@ -37,7 +37,8 @@
         "prettyName": "Admin Parent",
         "userID": 5,
         "role": "parent",
-        "isAdmin": true
+        "isAdmin": true,
+        "childrenIDs": [ 3, 4 ]
     },
     {
         "username": "nonadmin.parent",
@@ -45,6 +46,7 @@
         "prettyName": "Non-Admin Parent",
         "userID": 6,
         "role": "parent",
-        "isAdmin": false
+        "isAdmin": false,
+        "childrenIDs": [ 3, 4 ]
     }
 ]

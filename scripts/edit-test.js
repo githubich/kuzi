@@ -67,21 +67,27 @@ function updateEditQuestionModal(value, testDataI) {
     $('#question-question').value = testData.questions[testDataI].question
     if (value == "single-choice") {
         $('.question-value').style.display = ''
-        if (testDataI != undefined) $('.question-value').value = question.value
+        if (testDataI != undefined) $('#question-value').value = question.value
         if (value == question.type && testDataI != undefined) {
             let i = 0
             question.options.forEach(option => {
                 let optionE = document.createElement('li')
                 answersE.appendChild(optionE)
                 optionE.classList.add('existing-option', 'single-choice')
-                optionE.innerHTML = `<input type="radio" ${question.correctAnswer == i ? 'checked' : ''}><input type="text" value="${option}">`
+                optionE.innerHTML = `
+                    <input type="radio" ${question.correctAnswer == i ? 'checked' : ''} name="edit-question-modal-single-choice">
+                    <input type="text" value="${option}">
+                `
                 i++
             })
         }
         let optionE = document.createElement('li')
         answersE.appendChild(optionE)
         optionE.classList.add('new-option', 'single-choice')
-        optionE.innerHTML = `<input type="radio" disabled><input type="text" placeholder="[{(typeToAddAnOption)}]...">`
+        optionE.innerHTML = `
+            <input type="radio" disabled>
+            <input type="text" placeholder="[{(typeToAddAnOption)}]...">
+        `
     } else if (value == "multiple-choice") {
         if (value == question.type && testDataI) {
             let i = 0
@@ -89,17 +95,31 @@ function updateEditQuestionModal(value, testDataI) {
                 let optionE = document.createElement('li')
                 answersE.appendChild(optionE)
                 optionE.classList.add('existing-option', 'multiple-choice')
-                optionE.innerHTML = `<input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;"><input type="text" value="${option.text}"><input type="number" min="-100" max="100" title="" value="${option.value}">`
+                optionE.innerHTML = `
+                    <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;">
+                    <input type="text" value="${option.text}">
+                    <div class="markInput" onclick="this.children[0].focus()">
+                        <input class="percent" id="question-value" type="number" value="${option.value}" min="-100" max="100">
+                        <p>%</p>
+                    </div>
+                `
                 i++
             })
         }
         let optionE = document.createElement('li')
         answersE.appendChild(optionE)
         optionE.classList.add('new-option', 'multiple-choice')
-        optionE.innerHTML = `<input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled min="-100" max="100" title="" value=0>`
+        optionE.innerHTML = `
+            <input type="checkbox" oninput="this.checked = true" style="pointer-events: none;">
+            <input type="text" placeholder="[{(typeToAddAnOption)}]...">
+            <div class="markInput" onclick="this.children[0].focus()">
+                <input class="percent" id="question-value" type="number" value=0 min="-100" max="100">
+                <p>%</p>
+            </div>
+        `
     } else if (value == 'open') {
         $('.question-value').style.display = ''
-        if (testDataI != undefined) $('.question-value').value = question.value
+        if (testDataI != undefined) $('#question-value').value = question.value
     }
     addFunctionality()
 }
@@ -163,7 +183,8 @@ function addFunctionality() {
             $('.question-answer').appendChild(optionEnew)
             optionEnew.classList.add('new-option', 'single-choice')
             optionEnew.innerHTML = `
-                <input type="radio" disabled name="edit-question-modal-single-choice" id="edit-question-modal-single-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]...">
+                <input type="radio" disabled name="edit-question-modal-single-choice">
+                <input type="text" placeholder="[{(typeToAddAnOption)}]...">
             `
             addFunctionality()
         }
@@ -178,14 +199,19 @@ function addFunctionality() {
             $('.question-answer').appendChild(optionEnew)
             optionEnew.classList.add('new-option', 'multiple-choice')
             optionEnew.innerHTML = `
-            <input type="checkbox" checked oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-new"><input type="text" placeholder="[{(typeToAddAnOption)}]..."><input type="number" disabled placeholder="" min="-100" max="100" title="" value=0>
+                <input type="checkbox" oninput="this.checked = true" style="pointer-events: none;" name="edit-question-modal-multiple-choice" id="edit-question-modal-multiple-choice-new">
+                <input type="text" placeholder="[{(typeToAddAnOption)}]...">
+                <div class="markInput" onclick="this.children[0].focus()">
+                    <input class="percent" id="question-value" type="number" value=0 min="-100" max="100">
+                    <p>%</p>
+                </div>
             `
             addFunctionality()
         }
         this.placeholder = ''
         this.parentElement.classList.remove('new-option')
         this.parentElement.classList.add('added-option')
-        this.nextElementSibling.disabled = false
+        this.previousElementSibling.checked = true
     }))
     $$('#edit-question-modal li > input[type=text]').forEach(el => el.addEventListener('blur', function() {
         if (!this.parentElement.classList.contains('new-option') && this.value == "") this.parentElement.remove()

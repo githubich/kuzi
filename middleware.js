@@ -31,7 +31,7 @@ function kuziMiddleware(req, res, next) {
     req.userInfo = {}
     if (req.headers.cookie) {
         let cookies = {}
-        req.headers.cookie.split('&').forEach(cookie => {
+        req.headers.cookie.split('; ').forEach(cookie => {
             eval(`cookies.${cookie.split('=')[0]} = '${cookie.split('=')[1]}'`)
         })
         req.cookies = cookies
@@ -49,7 +49,27 @@ function kuziMiddleware(req, res, next) {
         req.userInfo.class = {}
         req.userInfo.currentSubject = {}
         if (req.userInfo.role == "student") req.userInfo.class = classes.find(e => e.students.includes(req.userInfo.userID))
-        scheduling.forEach(connection => {
+        else if (req.userInfo.role == "parent" && req.userInfo.childrenIDs != undefined && req.userInfo.childrenIDs != []) {
+            req.userInfo.children = []
+            req.userInfo.childrenIDs.forEach(childID => {
+                let child = users.find(e => e.userID == childID)
+                delete child.password
+                delete child.role
+                child.class = classes.find(e => e.students.includes(childID))
+                child.currentSubject = {}
+                scheduling.forEach(connection => {
+                    let now = new Date()
+                    let start = new Date(`${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${connection.time.hours}:${connection.time.minutes}`)
+                    let end = new Date(`${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${connection.time.hours + connection.time.duration.hours}:${connection.time.minutes + connection.time.duration.minutes}`)
+                    if (connection.classID == child.class.classID && start.getTime() <= now.getTime() && end.getTime() > now.getTime() && now.getDay() == connection.time.weekDay) subjects.forEach(subject => {
+                        if (subject.subjectID == connection.subjectID) child.currentSubject = subject
+                    })
+                })
+                req.userInfo.children.push(child)
+            })
+            delete req.userInfo.childrenIDs
+        }
+        if (req.userInfo.role != "parent") scheduling.forEach(connection => {
             let now = new Date()
             let start = new Date(`${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${connection.time.hours}:${connection.time.minutes}`)
             let end = new Date(`${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${connection.time.hours + connection.time.duration.hours}:${connection.time.minutes + connection.time.duration.minutes}`)
@@ -67,7 +87,6 @@ function kuziMiddleware(req, res, next) {
                 })
             }
         })
-        i = 0
         activeCookies.forEach(cookie => {
             if (cookie.expireTime <= Date.now()) {
                 activeCookies.splice(i, 1)

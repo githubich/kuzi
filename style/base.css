@@ -74,7 +74,9 @@ header .vertical-separator {
 .header--actions, .dropdown-actions { font-size: 14.5px; }
 .header-action { margin-right: 15px; }
 .header-action.selected span { font-weight: bold; }
-.dropdown-action *, .header-action * { text-decoration: none; color: var(--accent); }
+.dropdown-action *:not(select):not(option), .header-action * { text-decoration: none; color: var(--accent); }
+body:not(.parent) .dropdown-action select { display: none; }
+.dropdown-action select { font-size: 14.5px; height: auto; }
 .dropdown-action i, .dropdown-action input, .header-action i { margin: 0 5px 0 0; font-size: 16px; }
 .modal {
 	position: fixed; top: 0; left: 0;
@@ -171,6 +173,7 @@ select { height: 33px; width: -webkit-fill-available; }
     #dropdown, #more { top: 60px; border-radius: 0 0 10px 10px; }
     #dropdown.showing, #more.showing { animation: crop .2s ease-in-out running; display: block; }
     #dropdown.hiding, #more.hiding { animation: crop .2s ease-in-out running reverse; display: block; }
+    .dropdown-actions { width: 100%; }
 }
 @media (max-width: 600px) {
 	#dropdown, #more {

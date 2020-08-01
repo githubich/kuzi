@@ -43,7 +43,65 @@
             window.addEventListener('load', resize)
             window.addEventListener('resize', resize)
             window.addEventListener('load', () => {
-                fetch('/students/marks/graph', { method: "POST" })
+                if (parent.userInfo.role == "student") fetch('/students/marks/graph', { method: "POST" })
+                    .then(res => res.json()
+                        .then(res => {
+                            resData = res
+                            c = 0
+                            let subject = resData[c]
+                            let ctx = $('#graph').getContext('2d')
+                            markGraph = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: [],
+                                    datasets: [{
+                                        data: [],
+                                        backgroundColor: `#${getComputedStyle(parent.document.documentElement).getPropertyValue('--accent').slice(2, Infinity)}7a`,
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    animation: {
+                                        duration: 600
+                                    },
+                                    maintainAspectRatio: false,
+                                    title: {
+                                        display: true,
+                                    },
+                                    tooltips: {
+                                        displayColors: false
+                                    },
+                                    legend: {
+                                        display: false
+                                    },
+                                    scales: {
+                                        xAxes: [{
+                                            ticks: {
+                                                display: false
+                                            },
+                                            gridLines: {
+                                                color: "#0000"
+                                            }
+                                        }],
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true,
+                                                max: 100
+                                            },
+                                            steps: 10,
+                                            gridLines: {
+                                                color: "#0000"
+                                            }
+                                        }]
+                                    }
+                                }
+                                
+                            })
+                            mouseOver = false
+                            //setColor()
+                            refresh(0)
+                        }))
+                else if (parent.userInfo.role == "parent") fetch('/parents/marks/graph', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: parseInt($parseCookies().selectedChild) }) })
                     .then(res => res.json()
                         .then(res => {
                             resData = res
