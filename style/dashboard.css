@@ -1,5 +1,6 @@
 .motivation-dash-block { margin-bottom: 20px; }
 .dash-container { display: grid; gap: 20px; }
+body:not(.loaded) .dash-block { display: none; }
 .dash-block {
     display: flex; flex-direction: column;
     padding: 5px;

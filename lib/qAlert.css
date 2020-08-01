@@ -26,7 +26,7 @@
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    color: #fff;
+    color: #fff !important;
 }
 #qAlert .qAlert-inner .fas { font-size: 55px; color: var(--qAlert-accent); }
 #qAlert .text-input { margin: 0 0 12px 0; text-align: left; }

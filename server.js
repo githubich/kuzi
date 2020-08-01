@@ -68,7 +68,7 @@ app.get('/new-test.html', (req, res) => {
                 question: "Is Kuzi the best platform of them all?",
                 type: "single-choice",
                 options: [ "Yes", "No" ],
-                correctAnswer: 1,
+                correctAnswer: 0,
                 value: 25
             },
             {
