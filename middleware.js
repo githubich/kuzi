@@ -54,7 +54,6 @@ function kuziMiddleware(req, res, next) {
             req.userInfo.childrenIDs.forEach(childID => {
                 let child = users.find(e => e.userID == childID)
                 delete child.password
-                delete child.role
                 child.class = classes.find(e => e.students.includes(childID))
                 child.currentSubject = {}
                 scheduling.forEach(connection => {

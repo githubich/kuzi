@@ -9,7 +9,7 @@ function load() {
         $('#manager').remove()
         $('#period-container').style = ''
         let options = {}
-        if (userInfo.role == 'parent') options = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
+        if (userInfo.role == 'parent') options = { ...options, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
         else options = { method: 'POST' }
         fetch(`/${userInfo.role}s/marks/get`, options)
             .then(res => res.json()

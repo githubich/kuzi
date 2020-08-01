@@ -224,6 +224,8 @@ app.post('/students/marks/get', (req, res) => {
 		})
 		i++
 	})
+	i = 0
+	resContent.forEach(a => { if (resContent[i].subjects.length <= 0) resContent.splice(i, 1); else i++ })
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/students/marks/graph', (req, res) => {
@@ -859,6 +861,9 @@ app.post('/misc/schedule/get', (req, res) => {
 	let theirScheduling = []
 	let users = importJSON('users.json')
 	let i = 0
+
+	if (req.userInfo.role == "parent") req.userInfo = req.userInfo.children.find(e => e.userID == parseInt(req.body.studentID))
+
 	scheduling.forEach(connection => {
 		if (req.userInfo.role == "student" && req.userInfo.class.classID == connection.classID) theirScheduling.push(connection)
 		if (req.userInfo.role == "teacher" && req.userInfo.userID == connection.teacherID) theirScheduling.push(connection)

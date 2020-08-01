@@ -14,6 +14,7 @@
                     if (forcedCount) c = forcedCount
                     if (c >= resData.length) c = 0
                     let subject = resData[c]
+                    if (!subject || subject.marks.length == 0) return
                     let data = []
                     let labels = []
                     let i = 0
@@ -30,7 +31,7 @@
                     resize()
                     setTimeout(refresh, 5000)
                 } else {
-                    setTimeout(refresh, 0)
+                    setTimeout(refresh, 100)
                 }
             }
             /*setColor = () => {

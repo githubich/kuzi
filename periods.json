@@ -1,7 +1,7 @@
 [
     {
         "periodID": 1,
-        "periodName": "1r Trimester",
+        "periodName": "1st Trimester",
         "startDate": {
             "day": 13,
             "month": 9
@@ -13,7 +13,7 @@
     },
     {
         "periodID": 2,
-        "periodName": "2r Trimester",
+        "periodName": "2nd Trimester",
         "startDate": {
             "day": 9,
             "month": 1
@@ -25,7 +25,7 @@
     },
     {
         "periodID": 3,
-        "periodName": "3r Trimester",
+        "periodName": "3rd Trimester",
         "startDate": {
             "day": 12,
             "month": 4

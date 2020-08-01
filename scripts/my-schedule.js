@@ -16,8 +16,8 @@ function updateDetails(i) {
     let prettyMinutes2 = time.minutes + time.duration.minutes
     if (prettyMinutes < 10) prettyMinutes = `0${prettyMinutes}`
     if (prettyMinutes2 < 10) prettyMinutes2 = `0${prettyMinutes2}`
-    $('#details-modal .start-time').innerText = `[{(startTime)}] ${time.hours}:${(prettyMinutes)}`
-    $('#details-modal .end-time').innerText = `[{(endTime)}] ${time.hours + time.duration.hours}:${prettyMinutes2}`
+    $('#details-modal .start-time').innerText = `[{(startTime)}]: ${time.hours}:${(prettyMinutes)}`
+    $('#details-modal .end-time').innerText = `[{(endTime)}]: ${time.hours + time.duration.hours}:${prettyMinutes2}`
 }
 function createSchedule() {
     $('table').innerHTML = ''
@@ -75,8 +75,10 @@ function createSchedule() {
     })
 }
 function load() {
+    let options = { method: 'POST' }
+    if (userInfo.role == "parent") options = { ...options, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
     $('#schedule-container').addEventListener('scroll', createSchedule)
-    fetch('/misc/schedule/get', { method: 'POST' })
+    fetch('/misc/schedule/get', options)
         .then(res => res.json())
         .then(res => {
             r = res
