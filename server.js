@@ -1,4 +1,4 @@
-console.log(`[Kuzi] Starting... (${require('os').platform()} ${require('os').release()})`)
+console.log(`[Kuzi] Starting on ${require('os').platform()} ${require('os').release()}...`)
 
 const express = require('express')
 const app = express()
@@ -12,10 +12,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(require('express-fileupload')({ createParentPath: true }))
 app.use(require('./middleware'))
 
-let folders = ['notifications', 'test-progress', 'upload', 'upload/messages', 'upload/resources']
+let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
 folders.forEach(f => { if (!existsSync(`${f}/`)) mkdirSync(f) })
 
-let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json', 'upload/messages/index.json', 'upload/resources/index.json']
+let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json', /*'upload/messages/index.json'*/, 'upload/resources/index.json']
 files.forEach(f => { if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([])) })
 
 
@@ -881,16 +881,4 @@ app.post('/misc/schedule/get', (req, res) => {
 	res.respond(JSON.stringify(theirScheduling), '', 'application/json', 200)
 })
 
-/*function runAtMidnight() {
-	let now = new Date()
-	if (now.getHours() == 0 &&
-		now.getMinutes() == 1 &&
-		now.getSeconds() == 0 &&
-		now.getMilliseconds() <= 10 ) {
-		console.log("[Kuzi|Daily Tasks] Starting...")
-		console.log("[Kuzi|Daily Tasks] Done!")
-	}
-	setTimeout(runAtMidnight, 10)
-}
-setTimeout(runAtMidnight, 0)*/
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`))
