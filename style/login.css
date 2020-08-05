@@ -16,7 +16,7 @@ body { display: flex; }
 .title { margin: auto; text-align: center; }
 .hint { margin: 15px 0 0 0 !important; }
 #submit { padding: 5px 10px; margin: 20px auto auto; }
-input { border-radius: 0; margin-top: 3px; }
+input { border-radius: 0; margin-top: 3px; min-width: 250px; }
 @media (max-width: 600px) {
     body { background: linear-gradient(to bottom, var(--bg-shade2) 49%, var(--bg-shade1) 51%); }
     #login { width: 100%; }

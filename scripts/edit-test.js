@@ -257,7 +257,6 @@ function save() {
 function autoSave() {
     setTimeout(() => { save(); autoSave() }, 10000)
 }
-autoSave()
 function newQuestion() {
     let qE = document.createElement('div')
     $('#question-container').appendChild(qE)
@@ -340,6 +339,7 @@ function load() {
                 i++
             })
             addFunctionality()
+            autoSave()
         })
         .catch(e => qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back()))
 }

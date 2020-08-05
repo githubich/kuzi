@@ -44,24 +44,24 @@ main input { min-width: unset; }
 .tab.selected { background-color: var(--bg-shade3); }
 .tab div { margin: auto; }
 .content { background-color: var(--bg-shade1); padding: 20px; border-radius: 0 0 10px 10px; }
-#write-a-mark h3 { margin-bottom: 10px; }
-#write-a-mark h3 i { margin-right: 5px; }
-#write-a-mark ul {
+.content#write-a-mark h3 { margin-bottom: 10px; }
+.content#write-a-mark h3 i { margin-right: 5px; }
+.content#write-a-mark ul {
     background-color: var(--bg-shade2);
     margin: 0;
     border-radius: 10px;
     list-style-type: none;
     padding: 10px 0;
 }
-#write-a-mark ul li { padding: 0 10px; display: flex; }
-#write-a-mark ul li label { width: 100%; }
-#write-a-mark .my-classes-and-students { display: grid; gap: 20px; }
-#write-a-mark .my-classes-and-students input:not([type=number]) { margin-left: 0; margin-right: 5px; }
-#write-a-mark li.student { display: flex; }
-#write-a-mark li.student > * { margin-top: auto; margin-bottom: auto; }
-#write-a-mark li.student input:not(:checked) + label + .mark-input { display: none; }
-#write-a-mark .control:not(:nth-last-child(1)) { margin-right: 10px; }
-.mark-input {
+.content#write-a-mark ul li { padding: 0 10px; display: flex; }
+.content#write-a-mark ul li label { width: 100%; }
+.myClassesAndStudents { display: grid; gap: 20px; }
+.myClassesAndStudents input:not([type=number]) { margin-left: 0; margin-right: 5px; }
+li.student { display: flex; }
+li.student > * { margin-top: auto; margin-bottom: auto; }
+li.student input:not(:checked) + label + .markInput { display: none; }
+.control:not(:nth-last-child(1)) { margin-right: 10px; }
+.markInput {
 	display: inline-block;
 	padding: 5px 10px;
     border: solid var(--bg-alt);
@@ -70,8 +70,8 @@ main input { min-width: unset; }
     white-space: nowrap;
     cursor: text;
 }
-.mark-input * { color: var(--bg-alt); font-size: 16px; }
-.mark-input input[type=number] {
+.markInput * { color: var(--bg-alt); font-size: 16px; }
+.markInput input[type=number] {
     display: inline-block;
     padding: 0;
 	background: #0000;
@@ -85,25 +85,18 @@ h3, .title-controls { display: inline-block; }
 .submit-block button.submit { margin-top: 10px; }
 .mark-info { margin-bottom: 20px; }
 .mark-info-inner { display: grid; gap: 20px; }
-.header { display: flex; }
+.students--header { display: flex; }
 
-#view-marks ul, #view-marks li { padding: 0; margin: 0; list-style: none; }
-.view-marks-ul > li:not(:nth-last-child(1)) { margin-bottom: 20px; }
-.view-marks-ul details[open] .details-content { padding: 20px; }
-#view-marks .mark-details { display: grid; gap: 20px; }
-#view-marks .student { display: flex; flex-direction: row; }
-#view-marks .student > * { margin: auto 0; }
-#view-marks .student > .mark-input { margin-left: .6em; }
-#view-marks .student > i { font-size: 14px; margin-left: auto; }
-#view-marks .student > .create-student { margin-left: .6em; }
-#view-marks .students { margin-top: 20px; }
+#view-marks ul, #view-marks ul li { padding: 0; margin: 0; list-style: none; }
+#view-marks-ul > li:not(:nth-last-child(1)) { margin-bottom: 20px; }
+#view-marks-ul details[open] summary { margin-bottom: 20px; }
 
 @media (min-width: 601px) {
     .tabs { grid-template-columns: 1fr 1fr; }
-    #write-a-mark .my-classes-and-students { grid-template-columns: 1fr 1fr; }
+    .myClassesAndStudents { grid-template-columns: 1fr 1fr; }
     .control i { margin-right: 5px; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
-    .mark-info-inner, #view-marks .mark-details { grid-template-columns: 2fr 1fr 1fr; }
+    .mark-info-inner { grid-template-columns: 2fr 1fr 1fr; }
 }
 @media (max-width: 600px) {
     .tab { padding: 10px; }

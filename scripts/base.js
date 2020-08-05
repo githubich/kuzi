@@ -11,24 +11,18 @@ window.addEventListener('load', () => {
         if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
         else $('#theme + label').innerText = '[{(lightMode)}]'
     })
-    /*$$('#theme, #theme + label').forEach(el => el.addEventListener('contextmenu', e => {
-        e.preventDefault()
-        $('#theme').checked = true
-        localStorage.setItem('theme', 'blackpink')
-        document.documentElement.setAttribute('theme', 'blackpink')
-    }))*/
     headerDropdown = $('#dropdown')
     headerDropdownArrow = $("#dropdown-arrow")
     more = $("#more")
     fetch('/user/getInfo', { method: 'POST' })
         .then(res => res.json())
         .then(res => {
-            if (!res.userInfo.userID) location = '/'
             userInfo = res.userInfo
+            if (!userInfo.userID) location = '/'
             if (userInfo.role == "parent" && $parseCookies().selectedChild == undefined) document.cookie = `selectedChild=${userInfo.children[0].userID}`
+            $().classList.add(userInfo.role)
             $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
             $('.user-info .name').innerText = userInfo.prettyName
-            $().classList.add(userInfo.role)
             if (userInfo.role == "teacher") {
                 if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
                 else $('.user-info .status').innerText = `[{(teacher)}]`
@@ -50,8 +44,8 @@ window.addEventListener('load', () => {
                 childSelector.value = $parseCookies().selectedChild
             }
             if (typeof load == "function") load()
-            $().classList.add('loaded')
         })
+        .catch(e => location = '/')
 })
 window.addEventListener('click', e => {
     if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
@@ -159,4 +153,25 @@ function verifyAndChangePassword() {
 function updateChild(ID) {
     document.cookie = `selectedChild=${ID}`
     location.reload()
+}
+function getTemplate(templateName, parameters) {
+    if (templateName === (undefined || null) || $('#templates') === undefined) return
+    let template = $(`#templates #${templateName}`).innerHTML
+    if (parameters) {
+        template = template.toString()
+        Object.keys(parameters).forEach(parameter => template = template.split(`%${parameter}%`).join(parameters[parameter]))
+    }
+    return template
+}
+function createElement({ type, classes, id, innerContent, parameters }) {
+    if (!type) return
+    let element = document.createElement(type)
+    if (classes) element.classList.add(...classes)
+    if (id) element.id = id
+    if (innerContent && innerContent.type && innerContent.content) {
+        if (innerContent.type.toLowerCase() == 'html') element.innerHTML = innerContent.content
+        else element.innerText = innerContent.content
+    }
+    if (parameters) Object.keys(parameters).forEach(parameter => element.setAttribute(parameter, parameters[parameter]))
+    return element
 }

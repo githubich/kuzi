@@ -2,57 +2,115 @@
 <link rel="stylesheet" href="/style/marks.css">
 <script src="/scripts/marks.js"></script>
 
+<div id="templates">
+    <template id="class">
+        <li class="class">
+            <input type="radio" oninput="update(this.value)" id="class-%id%" name="class" value="%id%">
+            <label for="class-%id%">%name%</label>
+        </li>
+    </template>
+    <template id="student">
+        <input type="checkbox" id="student-%id%"><label for="student-%id%">%name%</label>
+        <div class="mark-input" onclick="this.children[0].focus()">
+            <input class="percent" studentid="%id%" id="mark-input-%id%" type="number" min="-100" max="100">%
+        </div>
+    </template>
+    <template id="edit-mark">
+        <details>
+            <summary><h3>%markName%</h3></summary>
+            <div class="details-content">
+                <li class="mark-details">
+                    <div class="mark-name-div">
+                        <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
+                        <input type="text" class="mark-name" value="%markName%">
+                    </div>
+                    <div class="mark-subject-div">
+                        <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p>
+                        <select name="subject" class="subject-chooser"></select>
+                    </div>
+                    <div class="mark-period-div">
+                        <p class="hint"><i class="fad fa-calendar-alt"></i>[{(period)}]</p>
+                        <select name="period" class="period-chooser" value="%period%"></select>
+                    </div>
+                </li>
+                <li class="marks"><ul class="students"></ul></li>
+            </div>
+            <button onclick="submitEdit('%i%')"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+        </details>
+    </template>
+    <template id="edit-mark-student">
+        <li studentID="%id%" class="student">
+            <p class="student-name">%name%</p>
+            <i class="fad fa-trash delete-student" title="[{(delete)}]" onclick="this.parentElement.remove(); updateStudents()"></i>
+            <div class="mark-input" onclick="this.children[0].focus()">
+                <input type="number" value="%value%" id="mark-input-%id%" min="-100" max="100" class="percent" studentID="%id%">%
+            </div>
+        </li>
+    </template>
+    <template id="edit-mark-new-student">
+        <li class="student new-student">
+            <select class="student-chooser"></select>
+            <i class="fad fa-plus create-student" title="[{(create)}]" onclick="this.parentElement.outerHTML = getTemplate('edit-mark-student', { id: this.previousElementSibling.value, name: this.previousElementSibling.selectedOptions[0].text, value: this.nextElementSibling.children[0].value }) + getTemplate('edit-mark-new-student'); updateStudents()"></i>
+            <div class="mark-input" onclick="this.children[0].focus()">
+                <input type="number" id="mark-input-new" min="-100" max="100" class="percent">%
+            </div>
+        </li>
+    </template>
+    <template id="student-chooser-option">
+        <option value="%studentID%">%studentName% (%className%)</option>
+    </template>
+</div>
 <div id="period-container" style="display: none;"></div>
 <div id="manager" style="display: none;">
     <div class="tabs">
-        <a class="tab selected" onclick="$('.tab.selected').classList.remove('selected'); this.classList.add('selected'); $$('.content')[0].style = ''; $$('.content')[1].style.display = 'none'">
-            <div>
-                <i class="fad fa-edit"></i><span>[{(writeAMark)}]</span>
-            </div>
+        <a class="tab selected" onclick="$('.tab.selected').classList.remove('selected'); this.classList.add('selected'); $$('.content')[0].removeAttribute('style'); $$('.content')[1].style.display = 'none'">
+            <div><i class="fad fa-edit"></i><span>[{(writeAMark)}]</span></div>
         </a>
-        <a class="tab" onclick="$('.tab.selected').classList.remove('selected'); this.classList.add('selected'); $$('.content')[0].style.display = 'none'; $$('.content')[1].style = ''">
-            <div>
-                <i class="fad fa-eye"></i><span>[{(viewMarks)}]</span>
-            </div>
+        <a class="tab" onclick="$('.tab.selected').classList.remove('selected'); this.classList.add('selected'); $$('.content')[1].removeAttribute('style'); $$('.content')[0].style.display = 'none'">
+            <div><i class="fad fa-eye"></i><span>[{(viewMarks)}]</span></div>
         </a>
     </div>
-    <div class="content write-a-mark">
-        <div class="myClassesAndStudents" style="grid-template-columns: 1fr;">
-            <div class="myclasses">
-                <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
-                <ul id="my-classes"></ul>
+    <div class="content" id="write-a-mark">
+        <div class="my-classes-and-students" style="grid-template-columns: 1fr;">
+            <div class="my-classes">
+                <div class="header">
+                    <h3><i class="fad fa-th-large"></i>[{(myClasses)}]</h3>
+                </div>
+                <ul class="my-classes-ul"></ul>
             </div>
             <div class="students" style="display: none;">
-                <div class="students--header">
+                <div class="header">
                     <h3><i class="fad fa-users"></i></h3>
                     <div class="title-controls">
                         <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = true; e.setAttribute('is-checked', true) })"><i class="fad fa-user-check"></i><span>[{(checkAll)}]</span></a>
                         <a class="control" onclick="$$('.student input[type=checkbox]').forEach(e => { e.checked = false; e.setAttribute('is-checked', false) })"><i class="fad fa-user-times"></i><span>[{(uncheckAll)}]</span></a>
                     </div>
                 </div>
-                <ul id="students-in-class"></ul>
+                <ul class="students-ul"></ul>
             </div>
         </div>
         <div class="mark-info" style="display: none;">
             <h3><i class="fad fa-info-circle"></i>[{(details)}]</h3>
             <div class="mark-info-inner">
-                <div class="itemname">
+                <div class="mark-name-div">
                     <p class="hint"><i class="fad fa-i-cursor"></i>[{(name)}]</p>
-                    <input type="text" id="mark-name">
+                    <input type="text" class="mark-name">
                 </div>
-                <div class="subject-chooser-div">
-                    <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p><br>
-                    <select name="subject" id="subject-chooser">
-                    </select>
+                <div class="mark-subject-div">
+                    <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p>
+                    <select name="subject" class="subject-chooser"></select>
                 </div>
-                <div class="period-chooser-div">
-                    <p class="hint"><i class="fad fa-calendar-alt"></i>[{(period)}]</p><br>
-                    <select name="period" id="period-chooser">
-                    </select>
+                <div class="mark-period-div">
+                    <p class="hint"><i class="fad fa-calendar-alt"></i>[{(period)}]</p>
+                    <select name="period" class="period-chooser"></select>
                 </div>
             </div>
         </div>
-        <button style="display: none;" class="submit" onclick="submit()">[{(submit)}]</button>
+        <button class="submit" onclick="submit()" style="display: none;">[{(submit)}]</button>
     </div>
-    <div style="display: none;" class="content view-marks"></div>
+    <div class="content" id="view-marks" style="display: none;">
+        <ul class="view-marks-ul">
+
+        </ul>
+    </div>
 </div>

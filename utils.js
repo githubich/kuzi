@@ -1,5 +1,4 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
-const { finished } = require('stream')
 random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
 ran16 = () => {return random(0,15).toString(16)}
 newUUID = () => {return ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()}
@@ -55,4 +54,9 @@ calcMark = (testID, studentID) => {
 
 	return { canBePerformed: canBePerformed, definitive: definitive, finished: progress.finished, mark: mark }
 }
-module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark }
+sortByPrettyName = (a, b) => {
+	if (a.prettyName.toLowerCase() > b.prettyName.toLowerCase()) return 1
+	else if (a.prettyName.toLowerCase() < b.prettyName.toLowerCase()) return -1
+	return 0
+}
+module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark, sortByPrettyName }

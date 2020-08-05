@@ -4,7 +4,7 @@ const express = require('express')
 const app = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
-const { newUUID, importJSON, saveJSON, calcMark } = require('./utils')
+const { newUUID, importJSON, saveJSON, calcMark, sortByPrettyName } = require('./utils')
 const settings = importJSON('settings.json')
 
 app.use(express.json());
@@ -514,6 +514,7 @@ app.post('/teachers/marks/create', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let marks = importJSON('marks.json')
 	req.body.markID = marks.length
+	req.body.ownerID = req.userInfo.userID
 	marks.push(req.body)
 	saveJSON('marks.json', marks)
 	req.body.marks.forEach(mark => {
@@ -522,6 +523,47 @@ app.post('/teachers/marks/create', (req, res) => {
 		saveJSON(`notifications/${mark.studentID}.json`, notifications)
 	})
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
+})
+app.post('/teachers/marks/list', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let users = importJSON('users.json')
+	let marks = importJSON('marks.json')
+	let theirMarks = []
+	marks.forEach(mark => {
+		if (mark.ownerID == req.userInfo.userID) {
+			let i = 0
+			mark.marks.forEach(markLoop => {
+				mark.marks[i].student = users.find(e => e.userID == markLoop.studentID)
+				delete mark.marks[i].student.password
+				i++ })
+			theirMarks.push(mark)
+		}
+	})
+	res.respond(JSON.stringify(theirMarks), '', 'application/json', 200)
+})
+
+app.post('/teachers/listMyStudents', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let classes = importJSON('classes.json')
+	let users = importJSON('users.json')
+	let scheduling = importJSON('scheduling.json')
+	let theirClasses = []
+	let theirStudents = []
+	scheduling.forEach(connection => { if (connection.teacherID == req.userInfo.userID && !theirClasses.includes(connection.classID)) theirClasses.push(connection.classID) })
+	theirClasses.forEach(clas => {
+		let theClass = classes.find(e => e.classID == clas)
+		let students = theClass.students
+		let i = 0
+		students.forEach(student => {
+			students[i] = users.find(e => e.userID == student)
+			students[i].class = { ...theClass }
+			delete students[i].class.students
+			delete students[i].password
+			i++
+		})
+		theirStudents.push(...students)
+	})
+	res.respond(JSON.stringify(theirStudents.sort(sortByPrettyName)), '', 'application/json', 200)
 })
 
 app.post('/teachers/getInfo', (req, res) => {

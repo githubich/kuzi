@@ -22,4 +22,4 @@ Pull requests are the most effective and helpful way to contribute, fork this pr
 
 ### Pull request guidelines
 If an issue doesn't follow these guidelines it will be marked as "w/o proper guidelines"  
-Use the same guidelines as the [Issues Guidelines](#issue-guidelines)
+Use the same guidelines as the [Issues guidelines](#issue-guidelines)
