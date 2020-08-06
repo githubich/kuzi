@@ -526,6 +526,7 @@ app.post('/teachers/marks/create', (req, res) => {
 })
 app.post('/teachers/marks/list', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let classes = importJSON('classes.json')
 	let users = importJSON('users.json')
 	let marks = importJSON('marks.json')
 	let theirMarks = []
@@ -534,6 +535,9 @@ app.post('/teachers/marks/list', (req, res) => {
 			let i = 0
 			mark.marks.forEach(markLoop => {
 				mark.marks[i].student = users.find(e => e.userID == markLoop.studentID)
+				classes.forEach(clas => {
+					if (clas.students.includes(markLoop.studentID)) mark.marks[i].student.class = clas
+				})
 				delete mark.marks[i].student.password
 				i++ })
 			theirMarks.push(mark)
@@ -547,6 +551,7 @@ app.post('/teachers/listMyStudents', (req, res) => {
 	let classes = importJSON('classes.json')
 	let users = importJSON('users.json')
 	let scheduling = importJSON('scheduling.json')
+	let subjectsByClass = {}
 	let theirClasses = []
 	let theirStudents = []
 	scheduling.forEach(connection => { if (connection.teacherID == req.userInfo.userID && !theirClasses.includes(connection.classID)) theirClasses.push(connection.classID) })
@@ -556,16 +561,29 @@ app.post('/teachers/listMyStudents', (req, res) => {
 		let i = 0
 		students.forEach(student => {
 			students[i] = users.find(e => e.userID == student)
-			students[i].class = { ...theClass }
+			students[i].class = theClass
 			delete students[i].class.students
 			delete students[i].password
 			i++
 		})
 		theirStudents.push(...students)
 	})
-	res.respond(JSON.stringify(theirStudents.sort(sortByPrettyName)), '', 'application/json', 200)
+	scheduling.forEach(connection => {
+		if (!subjectsByClass[connection.classID]) subjectsByClass[connection.classID] = []
+		subjectsByClass[connection.classID].push(connection.subjectID)
+	})
+	res.respond(JSON.stringify({ students: theirStudents.sort(sortByPrettyName), subjectsByClass: subjectsByClass }), '', 'application/json', 200)
 })
-
+app.post('/teachers/listMySubjects', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let scheduling = importJSON('scheduling.json')
+	let subjects = importJSON('subjects.json')
+	let theirScheduling = []
+	scheduling.forEach(connection => { if (connection.teacherID == req.userInfo.userID && theirScheduling.findIndex(e => e.subjectID == connection.subjectID) == -1) {
+		theirScheduling.push(subjects.find(e => e.subjectID == connection.subjectID))
+	} })
+	res.respond(JSON.stringify(theirScheduling.sort(sortByPrettyName)), '', 'application/json', 200)
+})
 app.post('/teachers/getInfo', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	try {

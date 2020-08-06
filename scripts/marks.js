@@ -54,11 +54,11 @@ function load() {
             })
     } else {
         $('#manager').removeAttribute('style'); $('#period-container').remove()
-        myStudents = []
+        myStudents = {}
         updateStudents = () => {
             $$('.student-chooser').forEach(studentChooser => {
                 studentChooser.innerHTML = ''
-                myStudents.forEach(student => studentChooser.innerHTML += getTemplate('student-chooser-option', { studentID: student.userID, studentName: student.prettyName, className: student.class.prettyName }))
+                myStudents.students.forEach(student => studentChooser.innerHTML += getTemplate('student-chooser-option', { studentID: student.userID, name: student.prettyName, classID: student.class.classID }))
                 studentChooser.parentElement.parentElement.querySelectorAll('li.student:not(.new-student)').forEach(studentLi => {
                     studentChooser.querySelector(`option[value="${studentLi.getAttribute('studentID')}"]`).remove()
                 })
@@ -70,6 +70,23 @@ function load() {
                 if (value < min) e.value = min
                 if (value > max) e.value = max
             }))
+        }
+        updateSubjectStudents = subjectChooser => {
+            let classesWithThatSubject = []
+            let subjectID = parseInt(subjectChooser.value)
+            Object.keys(myStudents.subjectsByClass).forEach(subjectByClass => { if (myStudents.subjectsByClass[subjectByClass].includes(subjectID)) classesWithThatSubject.push(parseInt(subjectByClass)) })
+            subjectChooser.parentElement.parentElement.nextElementSibling.querySelectorAll('li.student:not(.new-student)').forEach(studentLi => {
+                if (classesWithThatSubject.includes(parseInt(studentLi.getAttribute('classID')))) studentLi.style.display = ''
+                else studentLi.style.display = 'none'
+            })
+            updateStudents()
+            subjectChooser.parentElement.parentElement.parentElement.querySelectorAll('.student-chooser').forEach(studentChooser => {
+                studentChooser.querySelectorAll('option').forEach(studentOption => {
+                    if (!classesWithThatSubject.includes(parseInt(studentOption.getAttribute('classID')))) studentOption.remove()
+                })
+                if (studentChooser.children.length == 0) studentChooser.parentElement.style.display = 'none'
+                else studentChooser.parentElement.removeAttribute('style')
+            })
         }
         fetch('/teachers/getInfo', { method: "POST" }).then(res => res.json())
             .then(res => {
@@ -83,10 +100,10 @@ function load() {
         fetch('/teachers/marks/list', { method: 'POST' }).then(res => res.json())
             .then(res => {
                 res.forEach(mark => {
-                    $('.view-marks-ul').appendChild(createElement({ type: 'li', innerContent: { type: 'html', content: getTemplate('edit-mark', { markName: mark.name, period: mark.periodID }) } }))
+                    $('.view-marks-ul').appendChild(createElement({ type: 'li', innerContent: { type: 'html', content: getTemplate('edit-mark', { markName: mark.name, period: mark.periodID, subject: mark.subjectID }) } }))
                     let marksE = $('.view-marks-ul').children[$('.view-marks-ul').children.length - 1].querySelector('.marks .students')
                     mark.marks.forEach(subMark => {
-                        let foo = createElement({ type: 'a', innerContent: { type: 'html', content: getTemplate('edit-mark-student', { id: subMark.studentID , name: subMark.student.prettyName, value: subMark.mark }) } })
+                        let foo = createElement({ type: 'a', innerContent: { type: 'html', content: getTemplate('edit-mark-student', { id: subMark.studentID, classID: subMark.student.class.classID, name: subMark.student.prettyName, value: subMark.mark }) } })
                         marksE.appendChild(foo)
                         foo.outerHTML = foo.innerHTML
                     })
@@ -97,7 +114,18 @@ function load() {
                 fetch('/teachers/listMyStudents', { method: 'POST' }).then(res => res.json())
                     .then(res => {
                         myStudents = res
-                        updateStudents()
+                    })
+                fetch('/teachers/listMySubjects', { method: 'POST' }).then(res => res.json())
+                    .then(res => {
+                        $$('#view-marks .subject-chooser').forEach(subjectChooser => {
+                            res.forEach(subject => {
+                                let subjectE = createElement({ type: 'option', parameters: { value: subject.subjectID }, innerContent: { type: 'html', content: subject.prettyName } })
+                                subjectChooser.appendChild(subjectE)
+                                if (subject.current === true) { subjectE.innerHTML += " ([{(current)}])"; subjectChooser.value = subject.subjectID }
+                                if (subjectChooser.getAttribute('value')) subjectChooser.value = subjectChooser.getAttribute('value')
+                            })
+                            updateSubjectStudents(subjectChooser)
+                        })
                     })
             })
         fetch('/misc/periods/list', { method: "POST" }).then(res => res.json())
@@ -143,5 +171,8 @@ function load() {
                     .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
             } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
         }
+        /*submitEdit = elem => {
+
+        }*/
     }
 }

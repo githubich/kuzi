@@ -15,34 +15,6 @@
     },
     {
         "subjectID": 2,
-        "classID": 1,
-        "teacherID": 1,
-        "time": {
-            "weekDay": 5,
-            "hours": 16,
-            "minutes": 0,
-            "duration": {
-                "hours": 1,
-                "minutes": 30
-            }
-        }
-    },
-    {
-        "subjectID": 1,
-        "classID": 2,
-        "teacherID": 1,
-        "time": {
-            "weekDay": 4,
-            "hours": 9,
-            "minutes": 0,
-            "duration": {
-                "hours": 1,
-                "minutes": 30
-            }
-        }
-    },
-    {
-        "subjectID": 2,
         "classID": 2,
         "teacherID": 1,
         "time": {

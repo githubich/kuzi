@@ -26,7 +26,7 @@
                     </div>
                     <div class="mark-subject-div">
                         <p class="hint"><i class="fad fa-calendar-check"></i>[{(subject)}]</p>
-                        <select name="subject" class="subject-chooser"></select>
+                        <select name="subject" class="subject-chooser" value="%subject%" oninput="updateSubjectStudents(this)"></select>
                     </div>
                     <div class="mark-period-div">
                         <p class="hint"><i class="fad fa-calendar-alt"></i>[{(period)}]</p>
@@ -35,13 +35,13 @@
                 </li>
                 <li class="marks"><ul class="students"></ul></li>
             </div>
-            <button onclick="submitEdit('%i%')"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+            <button onclick="submitEdit(this.previousElementSibling)"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
         </details>
     </template>
     <template id="edit-mark-student">
-        <li studentID="%id%" class="student">
+        <li studentID="%id%" classID="%classID%" class="student">
             <p class="student-name">%name%</p>
-            <i class="fad fa-trash delete-student" title="[{(delete)}]" onclick="this.parentElement.remove(); updateStudents()"></i>
+            <i class="fad fa-trash delete-student" title="[{(delete)}]" onclick="let subjectChooser = this.parentElement.parentElement.parentElement.previousElementSibling.querySelector('.subject-chooser'); this.parentElement.remove(); updateSubjectStudents(subjectChooser)"></i>
             <div class="mark-input" onclick="this.children[0].focus()">
                 <input type="number" value="%value%" id="mark-input-%id%" min="-100" max="100" class="percent" studentID="%id%">%
             </div>
@@ -50,14 +50,14 @@
     <template id="edit-mark-new-student">
         <li class="student new-student">
             <select class="student-chooser"></select>
-            <i class="fad fa-plus create-student" title="[{(create)}]" onclick="this.parentElement.outerHTML = getTemplate('edit-mark-student', { id: this.previousElementSibling.value, name: this.previousElementSibling.selectedOptions[0].text, value: this.nextElementSibling.children[0].value }) + getTemplate('edit-mark-new-student'); updateStudents()"></i>
+            <i class="fad fa-plus create-student" title="[{(create)}]" onclick="let subjectChooser = this.parentElement.parentElement.parentElement.previousElementSibling.querySelector('.subject-chooser'); this.parentElement.outerHTML = getTemplate('edit-mark-student', { id: this.previousElementSibling.value, name: this.previousElementSibling.selectedOptions[0].text, value: this.nextElementSibling.children[0].value, classID: this.previousElementSibling.selectedOptions[0].getAttribute('classID') }) + getTemplate('edit-mark-new-student'); updateSubjectStudents(subjectChooser)"></i>
             <div class="mark-input" onclick="this.children[0].focus()">
                 <input type="number" id="mark-input-new" min="-100" max="100" class="percent">%
             </div>
         </li>
     </template>
     <template id="student-chooser-option">
-        <option value="%studentID%">%studentName% (%className%)</option>
+        <option value="%studentID%" classID="%classID%">%name%</option>
     </template>
 </div>
 <div id="period-container" style="display: none;"></div>
@@ -106,7 +106,7 @@
                 </div>
             </div>
         </div>
-        <button class="submit" onclick="submit()" style="display: none;">[{(submit)}]</button>
+        <button class="submit" onclick="submit()" style="display: none;"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
     </div>
     <div class="content" id="view-marks" style="display: none;">
         <ul class="view-marks-ul">
