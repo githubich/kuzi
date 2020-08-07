@@ -9,7 +9,7 @@ If an issue doesn't follow these guidelines it will be marked as "w/o proper gui
     * Keep it about 25 words
 * Body
     * Environment
-        * (Bug Report) Put the Node.js, Kuzi and OS versions. Example: "Node.js: 14.0.0, Kuzi: 1.0, OS: Arch Linux"
+        * (Bug Report) The Node.js, Kuzi and OS versions. Example: "Node.js: v12.18.3, Kuzi: 1.0, OS: Windows 10"
     * Description
         * We're not using SMS, use the words you consider
         * Provide rich information, screenshots, videos...

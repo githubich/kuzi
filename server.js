@@ -1,4 +1,9 @@
-console.log(`[Kuzi] Starting on ${require('os').platform()} ${require('os').release()}...`)
+let os = require('os').platform()
+if (os == 'win32') os = 'Windows'
+else if (os == 'linux') os = 'Linux'
+else if (os == 'darwin') os = 'macOS'
+
+console.log(`[Kuzi] Starting on ${os} ${require('os').release()}...`)
 
 const express = require('express')
 const app = express()
@@ -15,7 +20,7 @@ app.use(require('./middleware'))
 let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
 folders.forEach(f => { if (!existsSync(`${f}/`)) mkdirSync(f) })
 
-let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json', /*'upload/messages/index.json'*/, 'upload/resources/index.json']
+let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
 files.forEach(f => { if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([])) })
 
 
