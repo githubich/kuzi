@@ -33,8 +33,10 @@ select {
     font-size: 16px;
     height: 33px;
 }
+.upload-file i { padding-bottom: 20px; }
+
 @media (min-width: 601px) {
-    .file { animation: slap .45s ease; animation-play-state: paused; width: 110px; }
+    .file { /*animation: slap .45s ease; animation-play-state: paused;*/ width: 110px; }
     .mobile-only { display: none !important; }
 }
 @media (max-width: 600px) {

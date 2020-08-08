@@ -2,12 +2,16 @@
 <link rel="stylesheet" href="/style/resources.css">
 <script src="/scripts/resources.js"></script>
 
-<!--<iframe src='https://view.officeapps.live.com/op/embed.aspx?src=http://remote.url.tld/path/to/document.doc' width=100 height=100 frameborder='0'>This is an embedded <a target='_blank' href='http://office.com'>Microsoft Office</a> document, powered by <a target='_blank' href='http://office.com/webapps'>Office Online</a>.</iframe>-->
+<!--
+    <iframe src='https://view.officeapps.live.com/op/embed.aspx?src=http://remote.url.tld/path/to/document.doc'></iframe>
+-->
+
+<a class="teachers-only icon-container upload-file" onclick="toggleModal('upload')"><i class="fad fa-file-upload icon"></i>[{(uploadFile)}]</a>
 
 <div id="files">
 </div>
 
-<div id="upload-modal" class="modal blurry-bg">
+<div id="upload-modal" class="modal blurry-bg teachers-only">
     <a class="close" onclick="toggleModal('upload')"><i class="fas fa-times"></i></a>
     <div class="center">
         <h1 class="main-title"><i class="fad fa-file-upload"></i>[{(uploadFile)}]</h1>

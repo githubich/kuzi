@@ -1,4 +1,3 @@
-function random(min,max) {return Math.floor(Math.random()*(max-min+1)+min)}
 function load() {
     fetch(`/${userInfo.role}s/resources/get`, { method: 'POST' })
         .then(res => res.json())
@@ -12,8 +11,8 @@ function load() {
                 let subjectTitleE = document.createElement('div')
                 subjectE.appendChild(subjectTitleE)
                 subjectTitleE.classList.add('subject-title')
-                if (userInfo.role == "student") subjectTitleE.innerHTML = `<h2>${block.subject.prettyName}</h2><i class="far fa-file-upload teachers-only" onclick="toggleModal('upload')"></i>`
-                else subjectTitleE.innerHTML = `<h2>${block.subject.prettyName} (${block.class.prettyName})</h2><i class="far fa-file-upload teachers-only" onclick="toggleModal('upload')"></i>`
+                if (userInfo.role == "student") subjectTitleE.innerHTML = `<h2>${block.subject.prettyName}</h2>`
+                else subjectTitleE.innerHTML = `<h2>${block.subject.prettyName} (${block.class.prettyName})</h2>`
                 
                 let subjectContentE = document.createElement('div')
                 subjectE.appendChild(subjectContentE)
@@ -26,8 +25,8 @@ function load() {
                 let videoFormats = ['webm','mkv','flv','vob','ogv','drc','gifv','mng','avi','mts','ts','m2ts','mov','qt','wmv','yuv','rm','rmvb','asf','amv','mp4','m4p','m4v','mpg','mp2','mpeg','mpe','mpv','m2v','svi','3gp','3g2','mxf','roq','nsv','flv','f4v','f4p','f4a','f4b']
                 let audioFormats = ['aa','aac','aax','act','aiff','alac','amr','ape','au','awb','dct','dss','dvf','flac','gsm','iklax','ivs','m4a','m4b','m4p','mmf','mp3','mpc','msv','nmf','ogg','oga','mogg','opus','ra','rf64','sln','tta','voc','vox','wav','wma','wv','8svx','cda']
                 let archiveFormats = ['a','ar','cpio','shar','lbr','iso','lbr','mar','sbx','tar','bz2','f','?xf','gz','lz','lz4','lzma','lzo','rz','sfark','sz','?q?','?z?','xz','z','zst','??_','7z','s7z','ace','afa','alz','apk','arc','ark','cdx','arj','b1','b6z','ba','bh','cab','car','cfs','cpt','dar','dd','dgc','dmg','ear','gca','ha','hki','ice','jar','kgb','lzh','lha','lzx','pak','partimg','paq','paq1','paq2','paq3','paq4','paq5','paq6','paq7','paq8','paq9','pea','pim','pit','qda','rar','rk','sda','sea','sen','sfx','shk','sit','sitx','sqx','tag.gz','.tgz','tar.z','tar.bz2','tbz2','tar.lz','tlz','tar.xz','txz','uc','uc0','uz2','ucn','ur2','ue2','uca','uha','war','wim','xar','xp3','yz1','zip','zipx','zoo','zpaq','zz','ecc','ecsbx','par','par2','rev']
-                let programmingFormats = ['html','css','sass','scss','js','jsx','htm','c','h','cpp','cs','hta','json','xml','xaml','yml','dat','dat.old','properties','conf','cfg','vb','vbs','java','class']
-                let textFormats = ['txt','rtf']
+                let programmingFormats = ['html','css','sass','scss','js','jsx','htm','c','h','cpp','cs','hta','json','xml','xaml','yml','dat','dat.old','properties','conf','cfg','vb','vbs','java','class','git','gitignore']
+                let textFormats = ['txt','rtf','md']
 
                 block.files.forEach(file => {
                     let fileE = document.createElement('a')
@@ -36,7 +35,7 @@ function load() {
                     if (prettySize >= 1073741824) prettySize = `${Math.round(((prettySize / 1073741824) + Number.EPSILON) * 100) / 100}Gi`
                     else if (prettySize >= 1048576) prettySize = `${Math.round(((prettySize / 1048576) + Number.EPSILON) * 100) / 100}Mi`
                     else if (prettySize >= 1024) prettySize = `${Math.round(((prettySize / 1024) + Number.EPSILON) * 100) / 100}Ki`
-                    else prettySize = `${prettySize}`
+                    else prettySize = `${prettySize}B`
 
                     let fileExt = file.name.slice(file.name.indexOf('.') + 1, file.name.length).toLowerCase()
                     let icon = ''
@@ -55,17 +54,16 @@ function load() {
                     else icon = ''
 
                     fileE.outerHTML = `
-                        <a class="file" download style="animation-play-state: running;" uuid="${file.uuid}" href="/resources/download/${file.uuid}" title="Size: ${prettySize}B\nType: ${fileType}">
+                        <a class="file" download style="animation-play-state: running;" uuid="${file.uuid}" href="/resources/download/${file.uuid}" title="Size: ${prettySize}\nType: ${fileType}">
                             <i class="fad fa-file${icon}"></i>
                             <div class="details">
                                 <p>${file.display.name}</p>
-                                <p class="mobile-only size">Size: ${prettySize}B</p><p class="mobile-only separator">|</p><p class="mobile-only type">Type: ${fileType}</p>
+                                <p class="mobile-only size">Size: ${prettySize}</p><p class="mobile-only separator">|</p><p class="mobile-only type">Type: ${fileType}</p>
                             </div>
                         </a>
                     `
                 })
             })
-            // animateFiles(0)
             if (userInfo.role == "teacher") $$('.file').forEach(e => {
                 e.addEventListener('contextmenu', function(e) {
                     e.preventDefault()
@@ -88,13 +86,13 @@ function load() {
                 })
             })
             if (userInfo.role != "teacher") $$('.teachers-only').forEach(e => e.remove())
-            //$$('.file i').forEach(e => { e.style.transform = `rotate(${random(-7, 7)}deg)`; e.parentElement.style.animationPlayState = 'running'})
         })
         .catch(e => console.error(e))
 }
 function uploadFile() {
     let maxSize = parseInt($('.upload-input').getAttribute('max-size'))
-    if ($('.upload-input').files[0] == null) return qAlert({ message: "[{(noFileSelected)}]", mode: "error", buttons: { cancel: { invisible: true } } })
+    if ($('.upload-input').files[0] == null) return qAlert({ message: "[{(error.noFileSelected)}]", mode: "error", buttons: { cancel: { invisible: true } } })
+    if (!$('.class input:checked')) return qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
     let fileSize = $('.upload-input').files[0].size
     if (fileSize > maxSize || fileSize == 0) return
     let data = new FormData()
@@ -107,7 +105,7 @@ function uploadFile() {
         .then(res => res.json())
         .then(res => {
             if (res.message == 'ok') qAlert({ message: '[{(success.resources.upload)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => window.location.reload())
-            else return qAlert({ message: '[{(error.unknown.doNotRetry)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+            else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
         })
 }
 window.addEventListener('load', () => {
@@ -115,13 +113,14 @@ window.addEventListener('load', () => {
     setActiveTab(3)
 })
 window.addEventListener('toggle-modal-upload', () => {
+    if ($('#upload-modal').style.display == "none") return
     if (userInfo.role == "teacher") {
         fetch('/teachers/getInfo', { method: "POST" })
             .then(res => res.json()
             .then(res => {
                 data = res
                 let myClasses = $('#my-classes')
-                myClasses.innerHTML = ""
+                myClasses.innerHTML = ''
                 data.forEach(clas => {
                     let clasE = document.createElement('li')
                     myClasses.appendChild(clasE)
