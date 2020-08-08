@@ -420,7 +420,8 @@ app.post('/students/tests/save', (req, res) => {
 
 // Parents
 app.post('/parents/marks/get', (req, res) => {
-	if (req.userInfo.role != "parent" || req.userInfo.children.findIndex(e => e.userID == req.body.studentID) == -1) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.userInfo.role != "parent") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	if (req.userInfo.children.findIndex(e => e.userID == req.cookies.selectedChild) == -1) return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 500)
 	let exists = false
 	let marks = importJSON('marks.json')
 	let resContent = importJSON('periods.json')
@@ -435,7 +436,7 @@ app.post('/parents/marks/get', (req, res) => {
 		let usefulSubjects = []
 		marks.forEach(mark => {
 			exists = false
-			if (mark.periodID == a.periodID && mark.marks.findIndex(i => i.studentID == req.body.studentID) != -1) {
+			if (mark.periodID == a.periodID && mark.marks.findIndex(i => i.studentID == req.cookies.selectedChild) != -1) {
 				usefulSubjects.forEach(usefulSubject => { if (mark.subjectID == usefulSubject) exists = true })
 				if (!exists) usefulSubjects.push(mark.subjectID)
 			}
@@ -451,8 +452,8 @@ app.post('/parents/marks/get', (req, res) => {
 		usefulSubjects.forEach(usefulSubject => {
 			resContent[i].subjects.push({ subjectID: usefulSubject, marks: [] })
 			marks.forEach(mark => {
-				if (mark.periodID == a.periodID && mark.subjectID == usefulSubject && mark.marks.findIndex(i => i.studentID == req.body.studentID) != -1) {
-					let pMark = mark.marks.find(i => i.studentID == req.body.studentID)
+				if (mark.periodID == a.periodID && mark.subjectID == usefulSubject && mark.marks.findIndex(i => i.studentID == req.cookies.selectedChild) != -1) {
+					let pMark = mark.marks.find(i => i.studentID == req.cookies.selectedChild)
 					delete pMark.studentID
 					pMark.name = mark.name
 					pMark.markID = mark.markID
@@ -460,7 +461,7 @@ app.post('/parents/marks/get', (req, res) => {
 				}
 			})
 			tests.forEach(test => {
-				if (test.periodID == a.periodID && test.subjectID == usefulSubject) resContent[i].subjects[j].marks.push({ ...test, ...calcMark(test.testID, req.body.studentID) })
+				if (test.periodID == a.periodID && test.subjectID == usefulSubject) resContent[i].subjects[j].marks.push({ ...test, ...calcMark(test.testID, req.cookies.selectedChild) })
 			})
 			j++
 		})
@@ -471,6 +472,8 @@ app.post('/parents/marks/get', (req, res) => {
 		})
 		i++
 	})
+	i = 0
+	resContent.forEach(a => { if (resContent[i].subjects.length <= 0) resContent.splice(i, 1); else i++ })
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/parents/marks/graph', (req, res) => {
@@ -813,7 +816,9 @@ app.post('/misc/periods/list', (req, res) => {
 })
 
 app.post('/misc/notifications/get', (req, res) => {
-	let content = JSON.stringify(importJSON(`notifications/${req.userInfo.userID}.json`))
+	let rawJSON = importJSON(`notifications/${req.userInfo.userID}.json`)
+	if (req.userInfo.role == "parent") rawJSON= [ ...rawJSON, ...importJSON(`notifications/${req.cookies.selectedChild}.json`) ]
+	let content = JSON.stringify(rawJSON)
 	let locales = eval(`importJSON('localization.json').${settings.language}`)
 	locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
 	res.respond(content, '', 'application/json', 200)

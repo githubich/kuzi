@@ -3,7 +3,7 @@ window.addEventListener('load', () => {
     setActiveTab(1)
 })
 function load() {
-    if (userInfo.role == ("student" || "parent")) {
+    if (userInfo.role == 'student' || userInfo.role == 'parent') {
         $('#manager').remove(); $('#period-container').removeAttribute('style')
         if (location.toString().includes("?")) URLparams = $parseURLArgs()
         let options = { method: 'POST' }

@@ -95,7 +95,7 @@ function updateEvents() {
         })
         .catch(e => console.error(e))
 }
-window.addEventListener('load', () => {
+function load() {
     setPageTitle("chart-line", "[{(dashboard)}]")
     setActiveTab(0)
     if (getComputedStyle($('.dash-block.motivation-dash-block')).display != "none") {
@@ -109,12 +109,13 @@ window.addEventListener('load', () => {
     }
     updateNotifications()
     updateEvents()
-})
+}
 window.addEventListener('onresize', () => {
     $('#markGraph').width = $('#markGraph').offsetWidth
     $('#markGraph').height = $('#markGraph').offsetHeight
 })
 window.addEventListener('toggle-modal-new-event', () => {
+    if ($('#new-event-modal').style.display == "none") return
     if (userInfo.role == "teacher") {
         fetch('/teachers/getInfo', { method: "POST" })
             .then(res => res.json()
