@@ -65,11 +65,6 @@ function load() {
                 if (studentChooser.children.length == 0) studentChooser.parentElement.style.display = 'none'
                 else studentChooser.parentElement.removeAttribute('style')
             })
-            $$('.mark-input input[type=number]').forEach(e => e.addEventListener('input', () => {
-                let value = parseInt(e.value), min = parseInt(e.getAttribute('min')), max = parseInt(e.getAttribute('max'))
-                if (value < min) e.value = min
-                if (value > max) e.value = max
-            }))
         }
         updateSubjectStudents = subjectChooser => {
             let classesWithThatSubject = []
@@ -175,4 +170,12 @@ function load() {
 
         }*/
     }
+}
+
+function minMaxInput(input) {
+    let value = parseInt(input.value)
+    let min = parseInt(input.getAttribute('min'))
+    let max = parseInt(input.getAttribute('max'))
+    if (value < min) input.value = min
+    else if (value > max) input.value = max
 }

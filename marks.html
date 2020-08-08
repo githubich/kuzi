@@ -12,7 +12,7 @@
     <template id="student">
         <input type="checkbox" id="student-%id%"><label for="student-%id%">%name%</label>
         <div class="mark-input" onclick="this.children[0].focus()">
-            <input class="percent" studentid="%id%" id="mark-input-%id%" type="number" min="-100" max="100">%
+            <input class="percent" studentid="%id%" id="mark-input-%id%" type="number" min="-100" max="100" oninput="minMaxInput(this)">%
         </div>
     </template>
     <template id="edit-mark">

@@ -56,7 +56,8 @@ main input { min-width: unset; }
 #write-a-mark ul li { padding: 0 10px; display: flex; }
 #write-a-mark ul li label { width: 100%; }
 #write-a-mark .my-classes-and-students { display: grid; gap: 20px; }
-#write-a-mark .my-classes-and-students input:not([type=number]) { margin-left: 0; margin-right: 5px; }
+#write-a-mark .my-classes-and-students input:not([type=number]) { margin-left: 0; margin-right: 0; }
+#write-a-mark .my-classes-and-students input:not([type=number]) + label { padding-left: .3em; }
 #write-a-mark li.student { display: flex; }
 #write-a-mark li.student > * { margin-top: auto; margin-bottom: auto; }
 #write-a-mark li.student input:not(:checked) + label + .mark-input { display: none; }

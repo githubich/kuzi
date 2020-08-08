@@ -14,7 +14,7 @@ const settings = importJSON('settings.json')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(require('express-fileupload')({ createParentPath: true }))
+app.use(require('express-fileupload')())
 app.use(require('./middleware'))
 
 let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
