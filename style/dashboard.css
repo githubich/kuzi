@@ -12,6 +12,7 @@ body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
     border-radius: 8.5px;
     background-color: var(--bg);
 }
+.dash-block-title { min-height: 55.6px }
 .dash-block .dash-block-title * { white-space: nowrap !important; color: var(--bg-alt) !important; }
 .dash-block .dash-block-title h3 { display: inline-block; color: var(--bg-alt); }
 .dash-block .dash-block-title h3 i { margin-right: 7.5px; }
@@ -25,7 +26,7 @@ body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
 .event a * { color: var(--bg-alt) !important; }
 .event > div > *, .notification > div > * { display: inline-block; }
 .event p, .notification p { margin: 0; }
-.event .details, .notification .details { font-size: 0.9em; }
+.event .details, .notification .description { font-size: 0.9em; }
 .event i:nth-child(1), .notification i:nth-child(1) { float: left; margin-right: 12px; position: relative; }
 .event i { top: 3px; }
 .notification i { top: 5px; }
@@ -75,7 +76,8 @@ body.teacher .marks-dash-block { display: none }
 }
 @media (max-width: 900px) {
     .dash-container { grid-template-columns: 100%; }
-    .dash-block .dash-block-title { text-align: center; }
+    .dash-block .dash-block-title { text-align: center; position: relative; }
+    .dash-block .dash-block-title h3 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 }
 @media (max-width: 800px) {
     body .dash-container { grid-template-columns: 1fr; }

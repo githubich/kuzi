@@ -9,7 +9,7 @@ const express = require('express')
 const app = express()
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
-const { newUUID, importJSON, saveJSON, calcMark, sortByPrettyName } = require('./utils')
+const { newUUID, importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
 const settings = importJSON('settings.json')
 
 app.use(express.json());
@@ -229,8 +229,6 @@ app.post('/students/marks/get', (req, res) => {
 		})
 		i++
 	})
-	i = 0
-	resContent.forEach(a => { if (resContent[i].subjects.length <= 0) resContent.splice(i, 1); else i++ })
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 app.post('/students/marks/graph', (req, res) => {
@@ -525,11 +523,7 @@ app.post('/teachers/marks/create', (req, res) => {
 	req.body.ownerID = req.userInfo.userID
 	marks.push(req.body)
 	saveJSON('marks.json', marks)
-	req.body.marks.forEach(mark => {
-		let notifications = importJSON(`notifications/${mark.studentID}.json`)
-		notifications.push({ title: "[{(notification.newMark)}]", details: `${req.body.name}: ${mark.mark}%`, action: `window.location = "/marks.html?highlightID=${req.body.markID}"` })
-		saveJSON(`notifications/${mark.studentID}.json`, notifications)
-	})
+	req.body.marks.forEach(mark => createNotification({ message: "[{(notification.newMark)}]", description: `${req.body.name}: ${mark.mark}%`, userID: mark.studentID, actions: [ { default: true, text: '[{(view)}]', js: `window.location = "/marks.html?highlightID=${req.body.markID}"` } ] }))
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/teachers/marks/list', (req, res) => {

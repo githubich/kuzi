@@ -1,9 +1,12 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
-random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
-ran16 = () => {return random(0,15).toString(16)}
-newUUID = () => {return ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()+ran16()}
+random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+newUUID = () => {
+	let content = ''
+	for (let i = 0; i < 16; i++) content += random(0,15).toString(16)
+	return content
+}
 importJSON = location => {
-	if (!existsSync(location)) { console.warn(`[Kuzi|Warning] ${location} is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
+	if (!existsSync(location) || readFileSync(location) == '') { console.warn(`[Kuzi|Warning] ${location} is empty/is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
 	else return JSON.parse(readFileSync(location).toString('utf8'))
 }
 saveJSON = (file, JSONobject) => writeFileSync(file, JSON.stringify(JSONobject, null, 4))
@@ -59,4 +62,18 @@ sortByPrettyName = (a, b) => {
 	else if (a.prettyName.toLowerCase() < b.prettyName.toLowerCase()) return -1
 	return 0
 }
-module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark, sortByPrettyName }
+sortByTimeStamp = (a, b) => {
+	if (a.timeStamp > b.timeStamp) return 1
+	else if (a.timeStamp < b.timeStamp) return -1
+	return 0
+}
+createNotification = ({ message, description, userID, actions = undefined }) => {
+	let notifications = importJSON(`notifications/${userID}.json`)
+	let notification = { message: message, description: description, timeStamp: (new Date()).getTime() }
+	if (notifications[notifications.length - 1]) notification.notificationID = notifications[notifications.length - 1].notificationID + 1
+	else notification.notificationID = 0
+	if (actions) notification.actions = actions
+	saveJSON(`notifications/${userID}.json`, [ ...notifications, notification ])
+}
+createNotification({ message: 'Hola', description: 'Descripción', userID: 0 })
+module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark, sortByPrettyName, createNotification }

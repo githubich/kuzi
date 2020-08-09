@@ -12,6 +12,7 @@ function load() {
             .then(res => res.json())
             .then(periods => {
                 periods.forEach(period => {
+                    if (period.subjects.length == 0) return;
                     let periodE = createElement({ type: 'div', classes: [ "period", `period-${period.periodID}` ] })
                     $('#period-container').appendChild(periodE)
 
@@ -46,7 +47,8 @@ function load() {
                         })
                     })
                 })
-                if (location.toString().includes("?") && URLparams && URLparams.highlightID) {
+                if ($('#period-container').children.length == 0) $('#period-container').innerHTML = getTemplate('empty-page')
+                else if (location.toString().includes("?") && URLparams && URLparams.highlightID) {
                     $(`.mark-${URLparams.highlightID}`).classList.add('highlighted')
                     $('.highlighted').scrollIntoView()
                     if ($('.highlighted').getBoundingClientRect().top < 65) window.scrollBy(0, $('.highlighted').getBoundingClientRect().top - 65)

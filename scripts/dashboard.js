@@ -22,8 +22,8 @@ function updateNotifications() {
                         <div class="clickable" onclick='${notification.action}'>
                             <i class="fad fa-bell"></i>
                             <div class="notification-content">
-                                <p class="title">${notification.title}</p>
-                                <p class="details">${notification.details}</p>
+                                <p class="message">${notification.message}</p>
+                                <p class="description">${notification.description}</p>
                             </div>
                         </div>
                         <i class="far fa-check delete-notification" title="[{(discard)}]" onclick="discardNotification(${i})"></i>
