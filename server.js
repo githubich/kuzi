@@ -835,7 +835,8 @@ app.post('/misc/events/create', (req, res) => {
 	if (req.userInfo.role == "student") delete req.body.visibleTo
 	else delete req.body.teacherMode
 	if (events == []) req.body.eventID = 0
-	else req.body.eventID = events[events.length - 1].eventID + 1
+	else if (events[events.length - 1]) req.body.eventID = events[events.length - 1].eventID + 1
+	else req.body.eventID = 0
 	events.push(req.body)
 	saveJSON('events.json', events)
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -849,7 +850,7 @@ app.post('/misc/events/get', (req, res) => {
 	events.forEach(event => {
 		let eventDate = new Date(`${event.date.year}-${event.date.month}-${event.date.day}`)
 		eventDate.setHours(23); eventDate.setMinutes(59); eventDate.setSeconds(59); eventDate.setMilliseconds(999)
-		if (now.getTime() <= eventDate.getTime() && (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1))) {
+		if (now.getTime() <= eventDate.getTime() && (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1) || (event.visibleTo && event.visibleTo.findIndex(user => user == req.cookies.selectedChild) != -1))) {
 			found = false
 			i = 0
 			event.owner = importJSON('users.json').find(user => user.userID == event.owner)
@@ -891,7 +892,7 @@ app.post('/misc/events/details', (req, res) => {
 			i++
 		})
 	}
-	if (event.owner.userID == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user.userID == req.userInfo.userID) != -1)) res.respond(JSON.stringify(event), '', 'application/json', 200)
+	if (event.owner.userID == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user.userID == req.userInfo.userID) != -1) || (event.visibleTo && event.visibleTo.findIndex(user => user.userID == req.cookies.selectedChild) != -1)) res.respond(JSON.stringify(event), '', 'application/json', 200)
 	else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 })
 app.post('/misc/events/delete', (req, res) => {
