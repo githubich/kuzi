@@ -62,17 +62,27 @@ sortByPrettyName = (a, b) => {
 	else if (a.prettyName.toLowerCase() < b.prettyName.toLowerCase()) return -1
 	return 0
 }
-sortByTimeStamp = (a, b) => {
-	if (a.timeStamp > b.timeStamp) return 1
-	else if (a.timeStamp < b.timeStamp) return -1
-	return 0
-}
-createNotification = ({ message, description, userID, actions = undefined }) => {
+createNotification = ({ message, description, userID, forParentsToo, actions = undefined }) => {
+	let timeStamp = (new Date()).getTime()
 	let notifications = importJSON(`notifications/${userID}.json`)
-	let notification = { message: message, description: description, timeStamp: (new Date()).getTime() }
+	let notification = { message: message, description: description, timeStamp: timeStamp }
 	if (notifications[notifications.length - 1]) notification.notificationID = notifications[notifications.length - 1].notificationID + 1
 	else notification.notificationID = 0
 	if (actions) notification.actions = actions
 	saveJSON(`notifications/${userID}.json`, [ ...notifications, notification ])
+
+	if (forParentsToo === true) {
+		let parents = []
+		let users = importJSON('users.json')
+		users.forEach(user => {
+			if (user.role == 'parent' && user.childrenIDs.includes(userID)) parents.push(user.userID)
+		})
+		parents.forEach(parent => {
+			let notifications = importJSON(`notifications/${parent}.json`)
+			if (notifications[notifications.length - 1]) notification.notificationID = notifications[notifications.length - 1].notificationID + 1
+			else notification.notificationID = 0
+			saveJSON(`notifications/${parent}.json`, [ ...notifications, notification ])
+		})
+	}
 }
 module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark, sortByPrettyName, createNotification }

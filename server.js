@@ -12,8 +12,8 @@ const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirS
 const { newUUID, importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
 const settings = importJSON('settings.json')
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(require('express-fileupload')())
 app.use(require('./middleware'))
 
@@ -811,22 +811,19 @@ app.post('/misc/periods/list', (req, res) => {
 
 app.post('/misc/notifications/get', (req, res) => {
 	let rawJSON = importJSON(`notifications/${req.userInfo.userID}.json`)
-	if (req.userInfo.role == "parent") rawJSON= [ ...rawJSON, ...importJSON(`notifications/${req.cookies.selectedChild}.json`) ]
 	let content = JSON.stringify(rawJSON)
 	let locales = eval(`importJSON('localization.json').${settings.language}`)
 	locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
 	res.respond(content, '', 'application/json', 200)
 })
 app.post('/misc/notifications/discard', (req, res) => {
-	if (req.body.notificationI == "all") {
-		writeFileSync(`notifications/${req.userInfo.userID}.json`, JSON.stringify([]))
-		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-	} else {
+	if (req.body.notificationID == "all") writeFileSync(`notifications/${req.userInfo.userID}.json`, JSON.stringify([]))
+	else {
 		let notifications = importJSON(`notifications/${req.userInfo.userID}.json`)
-		notifications.splice(req.body.notificationI, 1)
+		notifications.splice(req.body.notificationID, 1)
 		saveJSON(`notifications/${req.userInfo.userID}.json`, notifications)
-		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 	}
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 
 app.post('/misc/events/create', (req, res) => {
@@ -919,6 +916,8 @@ app.post('/misc/events/edit', (req, res) => {
 })
 
 app.post('/misc/schedule/get', (req, res) => {
+	if (req.userInfo.role == "parent") req.userInfo = req.userInfo.children.find(e => e.userID == parseInt(req.body.studentID))
+
 	let classes = importJSON('classes.json')
 	let scheduling = importJSON('scheduling.json')
 	let subjects = importJSON('subjects.json')
@@ -926,11 +925,9 @@ app.post('/misc/schedule/get', (req, res) => {
 	let users = importJSON('users.json')
 	let i = 0
 
-	if (req.userInfo.role == "parent") req.userInfo = req.userInfo.children.find(e => e.userID == parseInt(req.body.studentID))
-
 	scheduling.forEach(connection => {
 		if (req.userInfo.role == "student" && req.userInfo.class.classID == connection.classID) theirScheduling.push(connection)
-		if (req.userInfo.role == "teacher" && req.userInfo.userID == connection.teacherID) theirScheduling.push(connection)
+		else if (req.userInfo.role == "teacher" && req.userInfo.userID == connection.teacherID) theirScheduling.push(connection)
 	})
 	theirScheduling.forEach(c => {
 		theirScheduling[i].subject = subjects.find(e => e.subjectID == c.subjectID)

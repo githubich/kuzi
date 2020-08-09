@@ -8,51 +8,41 @@ function sortEventsBlocksByDate(a, b) {
 }
 function updateNotifications() {
     let notifications = $('.notifications-dash-block .dash-block-content')
-    notifications.innerHTML = '<p style="margin: 0;" align=center>[{(loading)}]</p>'
+    notifications.innerHTML = `<p style="margin: 0;" align="center">[{(loading)}]</p>`
     fetch('/misc/notifications/get', { method: 'POST' })
         .then(res => res.json())
         .then(res => {
-            let i = 0
             notifications.innerHTML = ''
             res.forEach(notification => {
                 notificationE = document.createElement('div')
                 notifications.insertBefore(notificationE, notifications.children[0])
                 let action = ''
-                if (notification.actions.length == 1) action = notification.actions[0].js
-                else if (notification.actions.length > 1) action = notification.actions.find(e => e.default == true).js
+                if (notification.actions) {
+                    if (notification.actions.length == 1) action = notification.actions[0].js
+                    else if (notification.actions.length > 1) action = notification.actions.find(e => e.default == true).js
+                }
                 notificationE.outerHTML = `
                     <div class="notification">
-                        <div class="clickable" onclick='${action}'>
+                        <div class="clickable" ${(() => { if (action == '') return ''; return `onclick="${action}"` })()}>
                             <i class="fad fa-bell"></i>
                             <div class="notification-content">
                                 <p class="message">${notification.message}</p>
                                 <p class="description">${notification.description}</p>
                             </div>
                         </div>
-                        <i class="far fa-check delete-notification" title="[{(discard)}]" onclick="discardNotification(${i})"></i>
+                        <i class="far fa-check delete-notification" title="[{(discard)}]" onclick="discardNotification(${notification.notificationID})"></i>
                     </div>
                 `
-                i++
             })
         })
-        .catch(e => console.error(e))
 }
-function discardNotification(index) {
+function discardNotification(notificationID) {
     fetch('/misc/notifications/discard', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            notificationI: index
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notificationID: notificationID })
     })
-        .then(res => res.json())
-        .then(res => {
-            if (res.message = 'ok') updateNotifications()
-            else qAlert({ message: '[{(error.unknown.doNotRetry)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
-        })
-        .catch(e => console.error(e))
+        .then(() => updateNotifications())
 }
 function updateEvents() {
     let events = $('.events-dash-block .dash-block-content')
