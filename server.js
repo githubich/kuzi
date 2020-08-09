@@ -124,6 +124,7 @@ app.get('*', (req, res) => {
 
 // User-related stuff
 app.post('/user/login', (req, res) => {
+	let loggedIn = false
 	importJSON('users.json').forEach(user => {
 		if (user.username == req.body.username && user.password == req.body.password) {
 			let activeCookies = importJSON('active.cookies.json')
@@ -131,8 +132,10 @@ app.post('/user/login', (req, res) => {
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: user.userID })
 			saveJSON('active.cookies.json', activeCookies)
 			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 200)
+			loggedIn = true
 		}
 	})
+	if (loggedIn === false) res.respond(JSON.stringify({ message: 'not ok' }), '', 'application/json', 403)
 })
 app.post('/user/logout', (req, res) => {
 	let activeCookies = importJSON('active.cookies.json')

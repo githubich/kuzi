@@ -11,18 +11,16 @@ function send() {
     if ($('#kuzi-username').value != "" || $('#kuzi-password').value != "") {
         fetch('/user/login', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username: $('#kuzi-username').value,
                 password: $('#kuzi-password').value
             })
-        }).then(res => {
-            res.json().then(res => {
-                if (res.session) { document.cookie=`session=${res.session}`; window.location = "/dashboard.html" }
-                if (res.message == 'not ok') qAlert({ message: "[{(error.badUsernameOrPassword)}]", mode: "error", buttons: { cancel: { invisible: true } } }).then( $('#kuzi-password').value = "" )
-            })
         })
+            .then(res => res.json())
+            .then(res => {
+                if (res.session != undefined) { document.cookie=`session=${res.session}`; window.location = "/dashboard.html" }
+                else qAlert({ message: "[{(error.badUsernameOrPassword)}]", mode: "error", buttons: { cancel: { invisible: true } } }).then( $('#kuzi-password').value = "" )
+            })
     } else alert("[{(error.invalidInput)}]")
 }

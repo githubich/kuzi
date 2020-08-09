@@ -1,51 +1,66 @@
-headerDropdownVisible = false
-moreVisible = false
+function compareObjects(a, b) {
+    if (!a || !b || Object.keys(a).length != Object.keys(b).length) return false
+    let areEqual = true
+    Object.keys(a).forEach(key => { if (areEqual && typeof a[key] != 'object' && a[key] != b[key]) areEqual = false })
+    return areEqual
+}
+function updateUserInfo(info) {
+    $().classList.remove('student', 'teacher', 'parent')
+    $().classList.add(info.role)
+    if ($('.user-photo').style.backgroundImage != `url(/users/${info.userID})`) $('.user-photo').style.backgroundImage = `url(/users/${info.userID})`
+    $('.user-info .name').innerText = info.prettyName
+    if (info.role == "teacher") {
+        if (info.currentSubject.subjectID) $('.user-info .status').innerText = `${info.class.prettyName} | ${info.currentSubject.prettyName}`
+        else $('.user-info .status').innerText = `[{(teacher)}]`
+        if ($('#markGraph')) $('#markGraph').remove()
+    } else if (info.role == "student") {
+        if (info.currentSubject.subjectID) $('.user-info .status').innerText = `${info.class.prettyName} | ${info.currentSubject.prettyName}`
+        else $('.user-info .status').innerText = `${info.class.prettyName}`
+        if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
+    } else if (info.role == "parent") {
+        if ($parseCookies().selectedChild == undefined) document.cookie = `selectedChild=${info.children[0].userID}`
+        $('.user-info .status').innerText = info.children.find(e => e.userID == parseInt($parseCookies().selectedChild)).prettyName
+        if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
+        let childSelector = $('#child-selector')
+        info.children.forEach(child => {
+            let childE = document.createElement('option')
+            childSelector.appendChild(childE)
+            childE.innerText = child.prettyName
+            childE.value = child.userID
+        })
+        childSelector.value = $parseCookies().selectedChild
+    }
+}
 window.addEventListener('load', () => {
+    if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')))
     if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
     else $('#theme + label').innerText = '[{(lightMode)}]'
-    $('#theme').checked = localStorage.getItem('theme') != 'light'
+    $('#theme').checked = localStorage.getItem('theme') == 'dark'
     $('#theme').addEventListener('click', e => {
-        if (!$('#theme').checked) localStorage.setItem('theme', 'light')
-        else localStorage.setItem('theme', 'dark')
+        if ($('#theme').checked) {
+            localStorage.setItem('theme', 'dark')
+            $('#theme + label').innerText = '[{(darkMode)}]'
+        } else {
+            localStorage.setItem('theme', 'light')
+            $('#theme + label').innerText = '[{(lightMode)}]'
+        }
         document.documentElement.setAttribute('theme', localStorage.getItem('theme'))
-        if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
-        else $('#theme + label').innerText = '[{(lightMode)}]'
     })
     headerDropdown = $('#dropdown')
     headerDropdownArrow = $("#dropdown-arrow")
+    headerDropdownVisible = false
     more = $("#more")
+    moreVisible = false
     fetch('/user/getInfo', { method: 'POST' })
         .then(res => res.json())
         .then(res => {
             userInfo = res.userInfo
             if (!userInfo.userID) location = '/'
-            if (userInfo.role == "parent" && $parseCookies().selectedChild == undefined) document.cookie = `selectedChild=${userInfo.children[0].userID}`
-            $().classList.add(userInfo.role)
-            $('.user-photo').style.backgroundImage = `url(/users/${userInfo.userID})`
-            $('.user-info .name').innerText = userInfo.prettyName
-            if (userInfo.role == "teacher") {
-                if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
-                else $('.user-info .status').innerText = `[{(teacher)}]`
-                if ($('#markGraph')) $('#markGraph').remove()
-            } else if (userInfo.role == "student") {
-                if (userInfo.currentSubject.subjectID) $('.user-info .status').innerText = `${userInfo.class.prettyName} | ${userInfo.currentSubject.prettyName}`
-                else $('.user-info .status').innerText = `${userInfo.class.prettyName}`
-                if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
-            } else if (userInfo.role == "parent") {
-                $('.user-info .status').innerText = userInfo.children.find(e => e.userID == parseInt($parseCookies().selectedChild)).prettyName
-                if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
-                let childSelector = $('#child-selector')
-                userInfo.children.forEach(child => {
-                    let childE = document.createElement('option')
-                    childSelector.appendChild(childE)
-                    childE.innerText = child.prettyName
-                    childE.value = child.userID
-                })
-                childSelector.value = $parseCookies().selectedChild
-            }
+            updateUserInfo(userInfo)
             if (typeof load == "function") load()
+            localStorage.setItem('last-user-info', JSON.stringify(userInfo))
         })
-        .catch(e => location = '/')
+        .catch(e => console.log(e))
 })
 window.addEventListener('click', e => {
     if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
@@ -54,16 +69,14 @@ window.addEventListener('click', e => {
 window.addEventListener('keydown', e => {
     if (e.key == "Enter") {
         e.preventDefault()
-        if (document.activeElement === $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
-        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
-        else if (document.activeElement === $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
+        if (document.activeElement == $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
+        else if (document.activeElement == $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
+        else if (document.activeElement == $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
         return false
     } else if (e.key == "Escape") {
         e.preventDefault()
-        $$('.modal').forEach(modal => {
-            if (modal.style.display == "block") modal.querySelector('.close').click()
-        })
-    } //else if (e.key == "F12" || (e.ctrlKey && e.shiftKey && e.key == "C") || (e.ctrlKey && e.shiftKey && e.key == "J")) e.preventDefault()
+        $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
+    }
 })
 function toggleDropdown() {
     if (!$("#dropdown.hiding") && !$("#dropdown.showing")) {

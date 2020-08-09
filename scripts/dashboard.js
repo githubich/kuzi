@@ -48,45 +48,31 @@ function updateEvents() {
     let events = $('.events-dash-block .dash-block-content')
     fetch('/misc/events/get', { method: 'POST' })
         .then(res => res.json())
-        .then(res => res.sort(sortEventsBlocksByDate))
         .then(res => {
+            res.sort(sortEventsBlocksByDate)
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
             events.innerHTML = ''
             res.forEach(day => {
-                let dayE = document.createElement('div')
+                let dayE = createElement({ type: 'div', classes: [ 'day' ] })
                 events.appendChild(dayE)
-                dayE.classList.add('day')
                 
-                let dayETitle = document.createElement('b')
-                dayE.appendChild(dayETitle)
-                dayETitle.innerHTML = `<h4>${day.date.day} ${months[day.date.month - 1]} ${day.date.year}</h4>`
+                dayE.appendChild(createElement({ type: 'b', innerContent: { type: 'html', content: `<h4>${day.date.day} ${months[day.date.month - 1]} ${day.date.year}</h4>` } }))
 
                 day.events.forEach(event => {
+                    let hoverCard = event.description
+                    if (event.owner.userID != userInfo.userID) hoverCard += `\n[{(owner)}]: ${event.owner.prettyName}`
                     let eventE = document.createElement('div')
                     dayE.appendChild(eventE)
-                    if (event.owner.userID == userInfo.userID) {
-                        eventE.outerHTML = `
-                            <div class="event">
-                                <i class="fad fa-calendar-alt"></i>
-                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}">
-                                    <p class="name">${event.name}</p>
-                                </div></a>
-                            </div>
-                        `
-                    } else {
-                        eventE.outerHTML = `
-                            <div class="event">
-                                <i class="fad fa-calendar-alt"></i>
-                                <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${event.description}\n[{(owner)}]: ${event.owner.prettyName}">
-                                    <p class="name">${event.name}</p>
-                                </div></a>
-                            </div>
-                        `
-                    }
+                    eventE.outerHTML = `
+                        <div class="event">
+                            <i class="fad fa-calendar-alt"></i>
+                            <a href="/event-details.html?ID=${event.eventID}"><div class="event-content" title="${hoverCard}">
+                                <p class="name">${event.name}</p>
+                            </div></a>
+                        </div>`
                 })
             })
         })
-        .catch(e => console.error(e))
 }
 function load() {
     setPageTitle("chart-line", "[{(dashboard)}]")
@@ -98,7 +84,6 @@ function load() {
                 let quoteIndex = random(0, res.length - 1)
                 $(".motivation-dash-block .title").innerText = `${res[quoteIndex].a} ~ ${res[quoteIndex].b}`
             })
-            .catch(e => console.error(e))
     }
     updateNotifications()
     updateEvents()
@@ -127,14 +112,13 @@ window.addEventListener('toggle-modal-new-event', () => {
     update = updateID => {
         if (!updateID) return
         updateID = parseInt(updateID)
-        let studentsInClass = $('#students-in-class')
         data.forEach(clas => {
             if (clas.classID == updateID) {
-                studentsInClass.innerHTML = ''
+                $('#students-in-class').innerHTML = ''
                 $('.students h3').innerHTML = `<i class="fad fa-users"></i>[{(studentsIn)}] ${clas.className}`
                 clas.classStudents.forEach(student => {
                     studentE = document.createElement('li')
-                    studentsInClass.appendChild(studentE)
+                    $('#students-in-class').appendChild(studentE)
                     studentE.outerHTML = `<li class="student"><input type="checkbox" studentID="${student.studentID}" id="student-${student.studentID}"><label for="student-${student.studentID}">${student.studentName}</label></li>`
                 })
             }
@@ -166,7 +150,7 @@ window.addEventListener('toggle-modal-new-event', () => {
                     if (res.message == 'ok') qAlert({ message: "[{(success.eventSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) toggleModal('new-event'); updateEvents() })
                     if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
                 })
-                .catch(() => { qAlert({ message: "[{(error.unknown.retry)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
+                .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
         } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
     }
 })
