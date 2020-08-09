@@ -17,9 +17,12 @@ function updateNotifications() {
             res.forEach(notification => {
                 notificationE = document.createElement('div')
                 notifications.insertBefore(notificationE, notifications.children[0])
+                let action = ''
+                if (notification.actions.length == 1) action = notification.actions[0].js
+                else if (notification.actions.length > 1) action = notification.actions.find(e => e.default == true).js
                 notificationE.outerHTML = `
                     <div class="notification">
-                        <div class="clickable" onclick='${notification.action}'>
+                        <div class="clickable" onclick='${action}'>
                             <i class="fad fa-bell"></i>
                             <div class="notification-content">
                                 <p class="message">${notification.message}</p>

@@ -523,7 +523,7 @@ app.post('/teachers/marks/create', (req, res) => {
 	req.body.ownerID = req.userInfo.userID
 	marks.push(req.body)
 	saveJSON('marks.json', marks)
-	req.body.marks.forEach(mark => createNotification({ message: "[{(notification.newMark)}]", description: `${req.body.name}: ${mark.mark}%`, userID: mark.studentID, actions: [ { default: true, text: '[{(view)}]', js: `window.location = "/marks.html?highlightID=${req.body.markID}"` } ] }))
+	req.body.marks.forEach(mark => createNotification({ message: "[{(notification.newMark)}]", description: `${req.body.name}: ${mark.mark}%`, userID: mark.studentID, actions: [ { default: true, icon: 'eye', text: '[{(view)}]', js: `window.location = "/marks.html?highlightID=${req.body.markID}"` } ] }))
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/teachers/marks/list', (req, res) => {

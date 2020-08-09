@@ -1,15 +1,14 @@
 <!DOCTYPE html>
     <head>
-		<script src="/lib/qTools.min.js"></script>
+		<script async src="/lib/qTools.min.js"></script>
         <link async rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.css">
         <script async src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
         <script>
-            random = (min,max) => {return Math.floor(Math.random()*(max-min+1)+min)}
             resize = () => {
                 $('#graph').setAttribute('height', $().offsetHeight)
                 $('#graph').setAttribute('width', $().offsetWidth)
             }
-            refresh = (forcedCount) => {
+            refresh = forcedCount => {
                 if (mouseOver == false) {
                     if (forcedCount) c = forcedCount
                     if (c >= resData.length) c = 0
@@ -30,17 +29,8 @@
                     c++
                     resize()
                     setTimeout(refresh, 5000)
-                } else {
-                    setTimeout(refresh, 100)
-                }
+                } else setTimeout(refresh, 100)
             }
-            /*setColor = () => {
-                if (markGraph.data.datasets[0].backgroundColor != `#${getComputedStyle(parent.document.documentElement).getPropertyValue('--accent').slice(2, Infinity)}7a`) {
-                    markGraph.data.datasets[0].backgroundColor = `#${getComputedStyle(parent.document.documentElement).getPropertyValue('--accent').slice(2, Infinity)}7a`
-                    markGraph.update()
-                }
-                setTimeout(setColor, 100)
-            }*/
             window.addEventListener('load', resize)
             window.addEventListener('resize', resize)
             window.addEventListener('load', () => {
@@ -99,7 +89,6 @@
                                 
                             })
                             mouseOver = false
-                            //setColor()
                             refresh(0)
                         }))
                 else if (parent.userInfo.role == "parent") fetch('/parents/marks/graph', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: parseInt($parseCookies().selectedChild) }) })
@@ -157,7 +146,6 @@
                                 
                             })
                             mouseOver = false
-                            //setColor()
                             refresh(0)
                         }))
             })
