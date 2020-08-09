@@ -75,5 +75,4 @@ createNotification = ({ message, description, userID, actions = undefined }) => 
 	if (actions) notification.actions = actions
 	saveJSON(`notifications/${userID}.json`, [ ...notifications, notification ])
 }
-createNotification({ message: 'Hola', description: 'Descripción', userID: 0 })
 module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark, sortByPrettyName, createNotification }
