@@ -526,7 +526,7 @@ app.post('/teachers/marks/create', (req, res) => {
 	req.body.ownerID = req.userInfo.userID
 	marks.push(req.body)
 	saveJSON('marks.json', marks)
-	req.body.marks.forEach(mark => createNotification({ message: "[{(notification.newMark)}]", description: `${req.body.name}: ${mark.mark}%`, userID: mark.studentID, actions: [ { default: true, icon: 'eye', text: '[{(view)}]', js: `window.location = "/marks.html?highlightID=${req.body.markID}"` } ] }))
+	req.body.marks.forEach(mark => createNotification({ message: "[{(notification.newMark)}]", description: `${req.body.name}: ${mark.mark}%`, userID: mark.studentID, forParentsToo: true, actions: [ { default: true, icon: 'eye', text: '[{(view)}]', js: `window.location = "/marks.html?highlightID=${req.body.markID}"` } ] }))
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/teachers/marks/list', (req, res) => {
@@ -823,7 +823,7 @@ app.post('/misc/notifications/discard', (req, res) => {
 	if (req.body.notificationID == "all") writeFileSync(`notifications/${req.userInfo.userID}.json`, JSON.stringify([]))
 	else {
 		let notifications = importJSON(`notifications/${req.userInfo.userID}.json`)
-		notifications.splice(req.body.notificationID, 1)
+		notifications.splice(notifications.findIndex(e => e.notificationID == req.body.notificationID), 1)
 		saveJSON(`notifications/${req.userInfo.userID}.json`, notifications)
 	}
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
