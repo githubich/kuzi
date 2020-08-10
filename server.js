@@ -963,4 +963,20 @@ app.post('/misc/schedule/get', (req, res) => {
 	res.respond(JSON.stringify(theirScheduling), '', 'application/json', 200)
 })
 
+function dailyTasks() {
+	let now = new Date()
+	let users = importJSON('users.json')
+	users.forEach(user => {
+		if (user.birthdate && user.birthdate.day == now.getDate() && user.birthdate.month == now.getMonth()) {
+			createNotification({ message: '[{(birthdayMessage)}]', description: '[{(birthdayDescription)}]', userID: user.userID })
+		}
+	})
+	scheduleDailyTasks()
+}
+function scheduleDailyTasks() {
+	let now = new Date()
+	setTimeout(dailyTasks, (new Date(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate() + 1} 00:00`)).getTime() - now.getTime())
+}
+scheduleDailyTasks()
+
 app.listen(settings.serverPort, () => console.log(`[Kuzi] Listening on port ${settings.serverPort}`))

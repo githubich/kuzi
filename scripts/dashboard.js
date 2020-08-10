@@ -13,6 +13,7 @@ function updateNotifications() {
         .then(res => res.json())
         .then(res => {
             notifications.innerHTML = ''
+            let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
             res.forEach(notification => {
                 notificationE = document.createElement('div')
                 notifications.insertBefore(notificationE, notifications.children[0])
@@ -21,9 +22,10 @@ function updateNotifications() {
                     if (notification.actions.length == 1) action = notification.actions[0].js
                     else if (notification.actions.length > 1) action = notification.actions.find(e => e.default == true).js
                 }
+                let submitDate = new Date(notification.timeStamp)
                 notificationE.outerHTML = `
                     <div class="notification">
-                        <div class="clickable" ${(() => { if (action == '') return ''; return `onclick="${action}"` })()}>
+                        <div class="clickable" ${(() => { if (action == '') return ''; return `onclick="${action}"` })()} title="${submitDate.getDate()} ${months[submitDate.getMonth()]} ${submitDate.getFullYear()}">
                             <i class="fad fa-bell"></i>
                             <div class="notification-content">
                                 <p class="message">${notification.message}</p>
