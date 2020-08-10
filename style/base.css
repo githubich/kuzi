@@ -163,7 +163,8 @@ select { height: 33px; width: -webkit-fill-available; }
 
 .icon-container .icon { margin-right: .3em; }
 .empty-page { text-align: center; width: 100vw; }
-.empty-page p { padding: 0 20px; }
+.empty-page p { padding: 0 20px; font-size: 70px; }
+.empty-page p { padding: 0 20px; font-size: 1.3em; }
 
 @media (min-width: 601px) {
 	a.close:hover::after {

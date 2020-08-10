@@ -1,10 +1,4 @@
-function compareObjects(a, b) {
-    if (!a || !b || Object.keys(a).length != Object.keys(b).length) return false
-    let areEqual = true
-    Object.keys(a).forEach(key => { if (areEqual && typeof a[key] != 'object' && a[key] != b[key]) areEqual = false })
-    return areEqual
-}
-function updateUserInfo(info) {
+function updateUserInfo(info, fromCache) {
     $().classList.remove('student', 'teacher', 'parent')
     $().classList.add(info.role)
     if ($('.user-photo').style.backgroundImage != `url(/users/${info.userID})`) $('.user-photo').style.backgroundImage = `url(/users/${info.userID})`
@@ -21,18 +15,20 @@ function updateUserInfo(info) {
         if ($parseCookies().selectedChild == undefined) document.cookie = `selectedChild=${info.children[0].userID}`
         $('.user-info .status').innerText = info.children.find(e => e.userID == parseInt($parseCookies().selectedChild)).prettyName
         if ($('#markGraph')) $('#markGraph').src = "/mark-graph.html"
-        let childSelector = $('#child-selector')
-        info.children.forEach(child => {
-            let childE = document.createElement('option')
-            childSelector.appendChild(childE)
-            childE.innerText = child.prettyName
-            childE.value = child.userID
-        })
-        childSelector.value = $parseCookies().selectedChild
+        if (fromCache === false) {
+            let childSelector = $('#child-selector')
+            info.children.forEach(child => {
+                let childE = document.createElement('option')
+                childSelector.appendChild(childE)
+                childE.innerText = child.prettyName
+                childE.value = child.userID
+            })
+            childSelector.value = $parseCookies().selectedChild
+        }
     }
 }
 window.addEventListener('load', () => {
-    if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')))
+    if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')), true)
     if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
     else $('#theme + label').innerText = '[{(lightMode)}]'
     $('#theme').checked = localStorage.getItem('theme') == 'dark'
@@ -56,7 +52,7 @@ window.addEventListener('load', () => {
         .then(res => {
             userInfo = res.userInfo
             if (!userInfo.userID) location = '/'
-            updateUserInfo(userInfo)
+            updateUserInfo(userInfo, false)
             if (typeof load == "function") load()
             localStorage.setItem('last-user-info', JSON.stringify(userInfo))
         })
