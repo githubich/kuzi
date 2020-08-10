@@ -532,6 +532,7 @@ app.post('/teachers/marks/create', (req, res) => {
 app.post('/teachers/marks/list', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let classes = importJSON('classes.json')
+	let subjects = importJSON('subjects.json')
 	let users = importJSON('users.json')
 	let marks = importJSON('marks.json')
 	let theirMarks = []
@@ -544,11 +545,24 @@ app.post('/teachers/marks/list', (req, res) => {
 					if (clas.students.includes(markLoop.studentID)) mark.marks[i].student.class = clas
 				})
 				delete mark.marks[i].student.password
-				i++ })
+				i++
+			})
+			mark.subject = subjects.find(e => e.subjectID == mark.subjectID)
+			delete mark.subjectID
 			theirMarks.push(mark)
 		}
 	})
 	res.respond(JSON.stringify(theirMarks), '', 'application/json', 200)
+})
+app.post('/teachers/marks/edit', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let marks = importJSON('marks.json')
+	req.body.ownerID = req.userInfo.userID
+	console.log(req.body)
+	console.log(marks.findIndex(e => e.markID == req.body.markID))
+	marks[marks.findIndex(e => e.markID == req.body.markID)] = req.body
+	saveJSON('marks.json', marks)
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 
 app.post('/teachers/listMyStudents', (req, res) => {
@@ -751,11 +765,14 @@ app.post('/teachers/tests/edit', (req, res) => {
 app.post('/teachers/tests/delete', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let tests = importJSON('tests.json')
+	console.log(tests.find(e => e.testID == req.body.ID))
+	console.log(req.userInfo.userID)
+	console.log(req.body)
 	if (tests.find(e => e.testID == req.body.ID).ownerID == req.userInfo.userID) {
-		tests.splice(req.body.ID, 1)
+		tests.splice(tests.findIndex(e => e.testID == req.body.ID), 1)
 		saveJSON('tests.json', tests)
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 200)
+	} else res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 })
 app.post('/teachers/tests/setVisibility', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)

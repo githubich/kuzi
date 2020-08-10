@@ -12,6 +12,9 @@ function deleteTest(element, ID) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ID: ID })
                 })
+                    .then(() => {
+                        if ($('#test-container').children.length == 0) $('#test-container').innerHTML = getTemplate('empty-page')
+                    })
             }
         })
 }
@@ -38,7 +41,6 @@ function load() {
     fetch(`${userInfo.role}s/tests/list`, { method: 'POST' })
         .then(res => res.json())
         .then(res => {
-            console.log(res)
             if (userInfo.role == 'student') res.sort(testSort)
             let testContainer = $('#test-container')
             res.forEach(test => {
@@ -79,5 +81,6 @@ function load() {
                 if (userInfo.role == 'student') testE.classList.add(test.status)
                 else $$('.line').forEach(line => line.remove())
             })
+            if ($('#test-container').children.length == 0) $('#test-container').innerHTML = getTemplate('empty-page')
         })
 }

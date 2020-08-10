@@ -60,7 +60,7 @@
         </div>
         <div class="question-type">
             <p class="hint"><i class="fad fa-tasks"></i>[{(type)}]</p>
-		    <select id="question-type" oninput="updateEditQuestionModal(this.value, this.parentElement.parentElement.parentElement.getAttribute('i'))">
+		    <select id="question-type" oninput="updateEditQuestionModal(this.value, null)">
                 <option value="single-choice">[{(singleChoice)}]</option>
                 <option value="multiple-choice">[{(multipleChoice)}]</option>
                 <option value="open">[{(openAnswer)}]</option>

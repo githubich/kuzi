@@ -20,7 +20,7 @@ body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
 .dash-block .dash-block-title h3 i { margin-right: 7.5px; }
 .dash-block-content { margin: 5px 0 0 0; flex: 1 1 auto; }
 #markGraph:not([src]) { display: none; }
-#markGraph[src] { width: 100%; height: 100%; margin: 0; padding: 0; border: none; }
+#markGraph[src] { width: 100%; height: 100%; margin: 0; padding: 0; border: none; min-height: 225px; }
 .notification { white-space: nowrap; display: flex; }
 .notification p { white-space: normal; }
 .day:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }

@@ -16,8 +16,8 @@
         </div>
     </template>
     <template id="edit-mark">
-        <details>
-            <summary><h3>%markName%</h3></summary>
+        <details onclick="updateSubjectStudents(this.querySelector('.subject-chooser'))" style="cursor: default;">
+            <summary><h3>%markName% (%subjectName%)</h3></summary>
             <div class="details-content">
                 <li class="mark-details">
                     <div class="mark-name-div">
@@ -35,7 +35,7 @@
                 </li>
                 <li class="marks"><ul class="students"></ul></li>
             </div>
-            <button onclick="submitEdit(this.previousElementSibling)"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
+            <button onclick="submitEdit(this.previousElementSibling, parseInt('%markID%'))"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
         </details>
     </template>
     <template id="edit-mark-student">
@@ -43,7 +43,7 @@
             <p class="student-name">%name%</p>
             <i class="fad fa-trash delete-student" title="[{(delete)}]" onclick="let subjectChooser = this.parentElement.parentElement.parentElement.previousElementSibling.querySelector('.subject-chooser'); this.parentElement.remove(); updateSubjectStudents(subjectChooser)"></i>
             <div class="mark-input" onclick="this.children[0].focus()">
-                <input type="number" value="%value%" id="mark-input-%id%" min="-100" max="100" class="percent" studentID="%id%">%
+                <input type="number" value="%value%" id="mark-input-%id%" min="-100" max="100" class="percent" studentID="%id%" oninput="minMaxInput(this)">%
             </div>
         </li>
     </template>
@@ -52,7 +52,7 @@
             <select class="student-chooser"></select>
             <i class="fad fa-plus create-student" title="[{(create)}]" onclick="let subjectChooser = this.parentElement.parentElement.parentElement.previousElementSibling.querySelector('.subject-chooser'); this.parentElement.outerHTML = getTemplate('edit-mark-student', { id: this.previousElementSibling.value, name: this.previousElementSibling.selectedOptions[0].text, value: this.nextElementSibling.children[0].value, classID: this.previousElementSibling.selectedOptions[0].getAttribute('classID') }) + getTemplate('edit-mark-new-student'); updateSubjectStudents(subjectChooser)"></i>
             <div class="mark-input" onclick="this.children[0].focus()">
-                <input type="number" id="mark-input-new" min="-100" max="100" class="percent">%
+                <input type="number" id="mark-input-new" min="-100" max="100" class="percent" oninput="minMaxInput(this)">%
             </div>
         </li>
     </template>

@@ -64,11 +64,11 @@ function updateEditQuestionModal(value, testDataI) {
     let question = testData.questions[testDataI]
     answersE.innerHTML = ''
     $('.question-value').style.display = 'none'
-    $('#question-question').value = testData.questions[testDataI].question
+    if (testDataI != undefined) $('#question-question').value = testData.questions[testDataI].question
     if (value == "single-choice") {
         $('.question-value').style.display = ''
         if (testDataI != undefined) $('#question-value').value = question.value
-        if (value == question.type && testDataI != undefined) {
+        if (testDataI != undefined && value == question.type) {
             let i = 0
             question.options.forEach(option => {
                 let optionE = document.createElement('li')
@@ -89,7 +89,7 @@ function updateEditQuestionModal(value, testDataI) {
             <input type="text" placeholder="[{(typeToAddAnOption)}]...">
         `
     } else if (value == "multiple-choice") {
-        if (value == question.type && testDataI) {
+        if (testDataI != undefined && value == question.type) {
             let i = 0
             question.options.forEach(option => {
                 let optionE = document.createElement('li')

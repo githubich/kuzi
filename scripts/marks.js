@@ -97,7 +97,7 @@ function load() {
         fetch('/teachers/marks/list', { method: 'POST' }).then(res => res.json())
             .then(res => {
                 res.forEach(mark => {
-                    $('.view-marks-ul').appendChild(createElement({ type: 'li', innerContent: { type: 'html', content: getTemplate('edit-mark', { markName: mark.name, period: mark.periodID, subject: mark.subjectID }) } }))
+                    $('.view-marks-ul').appendChild(createElement({ type: 'li', innerContent: { type: 'html', content: getTemplate('edit-mark', { markName: mark.name, period: mark.periodID, subject: mark.subject.subjectID, subjectName: mark.subject.prettyName, markID: mark.markID }) } }))
                     let marksE = $('.view-marks-ul').children[$('.view-marks-ul').children.length - 1].querySelector('.marks .students')
                     mark.marks.forEach(subMark => {
                         let foo = createElement({ type: 'a', innerContent: { type: 'html', content: getTemplate('edit-mark-student', { id: subMark.studentID, classID: subMark.student.class.classID, name: subMark.student.prettyName, value: subMark.mark }) } })
@@ -109,9 +109,7 @@ function load() {
                     foo.outerHTML = foo.innerHTML
                 })
                 fetch('/teachers/listMyStudents', { method: 'POST' }).then(res => res.json())
-                    .then(res => {
-                        myStudents = res
-                    })
+                    .then(res => myStudents = res)
                 fetch('/teachers/listMySubjects', { method: 'POST' }).then(res => res.json())
                     .then(res => {
                         $$('#view-marks .subject-chooser').forEach(subjectChooser => {
@@ -121,7 +119,6 @@ function load() {
                                 if (subject.current === true) { subjectE.innerHTML += " ([{(current)}])"; subjectChooser.value = subject.subjectID }
                                 if (subjectChooser.getAttribute('value')) subjectChooser.value = subjectChooser.getAttribute('value')
                             })
-                            updateSubjectStudents(subjectChooser)
                         })
                     })
             })
@@ -153,27 +150,51 @@ function load() {
             $('.submit').removeAttribute('style'); $('.students').removeAttribute('style'); $('.mark-info').removeAttribute('style')
         }
         submit = () => {
-            let sendData = { name: $('#write-a-mark .mark-name').value, subjectID: parseInt($('#write-a-mark .subject-chooser').value), periodID: parseInt($('#write-a-mark .period-chooser').value), marks: [] }
+            let invalid = false
+            let sendData = {
+                name: $('#write-a-mark .mark-name').value,
+                subjectID: parseInt($('#write-a-mark .subject-chooser').value),
+                periodID: parseInt($('#write-a-mark .period-chooser').value),
+                marks: []
+            }
             $$('#write-a-mark .students-ul .mark-input input').forEach(e => {
-                if (getComputedStyle(e.parentElement).display != "none" && parseInt(e.value).toString() != 'NaN') {
+                if (getComputedStyle(e.parentElement).display != "none" && e.value != '') {
                     let mark = parseInt(e.value), min = parseInt(e.getAttribute('min')), max = parseInt(e.getAttribute('max'))
                     if (mark < min) mark = min
                     if (mark > max) mark = max
                     sendData.marks.push({ studentID: parseInt(e.getAttribute('studentID')), mark: mark })
+                } else invalid = true
+            })
+            if (!sendData.name || !sendData.subjectID || !sendData.periodID || !sendData.marks.length > 0 || invalid === true) return qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
+            fetch('/teachers/marks/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sendData) }).then(res => res.json()
+                .then(() => qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
+                .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
+        }
+        submitEdit = (elem, markID) => {
+            let invalid = false
+            let sendData = {
+                name: elem.querySelector('.mark-name').value,
+                subjectID: parseInt(elem.querySelector('.subject-chooser').value),
+                periodID: parseInt(elem.querySelector('.period-chooser').value),
+                marks: [],
+                markID: markID
+            }
+            elem.querySelectorAll('li.student:not(.new-student)').forEach(studentLi => {
+                if (studentLi.style.display != 'none') {
+                    sendData.marks.push({
+                        studentID: parseInt(studentLi.getAttribute('studentID')),
+                        mark: parseInt(studentLi.querySelector('input[type=number]').value)
+                    })
+                    if (!studentLi.querySelector('input[type=number]').value) invalid = true
                 }
             })
-            if (sendData.name && sendData.subjectID && sendData.marks.length > 0) {
-                fetch('/teachers/marks/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sendData) }) .then(res => res.json()
-                    .then(res => qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
-                    .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
-            } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
+            if (!sendData.name || !sendData.subjectID || !sendData.periodID || sendData.marks.length == 0 || invalid === true) return qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+            fetch('/teachers/marks/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sendData) }).then(res => res.json()
+                .then(() => qAlert({ message: "[{(success.markEdit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
+                .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
         }
-        /*submitEdit = elem => {
-
-        }*/
     }
 }
-
 function minMaxInput(input) {
     let value = parseInt(input.value)
     let min = parseInt(input.getAttribute('min'))
