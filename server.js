@@ -18,10 +18,14 @@ app.use(require('express-fileupload')())
 app.use(require('./middleware'))
 
 let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
-folders.forEach(f => { if (!existsSync(`${f}/`)) mkdirSync(f) })
+folders.forEach(f => {
+	if (!existsSync(`${f}/`)) mkdirSync(f)
+})
 
 let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
-files.forEach(f => { if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([])) })
+files.forEach(f => {
+	if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([]))
+})
 
 
 
@@ -558,8 +562,6 @@ app.post('/teachers/marks/edit', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let marks = importJSON('marks.json')
 	req.body.ownerID = req.userInfo.userID
-	console.log(req.body)
-	console.log(marks.findIndex(e => e.markID == req.body.markID))
 	marks[marks.findIndex(e => e.markID == req.body.markID)] = req.body
 	saveJSON('marks.json', marks)
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -765,9 +767,6 @@ app.post('/teachers/tests/edit', (req, res) => {
 app.post('/teachers/tests/delete', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
 	let tests = importJSON('tests.json')
-	console.log(tests.find(e => e.testID == req.body.ID))
-	console.log(req.userInfo.userID)
-	console.log(req.body)
 	if (tests.find(e => e.testID == req.body.ID).ownerID == req.userInfo.userID) {
 		tests.splice(tests.findIndex(e => e.testID == req.body.ID), 1)
 		saveJSON('tests.json', tests)
@@ -808,11 +807,23 @@ app.post('/teachers/tests/listSubmissions', (req, res) => {
 	let submissions = []
 	let users = importJSON('users.json')
 	readdirSync('test-progress').forEach(student => {
-		if (readdirSync(`test-progress/${student}`).includes(`${req.body.testID}.json`) &&
-		importJSON(`test-progress/${student}/${req.body.testID}.json`).finished)
+		if (readdirSync(`test-progress/${student}`).includes(`${req.body.testID}.json`) && importJSON(`test-progress/${student}/${req.body.testID}.json`).finished)
 		submissions.push({ student: users.find(e => e.userID == parseInt(student)), mark: calcMark(parseInt(req.body.testID), parseInt(student)), start: importJSON(`test-progress/${student}/${req.body.testID}.json`).start, end: importJSON(`test-progress/${student}/${req.body.testID}.json`).end })
 	})
 	res.respond(JSON.stringify(submissions), '', 'application/json', 200)
+})
+
+app.post('/teachers/birthdayList', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let users = importJSON('users.json')
+	let birthdays = []
+	users.forEach(user => {
+		if (user.birthdate && user.birthdate.day == now.getDate() && user.birthdate.month == now.getMonth()) {
+			delete user.password
+			birthdays.push(user)
+		}
+	})
+	res.respond(JSON.stringify(birthdays), '', 'application/json', 200)
 })
 
 // Misc
@@ -964,13 +975,16 @@ app.post('/misc/schedule/get', (req, res) => {
 })
 
 function dailyTasks() {
+	console.log('[Kuzi|Daily Tasks] Running...')
 	let now = new Date()
 	let users = importJSON('users.json')
 	users.forEach(user => {
 		if (user.birthdate && user.birthdate.day == now.getDate() && user.birthdate.month == now.getMonth()) {
+			console.log(`[Kuzi|Daily Tasks] Today is ${user.prettyName}'s birthday!`)
 			createNotification({ message: '[{(birthdayMessage)}]', description: '[{(birthdayDescription)}]', userID: user.userID })
 		}
 	})
+	console.log('[Kuzi|Daily Tasks] Done!')
 	scheduleDailyTasks()
 }
 function scheduleDailyTasks() {

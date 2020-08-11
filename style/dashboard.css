@@ -1,6 +1,7 @@
 html, body, main, #root, .dash-container { height: 100%; }
-body, main { display: flex; flex-direction: column; }
+body, main, #root { display: flex; flex-direction: column; }
 .motivation-dash-block { margin-bottom: 20px; }
+.dash-block.motivation-dash-block .dash-block-title .title { white-space: normal !important; }
 .dash-container { display: grid; gap: 20px; }
 body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
 .dash-block {
@@ -21,16 +22,16 @@ body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
 .dash-block-content { margin: 5px 0 0 0; flex: 1 1 auto; }
 #markGraph:not([src]) { display: none; }
 #markGraph[src] { width: 100%; height: 100%; margin: 0; padding: 0; border: none; min-height: 225px; }
-.notification { white-space: nowrap; display: flex; }
-.notification p { white-space: normal; }
-.day:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 15px; }
+.cumpleañero, .notification { white-space: nowrap; display: flex; }
+.cumpleañero p, .notification p { white-space: normal; }
+.cumpleañero:not(:nth-last-child(1)), .day:not(:nth-last-child(1)), .notification:not(:nth-last-child(1)) { margin-bottom: 20px; }
 .day h4 { margin: 0 0 2.5px 0; }
 .event a * { color: var(--bg-alt) !important; }
-.event > div > *, .notification > div > * { display: inline-block; }
-.event p, .notification p { margin: 0; }
+.cumpleañero *, .notification > div > * { display: inline-block; }
+.cumpleañero *, .event p, .notification p { margin: 0; }
 .event .details, .notification .description { font-size: 0.9em; }
-.event i:nth-child(1), .notification i:nth-child(1) { float: left; margin-right: 12px; position: relative; }
-.event i { top: 3px; }
+.cumpleañero i:nth-child(1), .event i:nth-child(1), .notification i:nth-child(1) { float: left; margin-right: 12px; position: relative; }
+.cumpleañero i, .event i { top: 3px; }
 .notification i { top: 5px; }
 .delete-notification { margin: auto 0 auto auto; }
 .notification .clickable { display: inline-flex; }
@@ -46,6 +47,7 @@ body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
 .day h4 { font-size: 1.1em; }
 body.student .birthday-dash-block, body.parent .birthday-dash-block,
 body.teacher .marks-dash-block { display: none }
+#new-event-modal input[type=text] { min-width: 300px; }
 #new-event-modal textarea {
     display: block;
     width: 100% !important; resize: vertical;

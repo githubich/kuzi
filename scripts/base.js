@@ -56,7 +56,7 @@ window.addEventListener('load', () => {
             if (typeof load == "function") load()
             localStorage.setItem('last-user-info', JSON.stringify(userInfo))
         })
-        .catch(e => console.log(e))
+        .catch(e => console.error(e))
 })
 window.addEventListener('click', e => {
     if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()

@@ -125,7 +125,6 @@ function load() {
     })
         .then(progress => progress.json())
         .then(progress => {
-            console.log(progress)
             if (progress.message == 'not started') {
                 setPageTitle("clipboard-check", "[{(testInfo)}]")
                 fetch('/students/tests/getMinimal', {
