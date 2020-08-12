@@ -76,9 +76,11 @@ function updateEvents() {
         })
         .catch(e => qError({ message: e, goBack: false }))
 }
-function load() {
+window.addEventListener('load', () => {
     setPageTitle("chart-line", "[{(dashboard)}]")
     setActiveTab(0)
+})
+window.addEventListener('ready', () => {
     if (getComputedStyle($('.motivation-dash-block')).display != "none") {
         fetch('https://gist.githubusercontent.com/ezarcel/5749f919b44cc4291d59bcc8e4169147/raw/b7e0b2fb4ea9c466271b562668d7edc4aa692627/enterpreneur-quotes.json').then(res => res.json())
             .then(res => {
@@ -99,7 +101,7 @@ function load() {
     }
     updateNotifications()
     updateEvents()
-}
+})
 window.addEventListener('toggle-modal-new-event', () => {
     if ($('#new-event-modal').style.display == "none" || userInfo.role != "teacher") return
     fetch('/teachers/getInfo', { method: "POST" }).then(res => res.json())

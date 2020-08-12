@@ -1,7 +1,3 @@
-window.addEventListener('load', () => {
-    if ($parseURLArgs().studentID == undefined || $parseURLArgs().testID == undefined) history.back()
-    setActiveTab(2, true)
-})
 function markOpenAnswer(questionI, correct) {
     $$(`.question:nth-child(${questionI + 1}) button`).forEach(el => el.remove())
 
@@ -16,7 +12,11 @@ function markOpenAnswer(questionI, correct) {
         })
     })
 }
-function load() {
+window.addEventListener('load', () => {
+    if ($parseURLArgs().studentID == undefined || $parseURLArgs().testID == undefined) history.back()
+    setActiveTab(2, true)
+})
+window.addEventListener('ready', () => {
     setPageTitle("clipboard-check", "[{(loading)}]")
     fetch('/teachers/tests/getAnswers', {
         method: 'POST',
@@ -81,4 +81,4 @@ function load() {
             })
         })
         .catch(e => qError({ message: e, goBack: true }))
-}
+})

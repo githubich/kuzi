@@ -74,7 +74,8 @@ function createSchedule() {
         k++
     })
 }
-function load() {
+window.addEventListener('load', setPageTitle("clock", "[{(mySchedule)}]"))
+window.addEventListener('ready', () => {
     let options = { method: 'POST' }
     if (userInfo.role == "parent") options = { ...options, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
     $('#schedule-container').addEventListener('scroll', createSchedule)
@@ -84,7 +85,5 @@ function load() {
             createSchedule()
         })
         .catch(e => qError({ message: e, goBack: true }))
-}
-window.addEventListener('load', () => { setPageTitle("clock", "[{(mySchedule)}]") })
-window.addEventListener('click', createSchedule)
+})
 window.addEventListener('resize', createSchedule)

@@ -1,4 +1,9 @@
 random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+setPageTitle = (icon, title) => $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}`
+function setActiveTab(index, preserveHref) {
+    $$('.header-action')[index].classList.add('selected')
+    if (!preserveHref) $$('.header-action a')[index].removeAttribute('href')
+}
 function updateUserInfo(info, fromCache) {
     $().classList.remove('student', 'teacher', 'parent')
     $().classList.add(info.role)
@@ -28,51 +33,6 @@ function updateUserInfo(info, fromCache) {
         }
     }
 }
-window.addEventListener('load', () => {
-    if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')), true)
-    if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
-    else $('#theme + label').innerText = '[{(lightMode)}]'
-    $('#theme').checked = localStorage.getItem('theme') == 'dark'
-    $('#theme').addEventListener('click', e => {
-        if ($('#theme').checked) {
-            localStorage.setItem('theme', 'dark')
-            $('#theme + label').innerText = '[{(darkMode)}]'
-        } else {
-            localStorage.setItem('theme', 'light')
-            $('#theme + label').innerText = '[{(lightMode)}]'
-        }
-        document.documentElement.setAttribute('theme', localStorage.getItem('theme'))
-    })
-    headerDropdown = $('#dropdown')
-    headerDropdownArrow = $("#dropdown-arrow")
-    headerDropdownVisible = false
-    more = $("#more")
-    moreVisible = false
-    fetch('/user/getInfo', { method: 'POST' }).then(res => res.json())
-        .then(res => {
-            userInfo = res.userInfo
-            if (!userInfo.userID) location = '/'
-            updateUserInfo(userInfo, false)
-            if (typeof load == "function") load()
-            localStorage.setItem('last-user-info', JSON.stringify(userInfo))
-        })
-        .catch(e => qError({ message: e, goBack: true }))
-})
-window.addEventListener('click', e => {
-    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
-    if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
-})
-window.addEventListener('keydown', e => {
-    if (e.key == "Enter") {
-        e.preventDefault()
-        if (document.activeElement == $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
-        else if (document.activeElement == $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
-        else if (document.activeElement == $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
-    } else if (e.key == "Escape") {
-        e.preventDefault()
-        $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
-    }
-})
 function toggleDropdown() {
     if (!$("#dropdown.hiding") && !$("#dropdown.showing")) {
         headerDropdown.classList.remove("shown","hidden")
@@ -105,11 +65,6 @@ function toggleMore() {
             setTimeout(() => { more.classList.remove("showing"); more.classList.add("shown") }, 200)
         }
     }
-}
-setPageTitle = (icon, title) => $('main .main-title').innerHTML = `<i class="fad fa-${icon}"></i>${title}`
-function setActiveTab(index, preserveHref) {
-    $$('.header-action')[index].classList.add('selected')
-    if (!preserveHref) $$('.header-action a')[index].removeAttribute('href')
 }
 function changePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
@@ -176,3 +131,48 @@ function createElement({ type, classes, id, innerContent, parameters }) {
     if (parameters) Object.keys(parameters).forEach(parameter => element.setAttribute(parameter, parameters[parameter]))
     return element
 }
+window.addEventListener('load', () => {
+    if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')), true)
+    if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
+    else $('#theme + label').innerText = '[{(lightMode)}]'
+    $('#theme').checked = localStorage.getItem('theme') == 'dark'
+    $('#theme').addEventListener('click', e => {
+        if ($('#theme').checked) {
+            localStorage.setItem('theme', 'dark')
+            $('#theme + label').innerText = '[{(darkMode)}]'
+        } else {
+            localStorage.setItem('theme', 'light')
+            $('#theme + label').innerText = '[{(lightMode)}]'
+        }
+        document.documentElement.setAttribute('theme', localStorage.getItem('theme'))
+    })
+    headerDropdown = $('#dropdown')
+    headerDropdownArrow = $("#dropdown-arrow")
+    headerDropdownVisible = false
+    more = $("#more")
+    moreVisible = false
+    fetch('/user/getInfo', { method: 'POST' }).then(res => res.json())
+        .then(res => {
+            userInfo = res.userInfo
+            if (!userInfo.userID) location = '/'
+            updateUserInfo(userInfo, false)
+            window.dispatchEvent(new Event('ready'))
+            localStorage.setItem('last-user-info', JSON.stringify(userInfo))
+        })
+        .catch(e => qError({ message: e, goBack: true }))
+})
+window.addEventListener('click', e => {
+    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
+    if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
+})
+window.addEventListener('keydown', e => {
+    if (e.key == "Enter") {
+        e.preventDefault()
+        if (document.activeElement == $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
+        else if (document.activeElement == $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
+        else if (document.activeElement == $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
+    } else if (e.key == "Escape") {
+        e.preventDefault()
+        $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
+    }
+})

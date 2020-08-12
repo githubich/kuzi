@@ -1,7 +1,3 @@
-window.addEventListener('load', () => {
-    setPageTitle("clipboard-check", `[{(tests)}]`)
-    setActiveTab(2)
-})
 function deleteTest(element, ID) {
     qAlert({ message: '[{(areYouSure)}]', mode: 'question', buttons: { ok: { text: '[{(yes)}]' }, cancel: { text: '[{(no)}]' } } })
         .then(a => {
@@ -37,7 +33,11 @@ function testSort(a, b) {
 
     return 0
 }
-function load() {
+window.addEventListener('load', () => {
+    setPageTitle("clipboard-check", `[{(tests)}]`)
+    setActiveTab(2)
+})
+window.addEventListener('ready', () => {
     fetch(`${userInfo.role}s/tests/list`, { method: 'POST' }).then(res => res.json())
         .then(res => {
             if (userInfo.role == 'student') res.sort(testSort)
@@ -83,4 +83,4 @@ function load() {
             if ($('#test-container').children.length == 0) $('#test-container').innerHTML = getTemplate('empty-page')
         })
         .catch(e => qError({ message: e, goBack: true }))
-}
+})

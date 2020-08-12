@@ -1,4 +1,27 @@
-function load() {
+function uploadFile() {
+    let maxSize = parseInt($('.upload-input').getAttribute('max-size'))
+    if ($('.upload-input').files[0] == null) return qAlert({ message: "[{(error.noFileSelected)}]", mode: "error", buttons: { cancel: { invisible: true } } })
+    if (!$('.class input:checked')) return qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
+    let fileSize = $('.upload-input').files[0].size
+    if (fileSize > maxSize || fileSize == 0) return
+    let data = new FormData()
+    data.append('file', $('.upload-input').files[0])
+    data.append('data', JSON.stringify({
+        classID: parseInt($('.class input:checked').value),
+        subjectID: parseInt($('#subject-chooser').value)
+    }))
+    fetch('/teachers/resources/upload', { method: 'POST', body: data }).then(res => res.json())
+        .then(res => {
+            if (res.message == 'ok') qAlert({ message: '[{(success.resources.upload)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => window.location.reload())
+            else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+        })
+        .catch(e => qError({ message: e, goBack: true }))
+}
+window.addEventListener('load', () => {
+    setPageTitle("folders", "[{(resources)}]")
+    setActiveTab(3)
+})
+window.addEventListener('ready', () => {
     fetch(`/${userInfo.role}s/resources/get`, { method: 'POST' }).then(res => res.json())
         .then(res => {
             if (res.length != 0) $('#files').innerHTML = ''
@@ -86,29 +109,6 @@ function load() {
             if (userInfo.role != "teacher") $$('.teachers-only').forEach(e => e.remove())
         })
         .catch(e => console.error(e))
-}
-function uploadFile() {
-    let maxSize = parseInt($('.upload-input').getAttribute('max-size'))
-    if ($('.upload-input').files[0] == null) return qAlert({ message: "[{(error.noFileSelected)}]", mode: "error", buttons: { cancel: { invisible: true } } })
-    if (!$('.class input:checked')) return qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
-    let fileSize = $('.upload-input').files[0].size
-    if (fileSize > maxSize || fileSize == 0) return
-    let data = new FormData()
-    data.append('file', $('.upload-input').files[0])
-    data.append('data', JSON.stringify({
-        classID: parseInt($('.class input:checked').value),
-        subjectID: parseInt($('#subject-chooser').value)
-    }))
-    fetch('/teachers/resources/upload', { method: 'POST', body: data }).then(res => res.json())
-        .then(res => {
-            if (res.message == 'ok') qAlert({ message: '[{(success.resources.upload)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => window.location.reload())
-            else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
-        })
-        .catch(e => qError({ message: e, goBack: true }))
-}
-window.addEventListener('load', () => {
-    setPageTitle("folders", "[{(resources)}]")
-    setActiveTab(3)
 })
 window.addEventListener('toggle-modal-upload', () => {
     if ($('#upload-modal').style.display == "none") return

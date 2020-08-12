@@ -3,7 +3,7 @@ window.addEventListener('load', () => {
     setPageTitle("clipboard-check", `[{(loading)}]`)
     setActiveTab(2, true)
 })
-function load() {
+window.addEventListener('ready', () => {
     fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) }).then(res => res.json())
         .then(test => {
             setPageTitle("clipboard-check", `[{(testSubmissions)}] (${test.name})`)
@@ -42,4 +42,4 @@ function load() {
                 .catch(e => qError({ message: e, goBack: true }))
         })
         .catch(e => qError({ message: e, goBack: true }))
-}
+})

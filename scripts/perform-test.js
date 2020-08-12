@@ -1,7 +1,3 @@
-window.addEventListener('load', () => {
-    if ($parseURLArgs().ID == undefined) history.back()
-    setActiveTab(2, true)
-})
 function loadTest(progress) {
     setPageTitle("clipboard-check", "[{(loading)}]")
     $('#test-info').innerHTML = ''
@@ -116,7 +112,11 @@ function save(final) {
             if (final && res.message == 'ok') qAlert({ message: '[{(success.tests.submit)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(a => history.back())
         })
 }
-function load() {
+window.addEventListener('load', () => {
+    if ($parseURLArgs().ID == undefined) history.back()
+    setActiveTab(2, true)
+})
+window.addEventListener('ready', () => {
     fetch('/students/tests/getProgress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -152,5 +152,5 @@ function load() {
                     .catch(e => qError({ message: e, goBack: true }))
             } else loadTest(progress)
         })
-        .catch(e => history.back())
-}
+        .catch(e => qError({ message: e, goBack: true }))
+})

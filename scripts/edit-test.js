@@ -295,11 +295,13 @@ function moveDown(event) {
     let q = event.path[2]
     if (q.nextElementSibling) q.nextElementSibling.querySelector('.move-question-up').click()
 }
-function load() {
-    if (userInfo.role != 'teacher') return qAlert({ message: "[{(error.notAllowed)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
-    if ($parseURLArgs().ID == undefined) return qAlert({ message: "[{(error.wrongID)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
+window.addEventListener('load', () => {
     setPageTitle("clipboard-check", `[{(loading)}]`)
     setActiveTab(2, true)
+})
+window.addEventListener('ready', () => {
+    if (userInfo.role != 'teacher') return qAlert({ message: "[{(error.notAllowed)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
+    if ($parseURLArgs().ID == undefined) return qAlert({ message: "[{(error.wrongID)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
     let footer = document.createElement('footer')
     document.body.appendChild(footer)
     footer.classList.add('blurry-bg')
@@ -339,7 +341,7 @@ function load() {
             autoSave()
         })
         .catch(e => qError({ message: e, goBack: true }))
-}
+})
 window.addEventListener('online', save)
 window.addEventListener('toggle-modal-edit-test', () => {
     if ($('#edit-test-modal').style.display == 'none') return
