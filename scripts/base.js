@@ -1,3 +1,4 @@
+random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 function updateUserInfo(info, fromCache) {
     $().classList.remove('student', 'teacher', 'parent')
     $().classList.add(info.role)
@@ -47,8 +48,7 @@ window.addEventListener('load', () => {
     headerDropdownVisible = false
     more = $("#more")
     moreVisible = false
-    fetch('/user/getInfo', { method: 'POST' })
-        .then(res => res.json())
+    fetch('/user/getInfo', { method: 'POST' }).then(res => res.json())
         .then(res => {
             userInfo = res.userInfo
             if (!userInfo.userID) location = '/'
@@ -56,7 +56,7 @@ window.addEventListener('load', () => {
             if (typeof load == "function") load()
             localStorage.setItem('last-user-info', JSON.stringify(userInfo))
         })
-        .catch(e => console.error(e))
+        .catch(e => qError({ message: e, goBack: true }))
 })
 window.addEventListener('click', e => {
     if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
@@ -68,7 +68,6 @@ window.addEventListener('keydown', e => {
         if (document.activeElement == $('.password-modal--input.password-modal--oldPassword')) $('.password-modal--input.password-modal--newPassword').focus()
         else if (document.activeElement == $('.password-modal--input.password-modal--newPassword')) $('.password-modal--input.password-modal--newPassword2').focus()
         else if (document.activeElement == $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
-        return false
     } else if (e.key == "Escape") {
         e.preventDefault()
         $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
@@ -114,17 +113,14 @@ function setActiveTab(index, preserveHref) {
 }
 function changePhoto() {
     let maxSize = parseInt($('.picture-input').getAttribute('max-size'))
-    if ($('.picture-input').files[0] == null) return qAlert({ message: "[{(noFileSelected)}]", mode: "error", buttons: { cancel: { invisible: true } } })
+    if ($('.picture-input').files[0] == null) return qError({ message: "[{(noFileSelected)}]"})
     let fileSize = $('.picture-input').files[0].size
     if (fileSize > maxSize || fileSize == 0) return
     let data = new FormData()
     data.append('photo', $('.picture-input').files[0])
-    fetch('/user/changePicture', { method: 'POST', body: data })
-        .then(res => res.json())
-        .then(res => {
-            if (res.message == 'ok') qAlert({ message: '[{(success.photoChange)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => location.reload())
-            else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
-        })
+    fetch('/user/changePicture', { method: 'POST', body: data }).then(res => res.json())
+        .then(res => qSuccess({ message: '[{(success.photoChange)}]'}).then(() => location.reload()))
+        .catch(e => qError({ message: e }))
 }
 function toggleModal(modalName) {
     let modal = $(`#${modalName}-modal`)
@@ -136,28 +132,24 @@ function verifyAndChangePassword() {
     let new1 = $('.password-modal--newPassword').value
     let new2 = $('.password-modal--newPassword2').value
 
-    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qAlert({ message: "[{(error.invalidInput)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
-    if (old == new1) return qAlert({ message: "[{(error.oldPassword=newPassword)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
-    if (new1 != new2) return qAlert({ message: "[{(error.newPassword!=newPasswordConfirmation)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
-    if (new1.length < 6) return qAlert({ message: "[{(error.newPasswordLength)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
+    if (old == "" || !old || old == null || old == undefined || new1 == "" || !new1 || new1 == null || new1 == undefined || new2 == "" || !new2 || new2 == null || new2 == undefined) return qError({ message: "[{(error.invalidInput)}]" })
+    if (old == new1) return qError({ message: "[{(error.oldPassword=newPassword)}]" })
+    if (new1 != new2) return qError({ message: "[{(error.newPassword!=newPasswordConfirmation)}]" })
+    if (new1.length < 6) return qError({ message: "[{(error.newPasswordLength)}]" })
 
-    fetch('/user/changePassword',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userID: userInfo.userID,
-                oldPassword: $('.password-modal--input.password-modal--oldPassword').value,
-                newPassword: $('.password-modal--input.password-modal--newPassword').value
-            })
-        })
-        .then(res => res.json())
+    fetch('/user/changePassword',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userID: userInfo.userID,
+            oldPassword: $('.password-modal--input.password-modal--oldPassword').value,
+            newPassword: $('.password-modal--input.password-modal--newPassword').value
+        })}).then(res => res.json())
         .then(res => {
-            if (res.message == 'ok') { qAlert({ message: "[{(success.passwordUpdate)}]", mode: "ok" , buttons: { cancel: { invisible: true } } }); toggleModal('password') }
-            else qAlert({ message: "[{(error.oldPasswordNotCorrect)}]", mode: "error" , buttons: { cancel: { invisible: true } } })
+            if (res.message == 'ok') { toggleModal('password'); qSuccess({ message: "[{(success.passwordUpdate)}]" }) }
+            else qError({ message: "[{(error.oldPasswordNotCorrect)}]" })
         })
+        .catch(e => qError({ message: e }))
 }
 function updateChild(ID) {
     document.cookie = `selectedChild=${ID}`

@@ -22,8 +22,7 @@ function load() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ studentID: $parseURLArgs().studentID, testID: $parseURLArgs().testID })
-    })
-        .then(res => res.json())
+    }).then(res => res.json())
         .then(test => {
             setPageTitle("clipboard-check", `[{(testAnswers)}] (${test.name}, ${test.student.prettyName})`)
             let qContainer = $('#question-container')
@@ -81,4 +80,5 @@ function load() {
                 i++
             })
         })
+        .catch(e => qError({ message: e, goBack: true }))
 }

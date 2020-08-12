@@ -1,4 +1,3 @@
-random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 function sortEventsBlocksByDate(a, b) {
     let aDate = (new Date(`${a.date.year}-${a.date.month}-${a.date.day}`)).getTime()
     let bDate = (new Date(`${b.date.year}-${b.date.month}-${b.date.day}`)).getTime()
@@ -9,8 +8,7 @@ function sortEventsBlocksByDate(a, b) {
 function updateNotifications() {
     let notifications = $('.notifications-dash-block .dash-block-content')
     notifications.innerHTML = `<p style="margin: 0;" align="center">[{(loading)}]</p>`
-    fetch('/misc/notifications/get', { method: 'POST' })
-        .then(res => res.json())
+    fetch('/misc/notifications/get', { method: 'POST' }).then(res => res.json())
         .then(res => {
             notifications.innerHTML = ''
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
@@ -37,6 +35,7 @@ function updateNotifications() {
                 `
             })
         })
+        .catch(e => qError({ message: e, goBack: false }))
 }
 function discardNotification(notificationID) {
     fetch('/misc/notifications/discard', {
@@ -45,11 +44,11 @@ function discardNotification(notificationID) {
         body: JSON.stringify({ notificationID: notificationID })
     })
         .then(() => updateNotifications())
+        .catch(e => qError({ message: e, goBack: false }))
 }
 function updateEvents() {
     let events = $('.events-dash-block .dash-block-content')
-    fetch('/misc/events/get', { method: 'POST' })
-        .then(res => res.json())
+    fetch('/misc/events/get', { method: 'POST' }).then(res => res.json())
         .then(res => {
             res.sort(sortEventsBlocksByDate)
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
@@ -75,6 +74,7 @@ function updateEvents() {
                 })
             })
         })
+        .catch(e => qError({ message: e, goBack: false }))
 }
 function load() {
     setPageTitle("chart-line", "[{(dashboard)}]")
@@ -85,6 +85,7 @@ function load() {
                 let quoteIndex = random(0, res.length - 1)
                 $(".motivation-dash-block .title").innerText = `${res[quoteIndex].a} ~ ${res[quoteIndex].b}`
             })
+            .catch(e => qError({ message: e, goBack: false }))
     }
     if (userInfo.role == 'teacher') {
         fetch('/teachers/birthdayList', { method: 'POST' }).then(res => res.json())
@@ -94,27 +95,25 @@ function load() {
                     $('.birthday-dash-block .dash-block-content').innerHTML += getTemplate('cumpleañero', { name: cumpleañero.prettyName })
                 })
             })
+            .catch(e => qError({ message: e, goBack: true }))
     }
     updateNotifications()
     updateEvents()
 }
 window.addEventListener('toggle-modal-new-event', () => {
-    if ($('#new-event-modal').style.display == "none") return
-    if (userInfo.role == "teacher") {
-        fetch('/teachers/getInfo', { method: "POST" })
-            .then(res => res.json()
-            .then(res => {
-                data = res
-                let myClasses = $('#my-classes')
-                myClasses.innerHTML = ""
-                data.forEach(clas => {
-                    let clasE = document.createElement('li')
-                    myClasses.appendChild(clasE)
-                    clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
-                })
-            }))
-            .catch(e => console.error(e))
-    }
+    if ($('#new-event-modal').style.display == "none" || userInfo.role != "teacher") return
+    fetch('/teachers/getInfo', { method: "POST" }).then(res => res.json())
+        .then(res => {
+            data = res
+            let myClasses = $('#my-classes')
+            myClasses.innerHTML = ""
+            data.forEach(clas => {
+                let clasE = document.createElement('li')
+                myClasses.appendChild(clasE)
+                clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
+            })
+        })
+        .catch(e => qError({ message: e, goBack: true }))
     update = updateID => {
         if (!updateID) return
         updateID = parseInt(updateID)
@@ -156,7 +155,7 @@ window.addEventListener('toggle-modal-new-event', () => {
                     if (res.message == 'ok') qAlert({ message: "[{(success.eventSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) toggleModal('new-event'); updateEvents() })
                     if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
                 })
-                .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })})
+                .catch(e => qError({ message: e, goBack: true }))
         } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
     }
 })

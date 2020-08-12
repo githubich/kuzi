@@ -8,8 +8,7 @@ function load() {
         if (location.toString().includes("?")) URLparams = $parseURLArgs()
         let options = { method: 'POST' }
         if (userInfo.role == parent) options = { ...options, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
-        fetch(`/${userInfo.role}s/marks/get`, options)
-            .then(res => res.json())
+        fetch(`/${userInfo.role}s/marks/get`, options).then(res => res.json())
             .then(periods => {
                 periods.forEach(period => {
                     if (period.subjects.length == 0) return;
@@ -54,6 +53,7 @@ function load() {
                     if ($('.highlighted').getBoundingClientRect().top < 65) window.scrollBy(0, $('.highlighted').getBoundingClientRect().top - 65)
                 }
             })
+            .catch(e => qError({ message: e, goBack: true }))
     } else {
         $('#manager').removeAttribute('style'); $('#period-container').remove()
         myStudents = {}
@@ -94,6 +94,7 @@ function load() {
                     clasE.outerHTML = getTemplate('class', { id: clas.classID, name: clas.className })
                 })
             })
+            .catch(e => qError({ message: e, goBack: true }))
         fetch('/teachers/marks/list', { method: 'POST' }).then(res => res.json())
             .then(res => {
                 res.forEach(mark => {
@@ -122,6 +123,7 @@ function load() {
                         })
                     })
             })
+            .catch(e => qError({ message: e, goBack: true }))
         fetch('/misc/periods/list', { method: "POST" }).then(res => res.json())
             .then(res => {
                 $$('.period-chooser').forEach(periodChooser => {
@@ -133,6 +135,7 @@ function load() {
                     })
                 })
             })
+            .catch(e => qError({ message: e, goBack: true }))
         update = updateID => {
             if (!updateID) return
             updateID = parseInt(updateID)
@@ -168,7 +171,7 @@ function load() {
             if (!sendData.name || !sendData.subjectID || !sendData.periodID || !sendData.marks.length > 0 || invalid === true) return qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
             fetch('/teachers/marks/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sendData) }).then(res => res.json()
                 .then(() => qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
-                .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
+                .catch(e => qError({ message: e, goBack: false }))
         }
         submitEdit = (elem, markID) => {
             let invalid = false
@@ -191,7 +194,7 @@ function load() {
             if (!sendData.name || !sendData.subjectID || !sendData.periodID || sendData.marks.length == 0 || invalid === true) return qAlert({ message: '[{(error.invalidInput)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
             fetch('/teachers/marks/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sendData) }).then(res => res.json()
                 .then(() => qAlert({ message: "[{(success.markEdit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
-                .catch(() => { qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { cancel: { invisible: true } } }) })
+                .catch(e => qError({ message: e, goBack: false }))
         }
     }
 }

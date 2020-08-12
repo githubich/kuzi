@@ -910,6 +910,7 @@ app.post('/misc/events/get', (req, res) => {
 })
 app.post('/misc/events/details', (req, res) => {
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
+	if (!event) res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
 	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
 	delete event.owner.password
 	if (event.visibleTo) {

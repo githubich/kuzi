@@ -9,8 +9,7 @@ function loadTest(progress) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID: $parseURLArgs().ID })
-    })
-        .then(res => res.json())
+    }).then(res => res.json())
         .then(test => {
             setPageTitle("clipboard-check", `[{(performTest)}] (${test.name})`)
             let qContainer = $('#question-container')
@@ -74,7 +73,7 @@ function loadTest(progress) {
             submitBtn.outerHTML = `<button id="submit" onclick="save(true)"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>`
             $$('input').forEach(input => input.addEventListener('input', () => { save(false)} ))
         })
-        .catch(e => history.back())
+        .catch(e => qError({ message: e, goBack: true }))
 }
 function startTest() {
     fetch('/students/tests/start', {
@@ -82,6 +81,7 @@ function startTest() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID: $parseURLArgs().ID })
     })
+    .catch(e => qError({ message: e, goBack: true }))
     loadTest(false)
 }
 function save(final) {
@@ -111,8 +111,7 @@ function save(final) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ progress: answers, finish: final, ID: $parseURLArgs().ID })
-    })
-        .then(res => res.json())
+    }).then(res => res.json())
         .then(res => {
             if (final && res.message == 'ok') qAlert({ message: '[{(success.tests.submit)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(a => history.back())
         })
@@ -122,8 +121,7 @@ function load() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID: $parseURLArgs().ID })
-    })
-        .then(progress => progress.json())
+    }).then(res => res.json())
         .then(progress => {
             if (progress.message == 'not started') {
                 setPageTitle("clipboard-check", "[{(testInfo)}]")
@@ -131,8 +129,7 @@ function load() {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ID: $parseURLArgs().ID })
-                })
-                    .then(test => test.json())
+                }).then(res => res.json())
                     .then(test => {
                         let startHours = test.startTime.hours
                         let startMinutes = test.startTime.minutes
@@ -152,6 +149,7 @@ function load() {
                             <button id="start-test" onclick="startTest()"><i class="fad fa-play"></i>[{(startTest)}]</button>
                         `
                     })
+                    .catch(e => qError({ message: e, goBack: true }))
             } else loadTest(progress)
         })
         .catch(e => history.back())

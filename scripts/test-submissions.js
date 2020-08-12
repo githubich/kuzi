@@ -4,12 +4,10 @@ window.addEventListener('load', () => {
     setActiveTab(2, true)
 })
 function load() {
-    fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) })
-        .then(res => res.json())
+    fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) }).then(res => res.json())
         .then(test => {
             setPageTitle("clipboard-check", `[{(testSubmissions)}] (${test.name})`)
-            fetch('/teachers/tests/listSubmissions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ testID: $parseURLArgs().ID }) })
-                .then(res => res.json())
+            fetch('/teachers/tests/listSubmissions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ testID: $parseURLArgs().ID }) }).then(res => res.json())
                 .then(res => {
                     let table = $('#submissions')
                     res.forEach(submission => {
@@ -41,5 +39,7 @@ function load() {
                         `
                     })
                 })
+                .catch(e => qError({ message: e, goBack: true }))
         })
+        .catch(e => qError({ message: e, goBack: true }))
 }

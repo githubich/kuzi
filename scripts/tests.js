@@ -38,8 +38,7 @@ function testSort(a, b) {
     return 0
 }
 function load() {
-    fetch(`${userInfo.role}s/tests/list`, { method: 'POST' })
-        .then(res => res.json())
+    fetch(`${userInfo.role}s/tests/list`, { method: 'POST' }).then(res => res.json())
         .then(res => {
             if (userInfo.role == 'student') res.sort(testSort)
             let testContainer = $('#test-container')
@@ -83,4 +82,5 @@ function load() {
             })
             if ($('#test-container').children.length == 0) $('#test-container').innerHTML = getTemplate('empty-page')
         })
+        .catch(e => qError({ message: e, goBack: true }))
 }

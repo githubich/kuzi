@@ -78,12 +78,12 @@ function load() {
     let options = { method: 'POST' }
     if (userInfo.role == "parent") options = { ...options, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentID: $parseCookies().selectedChild }) }
     $('#schedule-container').addEventListener('scroll', createSchedule)
-    fetch('/misc/schedule/get', options)
-        .then(res => res.json())
+    fetch('/misc/schedule/get', options).then(res => res.json())
         .then(res => {
             r = res
             createSchedule()
         })
+        .catch(e => qError({ message: e, goBack: true }))
 }
 window.addEventListener('load', () => { setPageTitle("clock", "[{(mySchedule)}]") })
 window.addEventListener('click', createSchedule)

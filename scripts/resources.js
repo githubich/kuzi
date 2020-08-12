@@ -1,6 +1,5 @@
 function load() {
-    fetch(`/${userInfo.role}s/resources/get`, { method: 'POST' })
-        .then(res => res.json())
+    fetch(`/${userInfo.role}s/resources/get`, { method: 'POST' }).then(res => res.json())
         .then(res => {
             if (res.length != 0) $('#files').innerHTML = ''
             res.forEach(block => {
@@ -74,13 +73,12 @@ function load() {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ uuid: file.getAttribute('uuid') })
-                            })
-                                .then(res => res.json())
+                            }).then(res => res.json())
                                 .then(res => {
                                     if (res.message == 'ok') {
                                         qAlert({ message: '[{(success.resources.delete)}]', mode: 'success', buttons: { cancel: { invisible: true } } })
                                         location.reload()
-                                    } else qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
+                                    } else qError({ goBack: false })
                                 })
                         })
                 })
@@ -101,12 +99,12 @@ function uploadFile() {
         classID: parseInt($('.class input:checked').value),
         subjectID: parseInt($('#subject-chooser').value)
     }))
-    fetch('/teachers/resources/upload', { method: 'POST', body: data })
-        .then(res => res.json())
+    fetch('/teachers/resources/upload', { method: 'POST', body: data }).then(res => res.json())
         .then(res => {
             if (res.message == 'ok') qAlert({ message: '[{(success.resources.upload)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(() => window.location.reload())
             else return qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } })
         })
+        .catch(e => qError({ message: e, goBack: true }))
 }
 window.addEventListener('load', () => {
     setPageTitle("folders", "[{(resources)}]")
@@ -115,8 +113,7 @@ window.addEventListener('load', () => {
 window.addEventListener('toggle-modal-upload', () => {
     if ($('#upload-modal').style.display == "none") return
     if (userInfo.role == "teacher") {
-        fetch('/teachers/getInfo', { method: "POST" })
-            .then(res => res.json()
+        fetch('/teachers/getInfo', { method: "POST" }).then(res => res.json())
             .then(res => {
                 data = res
                 let myClasses = $('#my-classes')
@@ -126,8 +123,8 @@ window.addEventListener('toggle-modal-upload', () => {
                     myClasses.appendChild(clasE)
                     clasE.outerHTML = `<li class="class"><input type="radio" oninput="update(this.value)" id="class-${clas.classID}" name="class" value="${clas.classID}"><label for="class-${clas.classID}">${clas.className}</label></li>`
                 })
-            }))
-            .catch(e => console.error(e))
+            })
+            .catch(e => qError({ message: e, goBack: true }))
     }
     update = updateID => {
         if (!updateID) return

@@ -5,10 +5,9 @@ function load() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ eventID: parseInt($parseURLArgs().ID) })
-    })
-        .then(res => res.json())
+    }).then(res => res.json())
         .then(res => {
-            if (res.message == 'not allowed') qAlert({ message: "[{(error.notAllowed)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(() => history.back())
+            if (res.message == 'not allowed') qError({ message: "[{(error.notAllowed)}]", goBack: true })
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
             $('#view p.name').innerText += res.name
             $('#view p.description').innerText += res.description
@@ -23,7 +22,7 @@ function load() {
                 $('#edit input.date').value = `${res.date.year}-${res.date.month}-${res.date.day}`
             } else $$('.owner-only, #edit').forEach(e => e.remove())
         })
-        .catch(e => console.error(e))
+        .catch(e => qError({ message: "[{(error.notAllowed)}]", goBack: true }))
 }
 function deleteEvent() {
     qAlert({ message: '[{(areYouSure)}]', mode: 'question', buttons: { ok: { text: 'Yes' }, cancel: { text: 'No' } } }).then(ans => {
@@ -32,12 +31,11 @@ function deleteEvent() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ eventID: parseInt($parseURLArgs().ID) })
-            })
-                .then(res => res.json())
+            }).then(res => res.json())
                 .then(res => {
-                    if (res.message == 'ok') qAlert({ message: "[{(success.delete.event)}]", mode: 'success', buttons: { cancel: { invisible: false } } }).then(() => history.back())
-                    else if (res.message == 'not allowed') qAlert({ message: "[{(error.notAllowed)}]", mode: 'error', buttons: { cancel: { invisible: false } } })
-                    else if (res.message == 'unknown error') qAlert({ message: "[{(error.unknown.doNotRetry)}]", mode: 'error', buttons: { cancel: { invisible: false } } }).then(() => location.reload())
+                    if (res.message == 'ok') qSuccess({ message: "[{(success.event.delete)}]" }).then(() => history.back())
+                    else if (res.message == 'not allowed') qError({ message: "[{(error.notAllowed)}]", goBack: false })
+                    else qError({ message: "[{(error.unknown)}]", goBack: false }).then(() => location.reload())
                 })
         }
     })
@@ -52,11 +50,10 @@ function editEvent() {
             description: $('#edit textarea.description').value,
             date: $('#edit input.date').value
         })
-    })
-        .then(res => res.json())
+    }).then(res => res.json())
         .then(res => {
-            if (res.message == 'ok') qAlert({ message: "[{(success.edit.event)}]", mode: 'success', buttons: { cancel: { invisible: false } } }).then(() => history.back())
-            else if (res.message == 'not allowed') qAlert({ message: "[{(error.notAllowed)}]", mode: 'error', buttons: { cancel: { invisible: false } } })
-            else if (res.message == 'unknown error') qAlert({ message: "[{(error.unknown.doNotRetry)}]", mode: 'error', buttons: { cancel: { invisible: false } } }).then(() => location.reload())
+            if (res.message == 'ok') qSuccess({ message: "[{(success.event.edit)}]" }).then(() => history.back())
+                    else if (res.message == 'not allowed') qError({ message: "[{(error.notAllowed)}]", goBack: false })
+                    else qError({ message: "[{(error.unknown)}]", goBack: false }).then(() => location.reload())
         })
 }

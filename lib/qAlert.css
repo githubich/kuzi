@@ -7,7 +7,6 @@
     width: fit-content;
     max-width: 90%;
 }
-#qAlert:not(.error):not(.warn):not(.question):not(.info) { --qAlert-accent: #7a7a7a; }
 #qAlert i.qAlert { display: none; }
 #qAlert.error * { --qAlert-accent: #f44; }
 #qAlert.error .qAlert.fa-exclamation-circle { display: block !important; }
@@ -20,6 +19,7 @@
 #qAlert.ok * { --qAlert-accent: #4f4; }
 #qAlert.ok .qAlert.fa-check-circle { display: block !important; }
 .qAlert-inner button {
+    display: inline-block;
     font-size: 16px;
     padding: 7px 15px;
     background-color: var(--qAlert-accent);
@@ -28,6 +28,6 @@
     cursor: pointer;
     color: #fff !important;
 }
-#qAlert .qAlert-inner .fas { font-size: 55px; color: var(--qAlert-accent); }
+#qAlert .qAlert-inner > i { font-size: 55px; color: var(--qAlert-accent); }
 #qAlert .text-input { margin: 0 0 12px 0; text-align: left; }
 #qAlert .text-input .hint { margin: 12px 0 24px 0; }

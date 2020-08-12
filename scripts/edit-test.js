@@ -245,18 +245,15 @@ function save() {
     $('footer').style = ''
     $('main').style.marginBottom = "42px"
     $('footer').innerHTML = `<div><div class="spinner"></div>[{(saving)}]...</div>`
-    fetch('/teachers/tests/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(testData) })
-        .then(res => res.json())
+    fetch('/teachers/tests/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(testData) }).then(res => res.json())
         .then(res => {
             if (res.message = 'ok') $('footer').innerHTML = `<div><i class="fad fa-check-circle"></i>[{(saved)}]</div>`
             else $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`
-            setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 2500)
+            setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 3000)
         })
         .catch(e => { $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`; setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 3000) })
 }
-function autoSave() {
-    setTimeout(() => { save(); autoSave() }, 10000)
-}
+autoSave = () => setTimeout(() => { save(); autoSave() }, 10000)
 function newQuestion() {
     let qE = document.createElement('div')
     $('#question-container').appendChild(qE)
@@ -299,17 +296,17 @@ function moveDown(event) {
     if (q.nextElementSibling) q.nextElementSibling.querySelector('.move-question-up').click()
 }
 function load() {
-    if ($parseURLArgs().ID == undefined) return qAlert({ message: '[{(wrongID)}]', mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
+    if (userInfo.role != 'teacher') return qAlert({ message: "[{(error.notAllowed)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
+    if ($parseURLArgs().ID == undefined) return qAlert({ message: "[{(error.wrongID)}]", mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back())
     setPageTitle("clipboard-check", `[{(loading)}]`)
     setActiveTab(2, true)
     let footer = document.createElement('footer')
     document.body.appendChild(footer)
     footer.classList.add('blurry-bg')
     footer.style.display = 'none'
-    $('main').style.marginBottom = "0"
+    $('main').style.marginBottom = 0
 
-    fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) })
-        .then(res => res.json())
+    fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) }).then(res => res.json())
         .then(res => {
             testData = res
             setPageTitle("clipboard-check", `[{(editTest)}] (${testData.name})`)
@@ -341,7 +338,7 @@ function load() {
             addFunctionality()
             autoSave()
         })
-        .catch(e => qAlert({ message: '[{(error.unknown)}]', mode: 'error', buttons: { cancel: { invisible: true } } }).then(a => history.back()))
+        .catch(e => qError({ message: e, goBack: true }))
 }
 window.addEventListener('online', save)
 window.addEventListener('toggle-modal-edit-test', () => {
@@ -361,7 +358,7 @@ window.addEventListener('toggle-modal-edit-test', () => {
             $(`#my-classes li.class input[type=radio][value="${testData.classID}"]`).click()
             $('#subject-chooser').value = testData.subjectID
         }))
-        .catch(e => console.error(e))
+        .catch(e => qError({ message: e, goBack: true }))
     fetch('/misc/periods/list', { method: "POST" })
         .then(res => res.json()
         .then(res => {
@@ -376,7 +373,7 @@ window.addEventListener('toggle-modal-edit-test', () => {
                 if (period.current === true) { periodChooser.value = period.periodID }
             })
         }))
-        .catch(e => console.error(e))
+        .catch(e => qError({ message: e, goBack: true }))
     update = updateID => {
         if (!updateID) return
         updateID = parseInt(updateID)
