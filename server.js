@@ -566,6 +566,17 @@ app.post('/teachers/marks/edit', (req, res) => {
 	saveJSON('marks.json', marks)
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
+app.post('/teachers/marks/delete', (req, res) => {
+	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)
+	let marks = importJSON('marks.json')
+	let markIndex = marks.findIndex(e => e.markID == req.body.markID)
+	if (markIndex == -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', 'application/json', 400)
+	let mark = marks[markIndex]
+	if (mark.ownerID != req.userInfo.userID) res.respond(JSON.stringify({ message: 'not allowed' }), '', 'application/json', 403)
+	marks.splice(markIndex, 1)
+	saveJSON('marks.json', marks)
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
 
 app.post('/teachers/listMyStudents', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.respond(JSON.stringify({ message: '' }), '', 'application/json', 403)

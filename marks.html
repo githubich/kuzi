@@ -18,6 +18,7 @@
     <template id="edit-mark">
         <details onclick="updateSubjectStudents(this.querySelector('.subject-chooser'))" style="cursor: default;">
             <summary><h3>%markName% (%subjectName%)</h3></summary>
+            <a class="delete-mark" title="[{(delete)}]" onclick="deleteMark(parseInt('%markID%'), this)"><i class="fad fa-trash"></i></a>
             <div class="details-content">
                 <li class="mark-details">
                     <div class="mark-name-div">

@@ -98,6 +98,7 @@
         "success.event.delete|Event deleted successfully!",
         "success.event.edit|Event edited successfully!",
         "success.event.submit|Event created successfully!",
+        "success.mark.delete|",
         "success.mark.edit|Mark edited successfully!",
         "success.mark.submit|Mark submitted successfully!",
         "success.passwordUpdate|Password updated successfully",

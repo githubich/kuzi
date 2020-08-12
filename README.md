@@ -35,7 +35,7 @@ sysctl --system
 This allows all users to run any server in any port they want, since usually port 80 is locked to be used only as root. If you run this, you won't need to type `sudo` in almost every command
 
 ### Run the server & test
-Run `node server.js` & open `http://localhost/` on a web browser or click [here](http://localhost/). Using HTTPS is up to you
+Run `npm start` & open `http://localhost/` on a web browser or click [here](http://localhost/). Using HTTPS is up to you
 
 ## Set up
 ### Create users

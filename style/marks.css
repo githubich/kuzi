@@ -37,8 +37,8 @@
 
 /* TEACHERS */
 main input { min-width: unset; }
-.tabs { display: grid; }
-.tab { display: inline-flex; background-color: var(--bg-shade2); padding: 20px; }
+.tabs { display: flex; }
+.tab { display: inline-flex; background-color: var(--bg-shade2); padding: 20px; width: 100%; }
 .tab:nth-child(1) { border-radius: 10px 0 0 0; }
 .tab i { margin-right: 5px; }
 .tab.selected { background-color: var(--bg-shade3); }
@@ -99,9 +99,11 @@ h3, .title-controls { display: inline-block; }
 #view-marks .student > .create-student { margin-left: .6em; }
 #view-marks .students { margin-top: 20px; }
 #view-marks button { margin-bottom: 20px }
+#view-marks details { position: relative; }
+#view-marks .delete-mark { position: absolute; right: 0; top: 0; font-size: 1.17em; }
 
 @media (min-width: 601px) {
-    .tabs { grid-template-columns: 1fr 1fr; }
+    .tabs { display: block }
     #write-a-mark .my-classes-and-students { grid-template-columns: 1fr 1fr; }
     .control i { margin-right: 5px; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }

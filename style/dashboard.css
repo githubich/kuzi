@@ -1,7 +1,6 @@
 html, body, main, #root, .dash-container { height: 100%; }
 body, main, #root { display: flex; flex-direction: column; }
 .motivation-dash-block { margin-bottom: 20px; }
-.dash-block.motivation-dash-block .dash-block-title .title { white-space: normal !important; }
 .dash-container { display: grid; gap: 20px; }
 body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
 .dash-block {
@@ -16,7 +15,7 @@ body:not(.student):not(.teacher):not(.parent) .dash-block { display: none; }
     background-color: var(--bg);
 }
 .dash-block-title { min-height: 55.6px }
-.dash-block .dash-block-title * { white-space: nowrap !important; color: var(--bg-alt) !important; }
+.dash-block:not(.motivation-dash-block) .dash-block-title * { white-space: nowrap !important; }
 .dash-block .dash-block-title h3 { display: inline-block; color: var(--bg-alt); }
 .dash-block .dash-block-title h3 i { margin-right: 7.5px; }
 .dash-block-content { margin: 5px 0 0 0; flex: 1 1 auto; }
@@ -80,7 +79,7 @@ body.teacher .marks-dash-block { display: none }
 @media (max-width: 900px) {
     .dash-container { grid-template-columns: 100%; }
     .dash-block .dash-block-title { text-align: center; position: relative; }
-    .dash-block .dash-block-title h3 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .dash-block:not(.motivation-dash-block) .dash-block-title h3 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 }
 @media (max-width: 800px) {
     body .dash-container { grid-template-columns: 1fr; }

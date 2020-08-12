@@ -203,5 +203,18 @@ window.addEventListener('ready', () => {
                 .then(() => qAlert({ message: "[{(success.markEdit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
                 .catch(e => qError({ message: e, goBack: false }))
         }
+        deleteMark = (id, element) => {
+            qAreYouSure().then(ans => {
+                if (ans) {
+                    fetch('/teachers/marks/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ markID: parseInt(id) }) }).then(res => res.json())
+                        .then(res => {
+                            if (res.message == 'ok') { qSuccess({ message: '[{(success.marks.delete)}]' }); element.parentElement.parentElement.remove() }
+                            else qError({ goBack: false })
+                        })
+                        .catch(e => qError({ message: e, goBack: false }))
+                }
+            })
+            
+        }
     }
 })
