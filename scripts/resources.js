@@ -106,7 +106,7 @@ window.addEventListener('ready', () => {
                         })
                 })
             })
-            if (userInfo.role != "teacher") $$('.teachers-only').forEach(e => e.remove())
+            if ($('#files').children.length == 0) $('#files').innerHTML = getTemplate('empty-page')
         })
         .catch(e => console.error(e))
 })
