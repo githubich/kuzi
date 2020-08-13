@@ -9,23 +9,25 @@ const express = require('express')
 const app = express()
 const { v4 } = require('uuid')
 const { extname } = require('path')
-const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
+const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync, lstatSync } = require('fs')
 const { importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
 const {
 	port = 80, language = 'en',
 	disableAnnouncements = false, disableMarks = false,/* disableNews = false,*/ disableMotivationalQuotes = false, disableTests = false, disableResources = false
 } = existsSync('settings.json') ? importJSON('settings.json') : {}
+const headless = [ 'login.html', 'mark-graph.html' ]
+const forbidden = [ 'base.html', '403.html', '404.html', 'CONTRIBUTING.md', 'README.md', '.gitignore' ]
 
 app.use(express.json())
 app.use(require('express-fileupload')())
 app.use(require('./middleware'))
 
-let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
+const folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
 folders.forEach(f => {
 	if (!existsSync(`${f}/`)) mkdirSync(f)
 })
 
-let files = ['active-cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
+const files = ['active-cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
 files.forEach(f => {
 	if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([]))
 })
@@ -114,9 +116,9 @@ app.get('/remove_menus.css', (req, res) => {
 })
 app.get('*', (req, res) => {
 	if ((req.userInfo && req.userInfo.userID) || req.url === "/login.html" || extname(req.url) !== ".html") {
-		if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.sendError(403)
-		else if (existsSync(`.${req.url}`)) {
-			if (extname(req.url) == '.html' && req.url != '/login.html' && req.url != '/mark-graph.html') res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
+		if (existsSync(`.${req.url}`) && (extname(req.url) == '.json' || forbidden.includes(req.url.slice(1, req.url.length)) || req.url.includes('/.git'))) res.sendError(403)
+		else if (existsSync(`.${req.url}`) && lstatSync(`.${req.url}`).isFile()) {
+			if (extname(req.url) == '.html' && !headless.includes(req.url.slice(1, req.url.length))) res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
 			else res.respond('', `.${req.url}`, '', 200)
 		} else res.sendError(404)
 	} else res.redirect('/login.html')
