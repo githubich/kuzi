@@ -1,10 +1,4 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
-random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-newUUID = () => {
-	let content = ''
-	for (let i = 0; i < 16; i++) content += random(0,15).toString(16)
-	return content
-}
 importJSON = location => {
 	if (!existsSync(location) || readFileSync(location) == '') { console.warn(`[Kuzi|Warning] ${location} is empty/is empty, writing default content`); writeFileSync(location, JSON.stringify([])); return importJSON(location) }
 	else return JSON.parse(readFileSync(location).toString('utf8'))
@@ -85,4 +79,4 @@ createNotification = ({ message, description, userID, forParentsToo, actions = u
 		})
 	}
 }
-module.exports = { importJSON, saveJSON, newUUID, extensionToMime, importLocale, calcMark, sortByPrettyName, createNotification }
+module.exports = { importJSON, saveJSON, extensionToMime, importLocale, calcMark, sortByPrettyName, createNotification }

@@ -7,12 +7,13 @@ console.log(`[Kuzi] Starting on ${os} ${require('os').release()}...`)
 
 const express = require('express')
 const app = express()
+const { v4 } = require('uuid')
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync } = require('fs')
-const { newUUID, importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
+const { importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
 const {
 	port = 80, language = 'en',
-	disableAnnouncements = false, disableMarks = false, disableNews = false, disableMotivationalQuotes = false, disableTests = false, disableResources = false
+	disableAnnouncements = false, disableMarks = false,/* disableNews = false,*/ disableMotivationalQuotes = false, disableTests = false, disableResources = false
 } = existsSync('settings.json') ? importJSON('settings.json') : {}
 
 app
@@ -135,7 +136,7 @@ app.post('/user/login', (req, res) => {
 	importJSON('users.json').forEach(user => {
 		if (user.username == req.body.username && user.password == req.body.password) {
 			let activeCookies = importJSON('active.cookies.json')
-			let newSession = newUUID()
+			let newSession = v4()
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: user.userID })
 			saveJSON('active.cookies.json', activeCookies)
 			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 200)

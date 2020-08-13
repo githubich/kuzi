@@ -3,7 +3,7 @@ const { readFileSync, existsSync } = require('fs')
 const { extname } = require('path')
 const { extensionToMime } = require('./utils')
 const locales = importLocale()
-function kuziMiddleware(req, res, next) {
+module.exports = function kuziMiddleware(req, res, next) {
     console.log(`[Kuzi|${req.connection.remoteAddress.replace('::ffff:','')}|${(new Date()).getHours()}:${(new Date()).getMinutes()}:${(new Date()).getSeconds()}] ${req.method} ${req.url}`)
     res.respond = (content, file, mime, statusCode) => {
         if (!mime && file) mime = extensionToMime(file)
@@ -104,4 +104,3 @@ function kuziMiddleware(req, res, next) {
     
     next()
 }
-module.exports = kuziMiddleware
