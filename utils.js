@@ -22,7 +22,7 @@ extensionToMime = ext => {
 	else return 'text/html'
 }
 importLocale = () => {
-	let { language } = importJSON('settings.json')
+	let { language = 'en' } = existsSync('settings.json') ? importJSON('settings.json') : {}
 	let localizationStrings = importJSON('localization.json')[language]
 	let version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
 	console.log(`[Kuzi] Using Kuzi ${version}`)

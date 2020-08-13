@@ -16,8 +16,8 @@ function send() {
                 username: $('#kuzi-username').value,
                 password: $('#kuzi-password').value
             })}).then(res => res.json())
-            .then(res => {
-                if (res.session != undefined) { document.cookie=`session=${res.session}`; window.location = "/dashboard.html" }
+            .then(({ session }) => {
+                if (session != undefined) { document.cookie=`session=${session}`; window.location = "/dashboard.html" }
                 else qError({ message: "[{(error.badUsernameOrPassword)}]", goBack: false }).then( $('#kuzi-password').value = "" )
             })
     } else alert("[{(error.invalidInput)}]")

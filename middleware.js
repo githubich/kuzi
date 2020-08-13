@@ -1,5 +1,5 @@
 const { importJSON, saveJSON, importLocale } = require('./utils')
-const { readFileSync } = require('fs')
+const { readFileSync, existsSync } = require('fs')
 const { extname } = require('path')
 const { extensionToMime } = require('./utils')
 const locales = importLocale()
@@ -16,8 +16,14 @@ function kuziMiddleware(req, res, next) {
         res.setHeader('Content-Type', mime)
         res.status(statusCode).send(content)
     }
+    res.sendError = errorCode => {
+		if (req.accepts('html') && existsSync(`./${errorCode}.html`)) res.respond('', `./${errorCode}.html`, 'text/html', 404)
+        else if (req.accepts('json')) res.json({ status: 404, statusCode: 404, code: 404, ok: false }).status(404)
+        else res.sendStatus(404)
+    }
     if (req.url.includes("?")) { req.fullUrl = req.url.split()[0]; req.url = req.url.split("?")[0] }
-    if (req.url == '/' || req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html')) return next()
+    if (req.url == '/') return res.redirect(308, '/login.html')
+    if (req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html')) return next()
     
     let activeCookies = importJSON('active.cookies.json')
     let classes = importJSON('classes.json')
@@ -95,6 +101,7 @@ function kuziMiddleware(req, res, next) {
         })
         if (modified) saveJSON('active.cookies.json', activeCookies)
     }
+    
     next()
 }
 module.exports = kuziMiddleware
