@@ -109,7 +109,7 @@ app.get('/remove_menus.css', (req, res) => {
 	if (settings.disableMotivationalQuotes) content = `${content}\n.motivation-dash-block { display: none !important; }` 
 	res.respond(content, '', 'text/css', 200)
 })
-app.get('/', (req, res) => res.redirect("/login.html"))
+app.get('/', (req, res) => res.redirect(308, "/login.html"))
 app.get('*', (req, res) => {
 	if ((req.userInfo && req.userInfo.userID) || req.url === "/login.html" || extname(req.url) !== ".html") {
 		if ((extname(req.url) == '.json' && existsSync(`.${req.url}`)) || req.url == '/base.html' || req.url == '/403.html' || req.url == '/404.html') res.respond('', '403.html', 'text/html', 200)

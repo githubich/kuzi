@@ -159,7 +159,7 @@ window.addEventListener('load', () => {
             window.dispatchEvent(new Event('ready'))
             localStorage.setItem('last-user-info', JSON.stringify(userInfo))
         })
-        .catch(e => qError({ message: e, goBack: true }))
+        .catch(e => location = '/')
 })
 window.addEventListener('click', e => {
     if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
