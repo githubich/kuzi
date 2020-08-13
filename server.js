@@ -12,10 +12,11 @@ const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirS
 const { newUUID, importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
 const settings = importJSON('settings.json')
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(require('express-fileupload')())
-app.use(require('./middleware'))
+app
+   .use(express.json())
+   .use(express.urlencoded({ extended: true }))
+   .use(require('express-fileupload')())
+   .use(require('./middleware'))
 
 let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
 folders.forEach(f => {
