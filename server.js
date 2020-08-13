@@ -16,18 +16,16 @@ const {
 	disableAnnouncements = false, disableMarks = false,/* disableNews = false,*/ disableMotivationalQuotes = false, disableTests = false, disableResources = false
 } = existsSync('settings.json') ? importJSON('settings.json') : {}
 
-app
-   .use(express.json())
-   .use(express.urlencoded({ extended: true }))
-   .use(require('express-fileupload')())
-   .use(require('./middleware'))
+app.use(express.json())
+app.use(require('express-fileupload')())
+app.use(require('./middleware'))
 
 let folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
 folders.forEach(f => {
 	if (!existsSync(`${f}/`)) mkdirSync(f)
 })
 
-let files = ['active.cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
+let files = ['active-cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
 files.forEach(f => {
 	if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([]))
 })
@@ -135,10 +133,10 @@ app.post('/user/login', (req, res) => {
 	let loggedIn = false
 	importJSON('users.json').forEach(user => {
 		if (user.username == req.body.username && user.password == req.body.password) {
-			let activeCookies = importJSON('active.cookies.json')
+			let activeCookies = importJSON('active-cookies.json')
 			let newSession = v4()
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: user.userID })
-			saveJSON('active.cookies.json', activeCookies)
+			saveJSON('active-cookies.json', activeCookies)
 			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 200)
 			loggedIn = true
 		}
@@ -146,12 +144,12 @@ app.post('/user/login', (req, res) => {
 	if (loggedIn === false) return res.sendError(403)
 })
 app.post('/user/logout', (req, res) => {
-	let activeCookies = importJSON('active.cookies.json')
+	let activeCookies = importJSON('active-cookies.json')
 	let i = 0
 	activeCookies.forEach(cookie => {
 		if (cookie.cookie == req.cookies.session) {
 			activeCookies.splice(i, 1)
-			saveJSON('active.cookies.json', activeCookies)
+			saveJSON('active-cookies.json', activeCookies)
 		}
 		i++
 	})

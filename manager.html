@@ -5,7 +5,7 @@
 <div id="manager">
     <div class="tabs">
         <div class="tabs">
-            <a class="tab" value="users" onclick="changeTab(this)">
+            <a class="tab selected" value="users" onclick="changeTab(this)">
                 <div><i class="fad fa-users"></i><span>[{(users)}]</span></div>
             </a>
             <a class="tab" value="classes" onclick="changeTab(this)">
@@ -17,10 +17,13 @@
             <a class="tab" value="scheduling" onclick="changeTab(this)">
                 <div><i class="fad fa-calendar-week"></i><span>[{(scheduling)}]</span></div>
             </a>
+            <a class="tab" value="periods" onclick="changeTab(this)">
+                <div><i class="fad fa-calendar-alt"></i><span>[{(periods)}]</span></div>
+            </a>
         </div>
     </div>
     <div class="content" id="users">
-
+        <aside></aside>
     </div>
     <div class="content" id="classes" style="display: none;">
 
@@ -29,6 +32,9 @@
 
     </div>
     <div class="content" id="scheduling" style="display: none;">
+
+    </div>
+    <div class="content" id="periods" style="display: none;">
 
     </div>
 </div>

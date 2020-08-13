@@ -1,5 +1,7 @@
 function changeTab(tab) {
     if (!tab || $('.tab.selected') == tab) return
+    $('.tab.selected').classList.remove('selected')
+    tab.classList.add('selected')
     $$('.content').forEach(content => content.style.display = 'none')
     $(`.content#${tab.getAttribute('value')}`).removeAttribute('style')
 }

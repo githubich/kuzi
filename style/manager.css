@@ -11,6 +11,7 @@
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
 }
 @media (max-width: 600px) {
+    .tabs { display: block }
     .tab { padding: 10px; }
     .tab:nth-child(1) { border-radius: 10px 10px 0 0; }
 }

@@ -39,18 +39,19 @@
 				<i id="dropdown-arrow" class="far fa-chevron-down"></i>
 			</div>
 			<div class="vertical-separator"></div>
-			<ul class="header--actions">
+			<ul class="header--actions" role="navigation">
 				<li class="header-action dashboard-action"><a href="/dashboard.html"><i class="fad fa-chart-line"></i><span>[{(dashboard)}]</span></a></li>
 				<li class="header-action marks-action"><a href="/marks.html"><i class="fad fa-calendar-check"></i><span>[{(marks)}]</span></a></li>
 				<li class="header-action tests-action"><a href="/tests.html"><i class="fad fa-clipboard-check"></i><span>[{(tests)}] (β)</span></a></li>
 				<li class="header-action resources-action"><a href="/resources.html"><i class="fad fa-folders"></i><span>[{(resources)}]</span></a></li>
+				<li class="header-action projects-action"><a href="/projects.html"><i class="fad fa-project-diagram"></i><span>[{(projects)}]</span></a></li>
 				<li class="header-action more-action"><a onclick="if ($('#hamburger-menu-modal').style.display == 'block') toggleModal('hamburger-menu'); toggleMore()"><i class="fad fa-plus"></i><span>[{(more)}]</span></a></li>
 			</ul>
 			<a class="hamburger-menu" onclick="$('.hamburger--actions').innerHTML = $('.header--actions').innerHTML; toggleModal('hamburger-menu')"><i class="fas fa-bars"></i></a>
 		</header>
 		<div id="dropdown" class="blurry-bg hidden">
 			<a class="close phone-close" onclick="toggleDropdown()"><i class="fas fa-times"></i></a>
-			<ul class="dropdown-actions">
+			<ul class="dropdown-actions" role="navigation">
 				<li class="dropdown-action parents-only"><select id="child-selector" oninput="updateChild(this.value)"></select></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); toggleModal('picture')"><i class="fad fa-portrait"></i><span>[{(changePicture)}]</span></a></li>
 				<li class="dropdown-action"><a onclick="toggleDropdown(); document.querySelectorAll('.password-modal-inner input').forEach(e => e.value = '') ; toggleModal('password')"><i class="fad fa-key"></i><span>[{(changePassword)}]</span></a></li>
@@ -60,9 +61,11 @@
 		</div>
 		<div id="more" class="blurry-bg hidden">
 			<a class="close phone-close" onclick="toggleMore()"><i class="fas fa-times"></i></a>
-			<ul class="dropdown-actions">
-				<!--<li class="dropdown-action messages-action"><a><i class="fad fa-comments"></i><span>[{(messages)}]</span></a></li>-->
+			<ul class="dropdown-actions" role="navigation">
+				<li class="dropdown-action messages-action"><a href="/messages.html"><i class="fad fa-comments"></i><span>[{(messages)}]</span></a></li>
+				<li class="dropdown-action students-action"><a href="/my-class.html"><i class="fad fa-users"></i><span>[{(students)}]</span></a></li>
 				<li class="dropdown-action my-schedule-action"><a href="/my-schedule.html"><i class="fad fa-clock"></i><span>[{(mySchedule)}]</span></a></li>
+				<li class="dropdown-action manager-action admins-only"><a href="/manager.html"><i class="fad fa-users-cog"></i><span>[{(manager)}]</span></a></li>
 				<li class="dropdown-action theme-chooser"><input type="checkbox" id="theme"><label for="theme">[{(theme)}]</label></li>
 			</ul>
 		</div>

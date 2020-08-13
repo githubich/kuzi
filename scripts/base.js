@@ -32,38 +32,36 @@ function updateUserInfo(info, fromCache) {
             childSelector.value = $parseCookies().selectedChild
         }
     }
+    dropdown.style.left = `${$('header > div:nth-child(2)').offsetLeft}px`
+    dropdown.style.width = `${$("header > :nth-child(4)").offsetLeft - $("header > :nth-child(2)").offsetLeft + 1}px`
 }
 function toggleDropdown() {
-    if (!$("#dropdown.hiding") && !$("#dropdown.showing")) {
-        headerDropdown.classList.remove("shown","hidden")
-        if (headerDropdownVisible) {
-            headerDropdownVisible = false
-            headerDropdown.classList.add("hiding")
-            headerDropdownArrow.style.transform = ""
-            setTimeout(() => { headerDropdown.classList.remove("hiding"); headerDropdown.classList.add("hidden") }, 200)
-        } else {
-            headerDropdownVisible = true
-            headerDropdown.classList.add("showing")
-            headerDropdown.style.left = `${$('header > div:nth-child(2)').offsetLeft}px`
-            headerDropdown.style.width = `${$("header > :nth-child(4)").offsetLeft - $("header > :nth-child(2)").offsetLeft + 1}px`
-            headerDropdownArrow.style.transform = "rotateX(180deg)"
-            setTimeout(() => { headerDropdown.classList.remove("showing"); headerDropdown.classList.add("shown") }, 200)
-        }
+    if ($('#dropdown.showing') || $('#dropdown.hiding')) return;
+    dropdown.classList.remove("shown","hidden")
+    if (dropdownVisible) {
+        dropdownVisible = false
+        dropdown.classList.add("hiding")
+        $("#dropdown-arrow").style.transform = ""
+        setTimeout(() => { dropdown.classList.remove("hiding"); dropdown.classList.add("hidden") }, 200)
+    } else {
+        dropdownVisible = true
+        dropdown.classList.add("showing")
+        $("#dropdown-arrow").style.transform = "rotateX(180deg)"
+        setTimeout(() => { dropdown.classList.remove("showing"); dropdown.classList.add("shown") }, 200)
     }
 }
 function toggleMore() {
-    if (!$("#more.hiding") && !$("#more.showing")) {
-        more.classList.remove("shown","hidden")
-        if (moreVisible) {
-            moreVisible = false
-            more.classList.add("hiding")
-            setTimeout(() => { more.classList.remove("hiding"); more.classList.add("hidden") }, 200)
-        } else {
-            moreVisible = true
-            more.classList.add("showing")
-            more.style.left = `${$('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth}px`
-            setTimeout(() => { more.classList.remove("showing"); more.classList.add("shown") }, 200)
-        }
+    if ($('#more.showing') || $('#more.hiding')) return;
+    more.classList.remove("shown","hidden")
+    if (moreVisible) {
+        moreVisible = false
+        more.classList.add("hiding")
+        setTimeout(() => { more.classList.remove("hiding"); more.classList.add("hidden") }, 200)
+    } else {
+        moreVisible = true
+        more.classList.add("showing")
+        more.style.left = `${$('header .more-action').offsetLeft - more.offsetWidth + $('header .more-action').offsetWidth}px`
+        setTimeout(() => { more.classList.remove("showing"); more.classList.add("shown") }, 200)
     }
 }
 function changePhoto() {
@@ -132,6 +130,10 @@ function createElement({ type, classes, id, innerContent, parameters }) {
     return element
 }
 window.addEventListener('load', () => {
+    dropdown = $('#dropdown')
+    dropdownVisible = false
+    more = $("#more")
+    moreVisible = false
     if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')), true)
     if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
     else $('#theme + label').innerText = '[{(lightMode)}]'
@@ -146,11 +148,6 @@ window.addEventListener('load', () => {
         }
         document.documentElement.setAttribute('theme', localStorage.getItem('theme'))
     })
-    headerDropdown = $('#dropdown')
-    headerDropdownArrow = $("#dropdown-arrow")
-    headerDropdownVisible = false
-    more = $("#more")
-    moreVisible = false
     fetch('/user/getInfo', { method: 'POST' }).then(res => res.json())
         .then(res => {
             userInfo = res.userInfo
@@ -162,8 +159,8 @@ window.addEventListener('load', () => {
         .catch(e => location = '/')
 })
 window.addEventListener('click', e => {
-    if (headerDropdownVisible && e.path[0] != headerDropdown && e.path[1] != headerDropdown && e.path[2] != headerDropdown && e.path[3] != headerDropdown && e.path[4] != headerDropdown) toggleDropdown()
-    if (moreVisible && e.path[0] != more && e.path[1] != more && e.path[2] != more && e.path[3] != more && e.path[4] != more) toggleMore()
+    if (dropdownVisible && !e.path.includes(dropdown)) toggleDropdown()
+    if (moreVisible && !e.path.includes(more)) toggleMore()
 })
 window.addEventListener('keydown', e => {
     if (e.key == "Enter") {

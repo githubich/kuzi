@@ -25,7 +25,7 @@ module.exports = function kuziMiddleware(req, res, next) {
     if (req.url == '/') return res.redirect(308, '/login.html')
     if (req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html')) return next()
     
-    let activeCookies = importJSON('active.cookies.json')
+    let activeCookies = importJSON('active-cookies.json')
     let classes = importJSON('classes.json')
     let subjects = importJSON('subjects.json')
     let scheduling = importJSON('scheduling.json')
@@ -99,7 +99,7 @@ module.exports = function kuziMiddleware(req, res, next) {
             }
             i++
         })
-        if (modified) saveJSON('active.cookies.json', activeCookies)
+        if (modified) saveJSON('active-cookies.json', activeCookies)
     }
     
     next()

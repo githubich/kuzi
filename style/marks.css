@@ -103,13 +103,13 @@ h3, .title-controls { display: inline-block; }
 #view-marks .delete-mark { position: absolute; right: 0; top: 0; font-size: 1.17em; }
 
 @media (min-width: 601px) {
-    .tabs { display: block }
     #write-a-mark .my-classes-and-students { grid-template-columns: 1fr 1fr; }
     .control i { margin-right: 5px; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
     .mark-info-inner, #view-marks .mark-details { grid-template-columns: 2fr 1fr 1fr; }
 }
 @media (max-width: 600px) {
+    .tabs { display: block }
     .tab { padding: 10px; }
     .tab:nth-child(1) { border-radius: 10px 10px 0 0; }
 }

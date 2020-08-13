@@ -2,17 +2,7 @@
 	"port": 80,
 	"language": "en",
 	"disableMarks": false,
-	"disableNews": false,
-	"disableMotivationalQuotes": false,
-	"disableTests": false,
 	"disableResources": false,
-	"teacherRules": {
-		"enabled": true,
-		"onlyAddHomeworkOnTeachTime": true,
-		"maxExamsPerDay": 2
-	},
-	"studentRules": {
-		"enabled": true,
-		"homeworkSubmittingMargin": 15
-	}
+	"disableTests": false,
+	"disableQuotes": false
 }
