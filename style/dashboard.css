@@ -76,6 +76,9 @@ body.teacher .marks-dash-block { display: none }
     body .dash-container { grid-template-columns: 2.25fr 1fr 1fr; }
     body.teacher .dash-container { grid-template-columns: 1fr 1fr 1fr; }
 }
+@media (max-width: 825px) {
+	body .dash-container { grid-template-columns: 1fr 1fr 1fr; }
+}
 @media (max-width: 800px) {
     .dash-block .dash-block-title { text-align: center; position: relative; }
     .dash-block:not(.motivation-dash-block) .dash-block-title h3 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }

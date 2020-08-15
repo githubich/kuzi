@@ -5,8 +5,9 @@ function setActiveTab(index, preserveHref) {
     if (!preserveHref) $$('.header-action a')[index].removeAttribute('href')
 }
 function updateUserInfo(info, fromCache) {
-    $().classList.remove('student', 'teacher', 'parent')
+    $().classList.remove('student', 'teacher', 'parent', 'admin')
     $().classList.add(info.role)
+    if (info.isAdmin) $().classList.add('admin')
     if ($('.user-photo').style.backgroundImage != `url(/users/${info.userID})`) $('.user-photo').style.backgroundImage = `url(/users/${info.userID})`
     $('.user-info .name').innerText = info.prettyName
     if (info.role == "teacher") {
@@ -154,6 +155,13 @@ window.addEventListener('keydown', e => {
         e.preventDefault()
         $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
     }
+})
+
+// SIZE DETECTOR
+window.addEventListener('resize', () => {
+    const lastAction = $('header .header--actions .header-action:nth-last-child(1)')
+    $('header').classList.remove('icons-only')
+    if (window.innerWidth <= (lastAction.offsetLeft + lastAction.offsetWidth)) $('header').classList.add('icons-only')
 })
 
 // ELEMENT FEATURES
