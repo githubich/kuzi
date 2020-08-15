@@ -34,7 +34,9 @@
                         <select name="period" class="period-chooser" value="%period%"></select>
                     </div>
                 </li>
-                <li class="marks"><ul class="students"></ul></li>
+                <li class="marks">
+                    <ul class="students"></ul>
+                </li>
             </div>
             <button onclick="submitEdit(this.previousElementSibling, parseInt('%markID%'))"><i class="fad fa-paper-plane"></i>[{(submit)}]</button>
         </details>
@@ -42,7 +44,7 @@
     <template id="edit-mark-student">
         <li studentID="%id%" classID="%classID%" class="student">
             <p class="student-name">%name%</p>
-            <i class="fad fa-trash delete-student" title="[{(delete)}]" onclick="let subjectChooser = this.parentElement.parentElement.parentElement.previousElementSibling.querySelector('.subject-chooser'); this.parentElement.remove(); updateSubjectStudents(subjectChooser)"></i>
+            <i class="fad fa-trash delete-student" title="[{(delete)}]" onclick="let subjectChooser = this.parentElement.parentElement.parentElement.previousElementSibling.querySelector('.subject-chooser'); this.parentElement.remove(); updateAllSubjects()"></i>
             <div class="mark-input" onclick="this.children[0].focus()">
                 <input type="number" value="%value%" id="mark-input-%id%" min="-100" max="100" class="percent" studentID="%id%" oninput="minMaxInput(this)">%
             </div>

@@ -75,15 +75,18 @@ window.addEventListener('ready', () => {
                 else studentChooser.parentElement.removeAttribute('style')
             })
         }
+        updateAllSubjects = () => {
+            updateStudents()
+            $$('.subject-chooser').forEach(el => updateSubjectStudents(el))
+        }
         updateSubjectStudents = subjectChooser => {
             let classesWithThatSubject = []
             let subjectID = parseInt(subjectChooser.value)
             Object.keys(myStudents.subjectsByClass).forEach(subjectByClass => { if (myStudents.subjectsByClass[subjectByClass].includes(subjectID)) classesWithThatSubject.push(parseInt(subjectByClass)) })
-            subjectChooser.parentElement.parentElement.nextElementSibling.querySelectorAll('li.student:not(.new-student)').forEach(studentLi => {
+            subjectChooser.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('li.student:not(.new-student)').forEach(studentLi => {
                 if (classesWithThatSubject.includes(parseInt(studentLi.getAttribute('classID')))) studentLi.style.display = ''
                 else studentLi.style.display = 'none'
             })
-            updateStudents()
             subjectChooser.parentElement.parentElement.parentElement.querySelectorAll('.student-chooser').forEach(studentChooser => {
                 studentChooser.querySelectorAll('option').forEach(studentOption => {
                     if (!classesWithThatSubject.includes(parseInt(studentOption.getAttribute('classID')))) studentOption.remove()
@@ -120,6 +123,7 @@ window.addEventListener('ready', () => {
                     .then(res => myStudents = res)
                 fetch('/teachers/listMySubjects', { method: 'POST' }).then(res => res.json())
                     .then(res => {
+                        updateAllSubjects()
                         $$('#view-marks .subject-chooser').forEach(subjectChooser => {
                             res.forEach(subject => {
                                 let subjectE = createElement({ type: 'option', parameters: { value: subject.subjectID }, innerContent: { type: 'html', content: subject.prettyName } })

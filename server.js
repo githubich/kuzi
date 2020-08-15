@@ -118,7 +118,7 @@ app.get('*', (req, res) => {
 	if ((req.userInfo && req.userInfo.userID) || req.url === "/login.html" || extname(req.url) !== ".html") {
 		if (existsSync(`.${req.url}`) && (extname(req.url) == '.json' || forbidden.includes(req.url.slice(1, req.url.length)) || req.url.includes('/.git'))) res.sendError(403)
 		else if (existsSync(`.${req.url}`) && lstatSync(`.${req.url}`).isFile()) {
-			if (extname(req.url) == '.html' && !headless.includes(req.url.slice(1, req.url.length))) res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
+			if (extname(req.url) == '.html' && (!headless.includes(req.url.slice(1, req.url.length)) && !req.url.includes('/frames/'))) res.respond(`${readFileSync('base.html')}\n${readFileSync(`.${req.url}`)}\n</div></main></body></html>`, '', 'text/html', 200)
 			else res.respond('', `.${req.url}`, '', 200)
 		} else res.sendError(404)
 	} else res.redirect('/login.html')
@@ -988,6 +988,15 @@ app.post('/misc/schedule/get', (req, res) => {
 		i++
 	})
 	res.respond(JSON.stringify(theirScheduling), '', 'application/json', 200)
+})
+
+app.post('/manager/template', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	res.respond('', '', '', 200)
+})
+app.post('/manager/users/list', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	res.respond(JSON.stringify(importJSON('users.json')), '', '', 200)
 })
 
 function dailyTasks() {

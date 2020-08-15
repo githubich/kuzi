@@ -52,5 +52,8 @@
     --accent-light: #2292e2;
 }
 body { background: var(--bg); }
-*:not(input):not(textarea):not(button):not(a):not(a *) { color: var(--bg-alt); }
+:not(input):not(textarea):not(button):not(a):not(a *) { color: var(--bg-alt); }
 a, a * { color: var(--accent); text-decoration: none; }
+[theme=dark] input[type=date]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}

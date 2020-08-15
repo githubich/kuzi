@@ -94,9 +94,9 @@ h3, .title-controls { display: inline-block; }
 #view-marks .mark-details { display: grid; gap: 20px; }
 #view-marks .student { display: flex; flex-direction: row; }
 #view-marks .student > * { margin: auto 0; }
-#view-marks .student > .mark-input { margin-left: .6em; }
-#view-marks .student > i { font-size: 14px; margin-left: auto; }
+#view-marks .student > .mark-input,
 #view-marks .student > .create-student { margin-left: .6em; }
+#view-marks .student > i { font-size: 14px; margin-left: auto; }
 #view-marks .students { margin-top: 20px; }
 #view-marks button { margin-bottom: 20px }
 #view-marks details { position: relative; }

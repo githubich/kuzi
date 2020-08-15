@@ -161,7 +161,7 @@ input[type=number] { -moz-appearance: textfield; }
 input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 #thanks-modal > .center { text-align: center; width: 100% }
 input[type=date], input[type=time] { height: 33px; }
-select { height: 33px; width: -webkit-fill-available; }
+select { height: 33px; width: 100%; }
 
 .icon-container .icon { margin-right: .3em; }
 .empty-page { text-align: center; width: 100vw; }

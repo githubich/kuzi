@@ -23,7 +23,38 @@
         </div>
     </div>
     <div class="content" id="users">
-        <aside></aside>
+        <aside>
+            <iframe id="users--user-list" src="/frames/user-list.html"></iframe>
+        </aside>
+        <div class="actual-content" style="display: none;">
+            <h2 class="content-title">[{(information)}]:</h2>
+            <div class="info-container">
+                <div class="username-input">
+                    <p class="hint"><i class="fad fa-user"></i>[{(username)}]</p>
+                    <input type="text">
+                </div>
+                <div class="password-input">
+                    <p class="hint"><i class="fad fa-key"></i>[{(password)}]</p>
+                    <div>
+                        <input type="text" placeholder="••••••••••" readonly>
+                        <a class="reveal icon-container" onclick="let input = this.previousElementSibling; input.removeAttribute('readonly'); input.placeholder = ''; input.value = input.getAttribute('password'); this.style.display = 'none'">
+                            <i class="fad fa-eye icon"></i>Reveal
+                        </a>
+                    </div>
+                </div>
+                <div class="birthday-input">
+                    <p class="hint"><i class="fad fa-birthday-cake"></i>[{(birthday)}]</p>
+                    <input type="date" class="no-year" onload="let now = new Date(); this.min = `${now.getFullYear()}-01-01`; this.max = `${now.getFullYear()}-12-31`; this.setAttribute('onload', '')">
+                </div>
+                <div class="isadmin-input">
+                    <p class="hint"><i class="fad fa-birthday-cake"></i>[{(isAdmin)}]?</p>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="content" id="classes" style="display: none;">
 
