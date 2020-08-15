@@ -1,10 +1,3 @@
-function minMaxInput(input) {
-    let value = parseInt(input.value)
-    let min = parseInt(input.getAttribute('min'))
-    let max = parseInt(input.getAttribute('max'))
-    if (value < min) input.value = min
-    else if (value > max) input.value = max
-}
 window.addEventListener('load', () => {
     setPageTitle("calendar-check", "[{(marks)}]")
     setActiveTab(1)

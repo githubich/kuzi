@@ -27,8 +27,12 @@
             <iframe id="users--user-list" src="/frames/user-list.html"></iframe>
         </aside>
         <div class="actual-content" style="display: none;">
-            <h2 class="content-title">[{(information)}]:</h2>
+            <h2 class="content-title icon-container"><i class="fad fa-info-circle icon"></i>[{(information)}]:</h2>
             <div class="info-container">
+                <div class="prettyName-input">
+                    <p class="hint"><i class="fad fa-user"></i>[{(name)}]</p>
+                    <input type="text">
+                </div>
                 <div class="username-input">
                     <p class="hint"><i class="fad fa-user"></i>[{(username)}]</p>
                     <input type="text">
@@ -44,10 +48,18 @@
                 </div>
                 <div class="birthday-input">
                     <p class="hint"><i class="fad fa-birthday-cake"></i>[{(birthday)}]</p>
-                    <input type="date" class="no-year" onload="let now = new Date(); this.min = `${now.getFullYear()}-01-01`; this.max = `${now.getFullYear()}-12-31`; this.setAttribute('onload', '')">
+                    <input type="date" class="no-year">
                 </div>
-                <div class="isadmin-input">
-                    <p class="hint"><i class="fad fa-birthday-cake"></i>[{(isAdmin)}]?</p>
+                <div class="role-input">
+                    <p class="hint"><i class="fad fa-user-tag"></i>[{(role)}]</p>
+                    <select id="users--role-chooser">
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="parent">Parent</option>
+                    </select>
+                </div>
+                <div class="isAdmin-input">
+                    <p class="hint"><i class="fad fa-users-cog"></i>[{(isAdmin)}]?</p>
                     <label class="toggle">
                         <input type="checkbox">
                         <span class="slider"></span>

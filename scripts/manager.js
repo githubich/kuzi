@@ -20,8 +20,10 @@ window.addEventListener('ready', () => {
         const userInfo = JSON.parse(decodeURI(e.detail.userInfo))
         
         const content = $('#users .actual-content')
+        content.querySelector('.password-input .reveal').removeAttribute('style')
         content.removeAttribute('style')
 
+        content.querySelector('.prettyName-input input').value = userInfo.prettyName
         content.querySelector('.username-input input').value = userInfo.username
 
         const passwordInput = content.querySelector('.password-input input')
@@ -30,8 +32,7 @@ window.addEventListener('ready', () => {
         passwordInput.placeholder = '••••••••••'
         passwordInput.value = ''
 
-        content.querySelector('.password-input .reveal').removeAttribute('style')
-
-        console.log(userInfo)
+        $('#users--role-chooser').value = userInfo.role
+        content.querySelector('.isAdmin-input input[type=checkbox]').checked = userInfo.isAdmin
     })
 })

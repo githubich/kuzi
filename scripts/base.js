@@ -155,3 +155,18 @@ window.addEventListener('keydown', e => {
         $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
     }
 })
+
+// ELEMENT FEATURES
+function minMaxInput(el) {
+    let value = parseInt(el.value),
+        min = parseInt(el.getAttribute('min')),
+        max = parseInt(el.getAttribute('max'))
+    if (value < min) el.value = min
+    else if (value > max) el.value = max
+}
+window.addEventListener('load', () => $$('input[type=date].no-year').forEach(el => {
+    let now = new Date()
+    el.min = `${now.getFullYear()}-01-01`;
+    el.max = `${now.getFullYear()}-12-31`;
+    el.setAttribute('onload', '')
+}))
