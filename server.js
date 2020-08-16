@@ -833,7 +833,7 @@ app.post('/teachers/birthdayList', (req, res) => {
 	let users = importJSON('users.json')
 	let birthdays = []
 	users.forEach(user => {
-		if (user.birthdate && user.birthdate.day == now.getDate() && user.birthdate.month == now.getMonth()) {
+		if (user.birthday && user.birthday.day == now.getDate() && user.birthday.month == now.getMonth()) {
 			delete user.password
 			birthdays.push(user)
 		}
@@ -1004,7 +1004,7 @@ function dailyTasks() {
 	let now = new Date()
 	let users = importJSON('users.json')
 	users.forEach(user => {
-		if (user.birthdate && user.birthdate.day == now.getDate() && user.birthdate.month == now.getMonth()) {
+		if (user.birthday && user.birthday.day == now.getDate() && user.birthday.month == now.getMonth()) {
 			console.log(`[Kuzi|Daily Tasks] Today is ${user.prettyName}'s birthday!`)
 			createNotification({ message: '[{(birthdayMessage)}]', description: '[{(birthdayDescription)}]', userID: user.userID })
 		}

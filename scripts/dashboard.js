@@ -6,7 +6,7 @@ function sortEventsBlocksByDate(a, b) {
     return 0
 }
 function updateNotifications() {
-    let notifications = $('.notifications-dash-block .dash-block-content')
+    let notifications = $('.notifications-dash-block .dash-block-content .content')
     notifications.innerHTML = `<p style="margin: 0;" align="center">[{(loading)}]</p>`
     fetch('/misc/notifications/get', { method: 'POST' }).then(res => res.json())
         .then(res => {
@@ -23,7 +23,7 @@ function updateNotifications() {
                 let submitDate = new Date(notification.timeStamp)
                 notificationE.outerHTML = `
                     <div class="notification">
-                        <div class="clickable" ${(() => { if (action == '') return ''; return `onclick="${action}"` })()} title="${submitDate.getDate()} ${months[submitDate.getMonth()]} ${submitDate.getFullYear()}">
+                        <div class="clickable" ${(() => { if (action == '') return ''; return `onclick="eval(decodeURI('${encodeURI(action)}'))"` })()} title="${submitDate.getDate()} ${months[submitDate.getMonth()]} ${submitDate.getFullYear()}">
                             <i class="fad fa-bell"></i>
                             <div class="notification-content">
                                 <p class="message">${notification.message}</p>
@@ -47,7 +47,7 @@ function discardNotification(notificationID) {
         .catch(e => qError({ message: e, goBack: false }))
 }
 function updateEvents() {
-    let events = $('.events-dash-block .dash-block-content')
+    let events = $('.events-dash-block .dash-block-content .content')
     fetch('/misc/events/get', { method: 'POST' }).then(res => res.json())
         .then(res => {
             res.sort(sortEventsBlocksByDate)
@@ -60,8 +60,10 @@ function updateEvents() {
                 dayE.appendChild(createElement({ type: 'b', innerContent: { type: 'html', content: `<h4>${day.date.day} ${months[day.date.month - 1]} ${day.date.year}</h4>` } }))
 
                 day.events.forEach(event => {
-                    let hoverCard = event.description
-                    if (event.owner.userID != userInfo.userID) hoverCard += `\n[{(owner)}]: ${event.owner.prettyName}`
+                    let hoverCard = ''
+                    if (event.description) hoverCard = `${event.description}`
+                    if (event.description && event.owner.userID != userInfo.userID) hoverCard += '\n'
+                    if (event.owner.userID != userInfo.userID) hoverCard += `[{(owner)}]: ${event.owner.prettyName}`
                     let eventE = document.createElement('div')
                     dayE.appendChild(eventE)
                     eventE.outerHTML = `
@@ -92,9 +94,9 @@ window.addEventListener('ready', () => {
     if (userInfo.role == 'teacher') {
         fetch('/teachers/birthdayList', { method: 'POST' }).then(res => res.json())
             .then(res => {
-                $('.birthday-dash-block .dash-block-content').innerHTML = ''
+                $('.birthday-dash-block .dash-block-content .content').innerHTML = ''
                 res.forEach(cumpleañero => {
-                    $('.birthday-dash-block .dash-block-content').innerHTML += getTemplate('cumpleañero', { name: cumpleañero.prettyName })
+                    $('.birthday-dash-block .dash-block-content .content').innerHTML += getTemplate('cumpleañero', { name: cumpleañero.prettyName })
                 })
             })
             .catch(e => qError({ message: e, goBack: true }))
@@ -103,7 +105,36 @@ window.addEventListener('ready', () => {
     updateEvents()
 })
 window.addEventListener('toggle-modal-new-event', () => {
-    if ($('#new-event-modal').style.display == "none" || userInfo.role != "teacher") return
+    if ($('#new-event-modal').style.display == "none") return
+    submit = () => {
+        let sendData = { name: $('#event-name').value, description: $('#event-description').value, date: {} }
+        sendData.date.year = parseInt($('#event-date').value.split("-")[0])
+        sendData.date.month = parseInt($('#event-date').value.split("-")[1])
+        sendData.date.day = parseInt($('#event-date').value.split("-")[2])
+        if (userInfo.role == "teacher") {
+            if ($('#forMyStudentsAndMe').checked) {
+                sendData.teacherMode = "forMyStudentsAndMe"
+                sendData.visibleTo = []
+                $$('#students-in-class input').forEach(e => {
+                    if (e.checked) sendData.visibleTo.push(parseInt(e.getAttribute('studentID')))
+                })
+            } else sendData.teacherMode = "justForMe"
+        }
+        if (sendData.name && sendData.date.year != NaN && sendData.date.month != NaN && sendData.date.day != NaN && (!sendData.visibleTo || sendData.visibleTo.length > 0)) {
+            fetch('/misc/events/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sendData)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.message == 'ok') qAlert({ message: "[{(success.event.submit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) toggleModal('new-event'); updateEvents() })
+                    if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
+                })
+                .catch(e => qError({ message: e, goBack: true }))
+        } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
+    }
+    if (userInfo.role != "teacher") return
     fetch('/teachers/getInfo', { method: "POST" }).then(res => res.json())
         .then(res => {
             data = res
@@ -132,32 +163,5 @@ window.addEventListener('toggle-modal-new-event', () => {
         })
         $('.students').style = ""
     }
-    submit = () => {
-        let sendData = { name: $('#event-name').value, description: $('#event-description').value, date: {} }
-        sendData.date.year = parseInt($('#event-date').value.split("-")[0])
-        sendData.date.month = parseInt($('#event-date').value.split("-")[1])
-        sendData.date.day = parseInt($('#event-date').value.split("-")[2])
-        if (userInfo.role == "teacher") {
-            if ($('#forMyStudentsAndMe').checked) {
-                sendData.teacherMode = "forMyStudentsAndMe"
-                sendData.visibleTo = []
-                $$('#students-in-class input').forEach(e => {
-                    if (e.checked) sendData.visibleTo.push(parseInt(e.getAttribute('studentID')))
-                })
-            } else sendData.teacherMode = "justForMe"
-        }
-        if (sendData.name && sendData.description && sendData.date.year != NaN && sendData.date.month != NaN && sendData.date.day != NaN && (!sendData.visibleTo || sendData.visibleTo.length > 0)) {
-            fetch('/misc/events/create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(sendData)
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.message == 'ok') qAlert({ message: "[{(success.eventSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) toggleModal('new-event'); updateEvents() })
-                    if (res.message == 'not ok') qAlert({ message: "[{(error.unknown)}]", mode: 'error', buttons: { ok: { text: '[{(retry)}]' }, cancel: { text: "[{(doNotRetry)}]" } } }).then(ans => { if (ans == true) submit() })
-                })
-                .catch(e => qError({ message: e, goBack: true }))
-        } else qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
-    }
+    
 })

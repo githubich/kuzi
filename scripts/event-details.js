@@ -45,7 +45,8 @@ window.addEventListener('ready', () => {
             if (res.message == 'not allowed') qError({ message: "[{(error.notAllowed)}]", goBack: true })
             let months = ['[{(january)}]','[{(february)}]','[{(march)}]','[{(april)}]','[{(may)}]','[{(june)}]','[{(july)}]','[{(august)}]','[{(september)}]','[{(octover)}]','[{(november)}]','[{(december)}]']
             $('#view p.name').innerText += res.name
-            $('#view p.description').innerText += res.description
+            if (res.description) $('#view p.description').innerText += res.description
+            else $('#view p.description').remove()
             $('#view p.date').innerText += `${res.date.day} ${months[res.date.month - 1]} ${res.date.year}`
             $('#view p.owner').innerText += res.owner.prettyName
             if (res.owner.userID == userInfo.userID) {

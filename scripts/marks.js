@@ -174,7 +174,7 @@ window.addEventListener('ready', () => {
             })
             if (!sendData.name || !sendData.subjectID || !sendData.periodID || !sendData.marks.length > 0 || invalid === true) return qAlert({ message: "[{(error.invalidInput)}]", mode: 'error', buttons: { cancel: { invisible: true } } })
             fetch('/teachers/marks/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sendData) }).then(res => res.json()
-                .then(() => qAlert({ message: "[{(success.markSubmit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
+                .then(() => qAlert({ message: "[{(success.mark.submit)}]", mode: 'success', buttons: { cancel: { invisible: true } } }).then(ans => { if (ans == true) location.reload() }) ))
                 .catch(e => qError({ message: e, goBack: false }))
         }
         submitEdit = (elem, markID) => {
