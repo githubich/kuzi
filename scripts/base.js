@@ -13,7 +13,6 @@ function updateUserInfo(info, fromCache) {
     if (info.role == "teacher") {
         if (info.currentSubject.subjectID) $('.user-info .status').innerText = `${info.class.prettyName} | ${info.currentSubject.prettyName}`
         else $('.user-info .status').innerText = `[{(teacher)}]`
-        if ($('#markGraph')) $('#markGraph').remove()
     } else if (info.role == "student") {
         if (info.currentSubject.subjectID) $('.user-info .status').innerText = `${info.class.prettyName} | ${info.currentSubject.prettyName}`
         else $('.user-info .status').innerText = `${info.class.prettyName}`
@@ -33,6 +32,8 @@ function updateUserInfo(info, fromCache) {
             childSelector.value = $parseCookies().selectedChild
         }
     }
+    if ($('#markGraph') && info.role != 'teacher' && !fromCache) $('#markGraph').src = "/mark-graph.html"
+    else if ($('#markGraph') && info.role == 'teacher' && !fromCache) $('#markGraph').remove()
     dropdown.style.left = `${$('header > div:nth-child(2)').offsetLeft}px`
     dropdown.style.width = `${$("header > :nth-child(4)").offsetLeft - $("header > :nth-child(2)").offsetLeft + 1}px`
 }
