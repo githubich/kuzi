@@ -64,7 +64,8 @@ iframe { border: none; }
     .content#users .info-container { grid-template-columns: repeat(3, 1fr); }
     .content#users .info-container .isAdmin-input { display: flex; flex-direction: column; }
     .content#users .info-container .isAdmin-input .toggle { margin: auto 0 0 0; }
-    .actual-content { padding: 0 20px; }
+    .actual-content { padding: 0 20px; display: flex; flex-direction: column; }
+    .actual-content > button { margin-top: auto; margin-bottom: 0; }
 
     aside, aside iframe { height: 100%; }
     aside { padding: 0 20px 0 0; border-width: 0 1px 0 0; width: 20vw; }

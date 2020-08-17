@@ -998,6 +998,19 @@ app.post('/manager/users/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	res.respond(JSON.stringify(importJSON('users.json')), '', '', 200)
 })
+app.post('/manager/users/edit', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let users = importJSON('users.json')
+	const userIndex = users.findIndex(e => e.userID == req.body.userID)
+
+	if (userIndex === -1) res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	users[userIndex] = req.body
+	saveJSON('users.json', users)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
+})
 
 function dailyTasks() {
 	console.log('[Kuzi|Daily Tasks] Running...')

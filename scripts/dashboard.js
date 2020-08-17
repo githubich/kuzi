@@ -83,14 +83,6 @@ window.addEventListener('load', () => {
     setActiveTab(0)
 })
 window.addEventListener('ready', () => {
-    if (getComputedStyle($('.motivation-dash-block')).display != "none") {
-        fetch('https://gist.githubusercontent.com/ezarcel/5749f919b44cc4291d59bcc8e4169147/raw/b7e0b2fb4ea9c466271b562668d7edc4aa692627/enterpreneur-quotes.json').then(res => res.json())
-            .then(res => {
-                let quoteIndex = random(0, res.length - 1)
-                $(".motivation-dash-block .title").innerText = `${res[quoteIndex].a} ~ ${res[quoteIndex].b}`
-            })
-            .catch(e => qError({ message: e, goBack: false }))
-    }
     if (userInfo.role == 'teacher') {
         fetch('/teachers/birthdayList', { method: 'POST' }).then(res => res.json())
             .then(res => {
@@ -103,6 +95,14 @@ window.addEventListener('ready', () => {
     }
     updateNotifications()
     updateEvents()
+    if (getComputedStyle($('.motivation-dash-block')).display != "none") {
+        fetch('https://gist.githubusercontent.com/ezarcel/5749f919b44cc4291d59bcc8e4169147/raw/b7e0b2fb4ea9c466271b562668d7edc4aa692627/enterpreneur-quotes.json').then(res => res.json())
+            .then(res => {
+                let quoteIndex = random(0, res.length - 1)
+                $(".motivation-dash-block .title").innerText = `${res[quoteIndex].a} ~ ${res[quoteIndex].b}`
+            })
+            .catch(e => qError({ message: e, goBack: false }))
+    }
 })
 window.addEventListener('toggle-modal-new-event', () => {
     if ($('#new-event-modal').style.display == "none") return

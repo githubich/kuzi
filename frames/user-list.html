@@ -9,8 +9,7 @@
         <script async src="/lib/qTools.js"></script>
         <script>
             parent.addEventListener('ready', () => {
-                if (!parent.userInfo.isAdmin) location = '/403.html'
-                fetch('/manager/users/list', { method: 'POST' }).then(res => res.json())
+                if (parent && parent.userInfo && parent.userInfo.isAdmin) fetch('/manager/users/list', { method: 'POST' }).then(res => res.json())
                     .then(users => {
                         $('#user-container').innerHTML = ''
                         users.forEach(user => {

@@ -3,7 +3,7 @@
         "username": "admin.teacher",
         "password": "kuzi",
         "prettyName": "Admin Teacher",
-        "userID": 1,
+        "userID": "1",
         "role": "teacher",
         "isAdmin": true
     },
@@ -11,7 +11,7 @@
         "username": "nonadmin.teacher",
         "password": "kuzi",
         "prettyName": "Non-Admin Teacher",
-        "userID": 2,
+        "userID": "2",
         "role": "teacher",
         "isAdmin": false
     },
@@ -19,7 +19,7 @@
         "username": "admin.student",
         "password": "kuzi",
         "prettyName": "Admin Student",
-        "userID": 3,
+        "userID": "3",
         "role": "student",
         "isAdmin": true
     },
@@ -27,7 +27,7 @@
         "username": "nonadmin.student",
         "password": "kuzi",
         "prettyName": "Non-Admin Student",
-        "userID": 4,
+        "userID": "4",
         "role": "student",
         "isAdmin": false
     },
@@ -35,18 +35,24 @@
         "username": "admin.parent",
         "password": "kuzi",
         "prettyName": "Admin Parent",
-        "userID": 5,
+        "userID": "5",
         "role": "parent",
         "isAdmin": true,
-        "childrenIDs": [ 3, 4 ]
+        "childrenIDs": [
+            "3",
+            "4"
+        ]
     },
     {
         "username": "nonadmin.parent",
         "password": "kuzi",
         "prettyName": "Non-Admin Parent",
-        "userID": 6,
+        "userID": "6",
         "role": "parent",
         "isAdmin": false,
-        "childrenIDs": [ 3, 4 ]
+        "childrenIDs": [
+            "3",
+            "4"
+        ]
     }
 ]
