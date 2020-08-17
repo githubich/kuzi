@@ -8,8 +8,18 @@
         <script async src="/lib/qDOM.js"></script>
         <script async src="/lib/qTools.js"></script>
         <script>
+            window.addEventListener('load', () => {
+                const search = $('#search')
+                search.addEventListener('input', () => {
+                    const ul = $('ul#user-container')
+                    ul.querySelectorAll('li').forEach(user => {
+                        user.removeAttribute('style')
+                        if (!user.querySelector('label').innerText.toLowerCase().includes(search.value.toLowerCase())) user.style.display = 'none'
+                    })
+                })
+            })
             parent.addEventListener('ready', () => {
-                if (parent && parent.userInfo && parent.userInfo.isAdmin) fetch('/manager/users/list', { method: 'POST' }).then(res => res.json())
+                if (parent.userInfo.isAdmin === true) fetch('/manager/users/list', { method: 'POST' }).then(res => res.json())
                     .then(users => {
                         $('#user-container').innerHTML = ''
                         users.forEach(user => {
@@ -24,9 +34,15 @@
             ::-webkit-scrollbar-thumb { background: var(--bg-shade2); border-radius: 3.25px; }
             ::-webkit-scrollbar-thumb:hover { background: var(--bg-shade3); }
             ::-webkit-scrollbar-thumb:active { background: var(--bg-shade4); }
-            * { box-sizing: border-box; user-select: none; }
+            input[type=search]::-ms-clear,
+            input[type=search]::-ms-reveal, 
+            input[type=search]::-webkit-search-decoration,
+            input[type=search]::-webkit-search-cancel-button,
+            input[type=search]::-webkit-search-results-button,
+            input[type=search]::-webkit-search-results-decoration { display: none; width: 0; height: 0; }
+
+            * { box-sizing: border-box; user-select: none; outline: none; }
             body {
-                font-family: 'Open Sans', Arial, Helvetica, sans-serif;
                 background-color: transparent;
                 color: var(--bg-alt);
                 max-height: 100vh;
@@ -34,25 +50,31 @@
                 display: flex;
                 flex-direction: column;
             }
+            body, #search { font-family: 'Open Sans', Arial, Helvetica, sans-serif; }
             body, ul, li, h3 { padding: 0; margin: 0; }
-            ul {
-                overflow: auto;
-	            height: 100%;
-            }
+            ul { overflow: auto; height: 100%; }
             li { display: flex; }
-            input + label {
-                padding: 7.5px;
-                width: 100%;
-            }
-            input:checked + label {
-                background-color: var(--accent);
-                color: #fff;
-            }
+            input + label { padding: 7.5px; width: 100%; }
+            input:checked + label { background-color: var(--accent); color: #fff; }
             ul, li { list-style: none; }
             header { padding: 0 0 12.5px 0; }
             header * { display: inline-block; }
             h3 { font-weight: normal; }
             header a { float: right; position: absolute; top: 2px; right: 0 }
+            #search-box {
+                display: flex;
+                flex-direction: row;
+                padding: 5px 10px;
+                border: solid var(--bg-alt); border-width: 0 0 1px 0;
+            }
+            #search-box > * { margin-top: auto; margin-bottom: auto; }
+            #search {
+                margin-left: 10px;
+                border: none; padding: 0;
+                font-size: 16px;
+                color: var(--bg-alt);
+            }
+            #search-box, #search { width: 100%; background-color: transparent; }
         </style>
     </head>
     <body>
@@ -66,9 +88,11 @@
         </div>
         <header>
             <h3 id="header-text">[{(users)}]</h3>
-            <a href="#">
-                <i id="header-icon" class="fad fa-plus" title="[{(newUser)}]"></i>
-            </a>
+            <a><i id="header-icon" class="fad fa-plus" title="[{(newUser)}]"></i></a>
+            <div id="search-box">
+                <i class="fad fa-search"></i>
+                <input type="search" id="search" autocomplete="off">
+            </div>
         </header>
         <ul id="user-container">
 
