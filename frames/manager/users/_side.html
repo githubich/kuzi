@@ -36,6 +36,14 @@
                         })
                     })
             })
+            function newUser() {
+                fetch('/manager/users/new', { method: 'POST' }).then(r => r.json())
+                    .then(res => {
+                        $('#user-container').innerHTML += getTemplate('user', { name: res.prettyName, id: res.userID, userInfo: encodeURI(JSON.stringify(res)) })
+                        window.frameElement.dispatchEvent(new CustomEvent('select', { detail: { userInfo: encodeURI(JSON.stringify(res)) } }))
+                        $('#user-container').children[$('#user-container').children.length - 1].querySelector('input[type=radio]').checked = true
+                    })
+            }
         </script>
         <style>
             ::-webkit-scrollbar { width: 7.5px; height: 7.5px; }
@@ -97,7 +105,7 @@
         <header>
             <h3 id="header-text">[{(users)}]</h3>
             <div class="icons">
-                <a class="header-icon new-user">
+                <a class="header-icon new-user" onclick="newUser()">
                     <i class="fad fa-plus" title="[{(newUser)}]"></i>
                 </a>
                 <a class="header-icon delete-selected-user">

@@ -1019,6 +1019,26 @@ app.post('/manager/users/edit', (req, res) => {
 
 	res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
 })
+app.post('/manager/users/new', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let users = importJSON('users.json')
+	
+	let newUserID = v4()
+	let newUser = {
+		username: "new.user",
+        password: "kuzi",
+        prettyName: "New User",
+        userID: newUserID,
+        role: "student",
+        isAdmin: false
+	}
+
+	users.push(newUser)
+	saveJSON('users.json', users)
+
+	res.respond(JSON.stringify(newUser), '', 'application/json', 200)
+})
 app.post('/manager/classes/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	let classes = importJSON('classes.json')
