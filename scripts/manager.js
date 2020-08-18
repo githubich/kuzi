@@ -39,6 +39,19 @@ window.addEventListener('ready', () => {
         $('#users--role-chooser').value = info.role
         content.querySelector('.isAdmin-input input[type=checkbox]').checked = info.isAdmin
 
+        if (info.role == 'student') {
+            content.querySelector('.class-input').removeAttribute('style')
+            content.querySelector('.children-input').style.display = 'none'
+            if (info.role == 'student' && info.class != undefined) content.querySelector('.class-input span').innerText = info.class.prettyName
+            else content.querySelector('.class-input span').innerText = '[{(noClassSelected)}]'
+        } else if (info.role == 'parent') {
+            content.querySelector('.class-input').style.display = 'none'
+            content.querySelector('.children-input').removeAttribute('style')
+        } else {
+            content.querySelector('.class-input').style.display = 'none'
+            content.querySelector('.children-input').style.display = 'none'
+        }
+        
         content.querySelector('button.submit').setAttribute('userID', info.userID)
     })
     users__submit = userID => {

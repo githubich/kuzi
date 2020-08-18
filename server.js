@@ -996,7 +996,14 @@ app.post('/manager/template', (req, res) => {
 })
 app.post('/manager/users/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
-	res.respond(JSON.stringify(importJSON('users.json')), '', '', 200)
+	const classes = importJSON('classes.json')
+	let users = importJSON('users.json')
+	users.map(user => {
+		if (user.role == 'student') {
+			classes.forEach(clas => { if (clas.students.includes(user.userID) || clas.students.includes(parseInt(user.userID))) user.class = clas })
+		}
+	})
+	res.respond(JSON.stringify(users), '', '', 200)
 })
 app.post('/manager/users/edit', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)

@@ -24,7 +24,7 @@
     </div>
     <div class="content" id="users">
         <aside>
-            <iframe id="users--user-list" src="/frames/user-list.html"></iframe>
+            <iframe id="users--user-list" src="/frames/user-list-single-choice.html"></iframe>
         </aside>
         <div class="actual-content" style="display: none;">
             <h2 class="content-title icon-container"><i class="fad fa-info-circle icon"></i>[{(information)}]:</h2>
@@ -65,6 +65,13 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+            </div>
+            <div class="class-input">
+                <p class="hint"><i class="fad fa-users"></i>[{(class)}]</p><br>
+                <span>[{(noClassSelected)}]</span><a style="margin-left: .3em;">[{(viewInClasses)}]...</a>
+            </div>
+            <div class="children-input">
+                <p class="hint"><i class="fad fa-users"></i>[{(children)}]</p><br>
             </div>
             <button class="icon-container submit" onclick="users__submit(this.getAttribute('userID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
         </div>

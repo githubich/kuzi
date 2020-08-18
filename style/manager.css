@@ -10,6 +10,7 @@ body { position: relative; }
 .tab div { margin: auto; }
 .content { background-color: var(--bg-shade1); padding: 20px; border-radius: 0 0 10px 10px; }
 .info-container { display: grid; gap: 20px; }
+.content#users .info-container ~ div { margin-top: 20px; }
 .content-title { margin-bottom: 20px; }
 
 #users .password-input > div { display: flex; }
