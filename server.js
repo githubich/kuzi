@@ -992,7 +992,8 @@ app.post('/misc/schedule/get', (req, res) => {
 
 app.post('/manager/template', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
-	res.respond('', '', '', 200)
+	
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 app.post('/manager/users/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
@@ -1031,6 +1032,19 @@ app.post('/manager/classes/list', (req, res) => {
 		return clas
 	})
 	res.respond(JSON.stringify(classes), '', '', 200)
+})
+app.post('/manager/classes/edit', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let classes = importJSON('classes.json')
+	const classIndex = classes.findIndex(e => e.classID == req.body.classID)
+
+	if (classIndex === -1) res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	classes[classIndex] = req.body
+	saveJSON('classes.json', classes)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 
 function dailyTasks() {

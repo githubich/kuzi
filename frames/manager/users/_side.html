@@ -55,16 +55,19 @@
             }
             body, #search { font-family: 'Open Sans', Arial, Helvetica, sans-serif; }
             body, ul, li, h3 { padding: 0; margin: 0; }
-            ul { overflow: auto; height: 100%; }
+            ul { overflow: auto; height: 100%; margin: 12.5px 0 0 0; }
             li { display: flex; }
             input[type=radio] { display: none; }
             input + label { padding: 7.5px; width: 100%; }
             input:checked + label { background-color: var(--accent); color: #fff; }
             ul, li { list-style: none; }
-            header { padding: 0 0 12.5px 0; }
             header * { display: inline-block; }
             h3 { font-weight: normal; }
-            header a { float: right; position: absolute; top: 2px; right: 0 }
+            header .icons {
+                float: right;
+                position: relative; top: 2px;
+                display: grid; gap: 7.5px; grid-template-columns: repeat(3, 1fr);
+            }
             #search-box {
                 display: flex;
                 flex-direction: row;
@@ -93,7 +96,17 @@
         </div>
         <header>
             <h3 id="header-text">[{(users)}]</h3>
-            <a><i id="header-icon" class="fad fa-plus" title="[{(newUser)}]"></i></a>
+            <div class="icons">
+                <a class="header-icon new-user">
+                    <i class="fad fa-plus" title="[{(newUser)}]"></i>
+                </a>
+                <a class="header-icon delete-selected-user">
+                    <i class="fad fa-trash" title="[{(deleteSelected)}]"></i>
+                </a>
+                <a class="header-icon delete-all-users">
+                    <i class="fad fa-dumpster" title="[{(deleteAll)}]"></i>
+                </a>
+            </div>
             <div id="search-box" onclick="this.children[1].focus()">
                 <i class="fad fa-search"></i>
                 <input type="search" id="search" autocomplete="off">

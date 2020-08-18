@@ -62,24 +62,25 @@ iframe { border: none; }
 .toggle input:checked + span::before { transform: translateX(calc(var(--l-width) - (var(--l-margin) * 2) - (var(--l-border) * 2) - var(--l-slider-size))); background-color: #fff; }
 
 @media (min-width: 601px) {
+    html, body, main, #root, #manager { overflow: hidden; }
     html, body, main, #root, #manager, .content { height: 100%; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
     
-    .content { display: grid; grid-template-columns: auto 1fr; }
+    .content { display: grid; grid-template-columns: auto 1fr; overflow: auto; }
     .content#users .info-container { grid-template-columns: repeat(3, 1fr); }
     .content#users .info-container .isAdmin-input { display: flex; flex-direction: column; }
     .content#users .info-container .isAdmin-input .toggle { margin: auto 0 0 0; }
     .actual-content { padding: 0 20px; display: flex; flex-direction: column; }
     .actual-content > button { margin-top: auto; margin-bottom: 0; }
 
-    aside, aside iframe { height: 100%; }
+    aside, aside iframe { height: 100%; min-height: max-content; }
     aside { padding: 0 20px 0 0; border-width: 0 1px 0 0; width: 20vw; }
     iframe { width: 100%; }
 
     .content#users .info-container ~ div, iframe, .content#classes .students-input { height: 100%; }
 }
 @media (max-width: 600px) {
-    .tabs { display: block }
+    .tabs { display: block; }
     .tab { padding: 10px; }
     .tab:nth-child(1) { border-radius: 10px 10px 0 0; }
 
