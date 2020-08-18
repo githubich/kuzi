@@ -9,7 +9,7 @@ module.exports = function kuziMiddleware(req, res, next) {
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
         else if (!content) content = readFileSync(file)
-        if ((mime == "text/html" || mime == "text/javascript") && !req.url.includes('/users/')) {
+        if ((mime == "text/html" || mime == "text/javascript") && req.url.slice(0,7) != '/users/') {
             content = content.toString('utf8')
             locales.forEach(locale => content = content.split(`[{(${locale.split('|')[0]})}]`).join(locale.split('|')[1]))
         }

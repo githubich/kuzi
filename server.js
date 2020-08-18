@@ -1018,6 +1018,20 @@ app.post('/manager/users/edit', (req, res) => {
 
 	res.respond(JSON.stringify({ message: 'ok' }), '', '', 200)
 })
+app.post('/manager/classes/list', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	let classes = importJSON('classes.json')
+	const users = importJSON('users.json')
+	classes.map(clas => {
+		clas.students = clas.students.map(student => {
+			let user = users.find(e => e.userID == student)
+			delete user.password
+			return user
+		})
+		return clas
+	})
+	res.respond(JSON.stringify(classes), '', '', 200)
+})
 
 function dailyTasks() {
 	console.log('[Kuzi|Daily Tasks] Running...')

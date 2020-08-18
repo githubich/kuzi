@@ -84,4 +84,49 @@ window.addEventListener('ready', () => {
             })
             .catch(e => qError({ goBack: false }))
     }
+
+    $('#classes--class-list').addEventListener('select', e => {
+        if (!e.detail.classInfo) return
+        const info = JSON.parse(decodeURI(e.detail.classInfo))
+
+        const content = $('.content#classes .actual-content')
+        content.removeAttribute('style')
+
+        content.querySelector('.prettyName-input input').value = info.prettyName
+
+        content.querySelector('.students-input iframe').contentWindow.set(info.classID)
+        
+        content.querySelector('button.submit').setAttribute('classID', info.classID)
+    })
+    users__submit = userID => {
+        if (!userID) throw Error('No userID specified')
+        const content = $('.content#users .actual-content')
+        let sendData = {
+            username: content.querySelector('.username-input input').value,
+            password: content.querySelector('.password-input input').value || content.querySelector('.password-input input').getAttribute('password'),
+            prettyName: content.querySelector('.prettyName-input input').value,
+            userID,
+            role: content.querySelector('.role-input select').value,
+            isAdmin: content.querySelector('.isAdmin-input input').checked
+        }
+
+        let birthday = content.querySelector('.birthday-input input').value
+        if (birthday) sendData.birthday = {
+            day: parseInt(birthday.split('-')[2]),
+            month: parseInt(birthday.split('-')[1])
+        }
+
+        if (sendData.role == 'parent') sendData.childrenIDs = content.querySelector('.children-input iframe').contentWindow.getSelected()
+
+        fetch('/manager/users/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sendData)
+        }).then(r => r.json())
+            .then(r => {
+                if (r.message = 'ok') qSuccess({ message: "[{(success.manager.user.edit)}]" }).then(a => location.reload())
+                else qError({ goBack: false })
+            })
+            .catch(e => qError({ goBack: false }))
+    }
 })

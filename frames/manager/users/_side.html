@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" oncontextmenu="event.preventDefault()">
+    <head>
+        <script async="false" src="/scripts/theming.js"></script>
+        <link rel="stylesheet" href="/style/theming.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap">
+        <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+        <script async src="/lib/qDOM.js"></script>
+        <script async src="/lib/qTools.js"></script>
+        <script>
+            window.addEventListener('load', () => {
+                const search = $('#search')
+                search.addEventListener('input', () => {
+                    const ul = $('ul#user-container')
+                    ul.querySelectorAll('li').forEach(user => {
+                        user.removeAttribute('style')
+                        if (!user.querySelector('label').innerText.toLowerCase().includes(search.value.toLowerCase())) user.style.display = 'none'
+                    })
+                })
+            })
+            parent.addEventListener('ready', () => {
+                if (parent.userInfo.isAdmin === true) fetch('/manager/users/list', { method: 'POST' }).then(res => res.json())
+                    .then(users => {
+                        $('#user-container').innerHTML = ''
+                        users.forEach(user => {
+                            $('#user-container').innerHTML += getTemplate('user', { name: user.prettyName, id: user.userID, userInfo: encodeURI(JSON.stringify(user)) })
+                        })
+                        $$('#user-container li input[type=radio]').forEach(user => {
+                            user.addEventListener('input', function() {
+                                window.frameElement.dispatchEvent(new CustomEvent('select', {
+                                    detail: {
+                                        userInfo: this.getAttribute('userInfo')
+                                    }
+                                }))
+                            })
+                        })
+                    })
+            })
+        </script>
+        <style>
+            ::-webkit-scrollbar { width: 7.5px; height: 7.5px; }
+            ::-webkit-scrollbar-track { background: var(--bg-shade1); border-radius: 3.25px; }
+            ::-webkit-scrollbar-thumb { background: var(--bg-shade2); border-radius: 3.25px; }
+            ::-webkit-scrollbar-thumb:hover { background: var(--bg-shade3); }
+            ::-webkit-scrollbar-thumb:active { background: var(--bg-shade4); }
+
+            * { box-sizing: border-box; user-select: none; outline: none; }
+            body {
+                background-color: transparent;
+                color: var(--bg-alt);
+                max-height: 100vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+            body, #search { font-family: 'Open Sans', Arial, Helvetica, sans-serif; }
+            body, ul, li, h3 { padding: 0; margin: 0; }
+            ul { overflow: auto; height: 100%; }
+            li { display: flex; }
+            input[type=radio] { display: none; }
+            input + label { padding: 7.5px; width: 100%; }
+            input:checked + label { background-color: var(--accent); color: #fff; }
+            ul, li { list-style: none; }
+            header { padding: 0 0 12.5px 0; }
+            header * { display: inline-block; }
+            h3 { font-weight: normal; }
+            header a { float: right; position: absolute; top: 2px; right: 0 }
+            #search-box {
+                display: flex;
+                flex-direction: row;
+                padding: 5px 10px;
+                border: solid var(--bg-alt); border-width: 0 0 1px 0;
+                cursor: text;
+            }
+            #search-box > * { margin-top: auto; margin-bottom: auto; }
+            #search {
+                margin-left: 10px;
+                border: none; padding: 0;
+                font-size: 16px;
+                color: var(--bg-alt);
+            }
+            #search-box, #search { width: 100%; background-color: transparent; }
+        </style>
+    </head>
+    <body>
+        <div id="templates">
+            <template id="user">
+                <li>
+                    <input type="radio" name="user-selector" userInfo="%userInfo%" id="user-%id%" style="display: none;">
+                    <label for="user-%id%">%name%</label>
+                </li>
+            </template>
+        </div>
+        <header>
+            <h3 id="header-text">[{(users)}]</h3>
+            <a><i id="header-icon" class="fad fa-plus" title="[{(newUser)}]"></i></a>
+            <div id="search-box" onclick="this.children[1].focus()">
+                <i class="fad fa-search"></i>
+                <input type="search" id="search" autocomplete="off">
+            </div>
+        </header>
+        <ul id="user-container"></ul>
+    </body>
+</html>

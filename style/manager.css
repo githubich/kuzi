@@ -22,6 +22,8 @@ iframe { border: none; }
 
 #users--students-list { margin: 10px 0 0 0; }
 
+.content#classes .students-input { margin: 20px 0 0 0; }
+
 .toggle {
     display: inline-block;
     position: relative;
@@ -63,7 +65,7 @@ iframe { border: none; }
     html, body, main, #root, #manager, .content { height: 100%; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
     
-    .content#users { display: grid; grid-template-columns: .1fr 1fr; }
+    .content { display: grid; grid-template-columns: auto 1fr; }
     .content#users .info-container { grid-template-columns: repeat(3, 1fr); }
     .content#users .info-container .isAdmin-input { display: flex; flex-direction: column; }
     .content#users .info-container .isAdmin-input .toggle { margin: auto 0 0 0; }
@@ -74,7 +76,7 @@ iframe { border: none; }
     aside { padding: 0 20px 0 0; border-width: 0 1px 0 0; width: 20vw; }
     iframe { width: 100%; }
 
-    .content#users .info-container ~ div, iframe { height: 100%; }
+    .content#users .info-container ~ div, iframe, .content#classes .students-input { height: 100%; }
 }
 @media (max-width: 600px) {
     .tabs { display: block }

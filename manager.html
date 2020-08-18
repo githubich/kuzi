@@ -4,27 +4,25 @@
 
 <div id="manager">
     <div class="tabs">
-        <div class="tabs">
-            <a class="tab selected" value="users" onclick="changeTab(this)">
-                <div><i class="fad fa-users"></i><span>[{(users)}]</span></div>
-            </a>
-            <a class="tab" value="classes" onclick="changeTab(this)">
-                <div><i class="fad fa-th-large"></i><span>[{(classes)}]</span></div>
-            </a>
-            <a class="tab" value="subjects" onclick="changeTab(this)">
-                <div><i class="fad fa-calendar-check"></i><span>[{(subjects)}]</span></div>
-            </a>
-            <a class="tab" value="scheduling" onclick="changeTab(this)">
-                <div><i class="fad fa-calendar-week"></i><span>[{(scheduling)}]</span></div>
-            </a>
-            <a class="tab" value="periods" onclick="changeTab(this)">
-                <div><i class="fad fa-calendar-alt"></i><span>[{(periods)}]</span></div>
-            </a>
-        </div>
+        <a class="tab selected" value="users" onclick="changeTab(this)">
+            <div><i class="fad fa-users"></i><span>[{(users)}]</span></div>
+        </a>
+        <a class="tab" value="classes" onclick="changeTab(this)">
+            <div><i class="fad fa-th-large"></i><span>[{(classes)}]</span></div>
+        </a>
+        <a class="tab" value="subjects" onclick="changeTab(this)">
+            <div><i class="fad fa-calendar-check"></i><span>[{(subjects)}]</span></div>
+        </a>
+        <a class="tab" value="scheduling" onclick="changeTab(this)">
+            <div><i class="fad fa-calendar-week"></i><span>[{(scheduling)}]</span></div>
+        </a>
+        <a class="tab" value="periods" onclick="changeTab(this)">
+            <div><i class="fad fa-calendar-alt"></i><span>[{(periods)}]</span></div>
+        </a>
     </div>
     <div class="content" id="users">
         <aside>
-            <iframe id="users--user-list" src="/frames/user-list-single-choice.html"></iframe>
+            <iframe id="users--user-list" src="/frames/manager/users/_side.html"></iframe>
         </aside>
         <div class="actual-content" style="display: none;">
             <h2 class="content-title icon-container"><i class="fad fa-info-circle icon"></i>[{(information)}]:</h2>
@@ -72,12 +70,28 @@
             </div>
             <div class="children-input">
                 <p class="hint"><i class="fad fa-users"></i>[{(children)}]</p>
-                <iframe id="users--students-list" src="/frames/students-list-multiple-choice.html"></iframe>
+                <iframe id="users--students-list" src="/frames/manager/users/children.html"></iframe>
             </div>
-            <button class="icon-container submit" onclick="users__submit(this.getAttribute('userID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
+            <button class="icon-container submit" onclick="users_submit(this.getAttribute('userID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
         </div>
     </div>
-    <div class="content" id="classes" style="display: none;"></div>
+    <div class="content" id="classes" style="display: none;">
+        <aside>
+            <iframe id="classes--class-list" src="/frames/manager/classes/_side.html"></iframe>
+        </aside>
+        <div class="actual-content" style="display: none;">
+            <h2 class="content-title icon-container"><i class="fad fa-info-circle icon"></i>[{(information)}]:</h2>
+            <div class="prettyName-input">
+                <p class="hint"><i class="fad fa-users"></i>[{(name)}]</p>
+                <input type="text">
+            </div>
+            <div class="students-input">
+                <p class="hint"><i class="fad fa-th-large"></i>[{(students)}]</p>
+                <iframe src="/frames/manager/classes/students.html"></iframe>
+            </div>
+            <button class="icon-container submit" onclick="users_submit(this.getAttribute('userID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
+        </div>
+    </div>
     <div class="content" id="subjects" style="display: none;"></div>
     <div class="content" id="scheduling" style="display: none;"></div>
     <div class="content" id="periods" style="display: none;"></div>
