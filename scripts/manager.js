@@ -39,17 +39,16 @@ window.addEventListener('ready', () => {
         $('#users--role-chooser').value = info.role
         content.querySelector('.isAdmin-input input[type=checkbox]').checked = info.isAdmin
 
+        content.querySelector('.class-input').style.display = 'none'
+        content.querySelector('.children-input').style.display = 'none'
+
         if (info.role == 'student') {
             content.querySelector('.class-input').removeAttribute('style')
-            content.querySelector('.children-input').style.display = 'none'
             if (info.role == 'student' && info.class != undefined) content.querySelector('.class-input span').innerText = info.class.prettyName
             else content.querySelector('.class-input span').innerText = '[{(noClassSelected)}]'
         } else if (info.role == 'parent') {
-            content.querySelector('.class-input').style.display = 'none'
             content.querySelector('.children-input').removeAttribute('style')
-        } else {
-            content.querySelector('.class-input').style.display = 'none'
-            content.querySelector('.children-input').style.display = 'none'
+            if (info.childrenIDs) content.querySelector('.children-input iframe').contentWindow.select(info.childrenIDs)
         }
         
         content.querySelector('button.submit').setAttribute('userID', info.userID)
@@ -71,6 +70,8 @@ window.addEventListener('ready', () => {
             day: parseInt(birthday.split('-')[2]),
             month: parseInt(birthday.split('-')[1])
         }
+
+        if (sendData.role == 'parent') sendData.childrenIDs = content.querySelector('.children-input iframe').contentWindow.getSelected()
 
         fetch('/manager/users/edit', {
             method: 'POST',

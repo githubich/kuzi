@@ -8,6 +8,14 @@
         <script async src="/lib/qDOM.js"></script>
         <script async src="/lib/qTools.js"></script>
         <script>
+            clearSelection = () => $$(`li input`).forEach(el => el.checked = false)
+            select = IDs => {
+                clearSelection()
+                IDs.forEach(id => {
+                    if ($(`li input[userID="${id}"]`)) $(`li input[userID="${id}"]`).checked = true
+                })
+            }
+            getSelected = () => [ ...$$('li input:checked') ].map(child => child = child.getAttribute('userID'))
             window.addEventListener('load', () => {
                 const search = $('#search')
                 search.addEventListener('input', () => {
@@ -23,16 +31,7 @@
                     .then(users => {
                         $('#user-container').innerHTML = ''
                         users.forEach(user => {
-                            $('#user-container').innerHTML += getTemplate('user', { name: user.prettyName, id: user.userID, userInfo: encodeURI(JSON.stringify(user)) })
-                        })
-                        $$('#user-container li input[type=radio]').forEach(user => {
-                            user.addEventListener('input', function() {
-                                window.frameElement.dispatchEvent(new CustomEvent('select', {
-                                    detail: {
-                                        userInfo: this.getAttribute('userInfo')
-                                    }
-                                }))
-                            })
+                            if (user.role == 'student') $('#user-container').innerHTML += getTemplate('user', { name: user.prettyName, id: user.userID, userInfo: encodeURI(JSON.stringify(user)) })
                         })
                     })
             })
@@ -56,10 +55,9 @@
             body, #search { font-family: 'Open Sans', Arial, Helvetica, sans-serif; }
             body, ul, li, h3 { padding: 0; margin: 0; }
             ul { overflow: auto; height: 100%; }
-            li { display: flex; }
-            input[type=radio] { display: none; }
-            input + label { padding: 7.5px; width: 100%; }
-            input:checked + label { background-color: var(--accent); color: #fff; }
+            li { display: flex; padding: 7.5px; width: 100%; }
+            input[type=checkbox], label { margin: auto 0; }
+            label { padding: 0 0 0 7.5px; width: 100%; }
             ul, li { list-style: none; }
             header { padding: 0 0 12.5px 0; }
             header * { display: inline-block; }
@@ -86,14 +84,13 @@
         <div id="templates">
             <template id="user">
                 <li>
-                    <input type="radio" name="user-selector" userInfo="%userInfo%" id="user-%id%" style="display: none;">
+                    <input type="checkbox" name="user-selector" userID="%id%" id="user-%id%">
                     <label for="user-%id%">%name%</label>
                 </li>
             </template>
         </div>
         <header>
             <h3 id="header-text">[{(users)}]</h3>
-            <a><i id="header-icon" class="fad fa-plus" title="[{(newUser)}]"></i></a>
             <div id="search-box" onclick="this.children[1].focus()">
                 <i class="fad fa-search"></i>
                 <input type="search" id="search" autocomplete="off">

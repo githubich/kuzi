@@ -20,6 +20,8 @@ body { position: relative; }
 aside { border: solid 1px var(--bg-alt); }
 iframe { border: none; }
 
+#users--students-list { margin: 10px 0 0 0; }
+
 .toggle {
     display: inline-block;
     position: relative;
@@ -70,7 +72,9 @@ iframe { border: none; }
 
     aside, aside iframe { height: 100%; }
     aside { padding: 0 20px 0 0; border-width: 0 1px 0 0; width: 20vw; }
-    iframe { width: 100% }
+    iframe { width: 100%; }
+
+    .content#users .info-container ~ div, iframe { height: 100%; }
 }
 @media (max-width: 600px) {
     .tabs { display: block }
