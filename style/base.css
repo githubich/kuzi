@@ -149,7 +149,12 @@ button i, .picture-label i { font-size: 15px; }
 .hint { font-size: 14px; margin: 0 !important; font-style: normal; display: inline-block; }
 .hint i { margin-right: .3em; }
 .password-modal--input { min-width: 100%; }
-.blurry-bg { background-color: var(--bg-semi-alpha); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+@supports (backdrop-filter: blur()) or (-webkit-backdrop-filter: blur()) {
+    .blurry-bg { background-color: var(--bg-semi-alpha); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+}
+@supports (not (backdrop-filter: blur())) or (not (-webkit-backdrop-filter: blur())) {
+    .blurry-bg { background-color: var(--bg-nearly-opaque); }
+}
 input, select { border-radius: 0; }
 input[type=text], input[type=password], input[type=date], input[type=number] { width: 100%; }
 input[type=text], input[type=password], input[type=date], input[type=time], input[type=number], textarea, select {

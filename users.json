@@ -60,39 +60,7 @@
         "password": "kuzi",
         "prettyName": "New User",
         "userID": "f1732bb7-9074-402b-a8d2-051ee73a4c89",
-        "role": "student",
-        "isAdmin": false
-    },
-    {
-        "username": "new.user",
-        "password": "kuzi",
-        "prettyName": "New User",
-        "userID": "7cfce5f8-7225-4c68-b706-6bfd7298056f",
-        "role": "student",
-        "isAdmin": false
-    },
-    {
-        "username": "new.user",
-        "password": "kuzi",
-        "prettyName": "New User",
-        "userID": "ca3a49f5-920d-471b-a4da-5284b51c4a58",
-        "role": "student",
-        "isAdmin": false
-    },
-    {
-        "username": "new.user",
-        "password": "kuzi",
-        "prettyName": "New User",
-        "userID": "bfb680c1-e1d3-4d44-b063-849b7cf1837f",
-        "role": "student",
-        "isAdmin": false
-    },
-    {
-        "username": "new.user",
-        "password": "kuzi",
-        "prettyName": "New User",
-        "userID": "c7e70b50-2767-473b-8e43-9a353a6bc240",
-        "role": "student",
-        "isAdmin": false
+        "role": "teacher",
+        "isAdmin": true
     }
 ]

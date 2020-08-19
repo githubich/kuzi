@@ -104,7 +104,8 @@ window.addEventListener('ready', () => {
                     $('.view-marks-ul').appendChild(createElement({ type: 'li', innerContent: { type: 'html', content: getTemplate('edit-mark', { markName: mark.name, period: mark.periodID, subject: mark.subject.subjectID, subjectName: mark.subject.prettyName, markID: mark.markID }) } }))
                     let marksE = $('.view-marks-ul').children[$('.view-marks-ul').children.length - 1].querySelector('.marks .students')
                     mark.marks.forEach(subMark => {
-                        let foo = createElement({ type: 'a', innerContent: { type: 'html', content: getTemplate('edit-mark-student', { id: subMark.studentID, classID: subMark.student.class.classID, name: subMark.student.prettyName, value: subMark.mark }) } })
+                        const classID = (subMark.student.class && subMark.student.class.classID ? subMark.student.class.classID : undefined)
+                        let foo = createElement({ type: 'a', innerContent: { type: 'html', content: getTemplate('edit-mark-student', { id: subMark.studentID, classID, name: subMark.student.prettyName, value: subMark.mark }) } })
                         marksE.appendChild(foo)
                         foo.outerHTML = foo.innerHTML
                     })
