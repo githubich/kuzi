@@ -36,6 +36,40 @@
                         })
                     })
             })
+            function newClass() {
+                fetch('/manager/classes/new', { method: 'POST' }).then(r => r.json())
+                    .then(res => {
+                        $('#class-container').innerHTML += getTemplate('class', { name: res.prettyName, id: res.classID, classInfo: encodeURI(JSON.stringify(res)) })
+                        window.frameElement.dispatchEvent(new CustomEvent('select', { detail: { classInfo: encodeURI(JSON.stringify(res)) } }))
+                        $('#class-container').children[$('#class-container').children.length - 1].querySelector('input[type=radio]').checked = true
+                    })
+            }
+            function deleteClass() {
+                if (!$('li input:checked')) return;
+                parent.qAreYouSure().then(a => {
+                    if (!a) return;
+                    fetch('/manager/classes/delete', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ classID: $('li input:checked').getAttribute('classID') })
+                    }).then(r => r.json())
+                        .then(res => {
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.classes.delete)}]' }).then(a => parent.location.reload())
+                            else parent.qError({ goBack: false })
+                        })
+                        .catch(e => parent.qError({ message: e, goBack: false }))
+                })
+            }
+            function deleteAllClasses() {
+                parent.qAreYouSure().then(a => {
+                    if (!a) return;
+                    fetch('/manager/classes/deleteAll', { method: 'POST' }).then(r => r.json())
+                        .then(res => {
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.classes.deleteAll)}]' }).then(a => parent.location.reload())
+                            else parent.qError({ goBack: false })
+                        })
+                        .catch(e => parent.qError({ message: e, goBack: false }))
+                })
+            }
         </script>
         <style>
             ::-webkit-scrollbar { width: 7.5px; height: 7.5px; }
@@ -83,13 +117,14 @@
                 color: var(--bg-alt);
             }
             #search-box, #search { width: 100%; background-color: transparent; }
+            [onclick] { cursor: pointer; }
         </style>
     </head>
     <body>
         <div id="templates">
             <template id="class">
                 <li>
-                    <input type="radio" name="class-selector" classInfo="%classInfo%" id="class-%id%" style="display: none;">
+                    <input type="radio" name="class-selector" classInfo="%classInfo%" classID="%id%" id="class-%id%" style="display: none;">
                     <label for="class-%id%">%name%</label>
                 </li>
             </template>
@@ -97,13 +132,13 @@
         <header>
             <h3 id="header-text">[{(classes)}]</h3>
             <div class="icons">
-                <a class="header-icon new-user">
-                    <i class="fad fa-plus" title="[{(newUser)}]"></i>
+                <a class="header-icon new-user" onclick="newClass()">
+                    <i class="fad fa-plus" title="[{(new)}]"></i>
                 </a>
-                <a class="header-icon delete-selected-user">
+                <a class="header-icon delete-selected-user" onclick="deleteClass()">
                     <i class="fad fa-trash" title="[{(deleteSelected)}]"></i>
                 </a>
-                <a class="header-icon delete-all-users">
+                <a class="header-icon delete-all-users" onclick="deleteAllClasses()">
                     <i class="fad fa-dumpster" title="[{(deleteAll)}]"></i>
                 </a>
             </div>

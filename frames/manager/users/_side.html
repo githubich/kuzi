@@ -28,9 +28,7 @@
                         $$('#user-container li input[type=radio]').forEach(user => {
                             user.addEventListener('input', function() {
                                 window.frameElement.dispatchEvent(new CustomEvent('select', {
-                                    detail: {
-                                        userInfo: this.getAttribute('userInfo')
-                                    }
+                                    detail: { userInfo: this.getAttribute('userInfo') }
                                 }))
                             })
                         })
@@ -43,6 +41,32 @@
                         window.frameElement.dispatchEvent(new CustomEvent('select', { detail: { userInfo: encodeURI(JSON.stringify(res)) } }))
                         $('#user-container').children[$('#user-container').children.length - 1].querySelector('input[type=radio]').checked = true
                     })
+            }
+            function deleteUser() {
+                if (!$('li input:checked')) return;
+                parent.qAreYouSure().then(a => {
+                    if (!a) return;
+                    fetch('/manager/users/delete', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userID: $('li input:checked').getAttribute('userID') })
+                    }).then(r => r.json())
+                        .then(res => {
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.users.delete)}]' }).then(a => parent.location.reload())
+                            else parent.qError({ goBack: false })
+                        })
+                        .catch(e => parent.qError({ message: e, goBack: false }))
+                })
+            }
+            function deleteAllUsers() {
+                parent.qAreYouSure().then(a => {
+                    if (!a) return;
+                    fetch('/manager/users/deleteAll', { method: 'POST' }).then(r => r.json())
+                        .then(res => {
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.users.deleteAll)}]' }).then(a => parent.location.reload())
+                            else parent.qError({ goBack: false })
+                        })
+                        .catch(e => parent.qError({ message: e, goBack: false }))
+                })
             }
         </script>
         <style>
@@ -66,7 +90,7 @@
             ul { overflow: auto; height: 100%; margin: 12.5px 0 0 0; }
             li { display: flex; }
             input[type=radio] { display: none; }
-            input + label { padding: 7.5px; width: 100%; }
+            input + label { padding: 7.5px; width: 100%; cursor: pointer; }
             input:checked + label { background-color: var(--accent); color: #fff; }
             ul, li { list-style: none; }
             header * { display: inline-block; }
@@ -91,13 +115,14 @@
                 color: var(--bg-alt);
             }
             #search-box, #search { width: 100%; background-color: transparent; }
+            [onclick] { cursor: pointer; }
         </style>
     </head>
     <body>
         <div id="templates">
             <template id="user">
                 <li>
-                    <input type="radio" name="user-selector" userInfo="%userInfo%" id="user-%id%" style="display: none;">
+                    <input type="radio" name="user-selector" userInfo="%userInfo%" userID="%id%" id="user-%id%" style="display: none;">
                     <label for="user-%id%">%name%</label>
                 </li>
             </template>
@@ -106,12 +131,12 @@
             <h3 id="header-text">[{(users)}]</h3>
             <div class="icons">
                 <a class="header-icon new-user" onclick="newUser()">
-                    <i class="fad fa-plus" title="[{(newUser)}]"></i>
+                    <i class="fad fa-plus" title="[{(new)}]"></i>
                 </a>
-                <a class="header-icon delete-selected-user">
+                <a class="header-icon delete-selected-user" onclick="deleteUser()">
                     <i class="fad fa-trash" title="[{(deleteSelected)}]"></i>
                 </a>
-                <a class="header-icon delete-all-users">
+                <a class="header-icon delete-all-users" onclick="deleteAllUsers()">
                     <i class="fad fa-dumpster" title="[{(deleteAll)}]"></i>
                 </a>
             </div>
