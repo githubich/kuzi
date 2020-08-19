@@ -116,7 +116,7 @@ window.addEventListener('load', () => {
     more = $("#more")
     moreVisible = false
     window.addEventListener('click', e => {
-        if (!dropdownVisible && !moreVisible) return console.log('hey')
+        if (!dropdownVisible && !moreVisible) return;
         if (!e.path && !e.composedPath) return console.warn("[Kuzi] Your browser doesn't support event.path or event.composedPath, the dropdown will stay open")
         if (dropdownVisible && ((e.path && !e.path.includes(dropdown)) || (e.composedPath && !e.composedPath().includes(dropdown)))) toggleDropdown()
         if (moreVisible && ((e.path && !e.path.includes(more)) || (e.composedPath && !e.composedPath().includes(more)))) toggleMore()

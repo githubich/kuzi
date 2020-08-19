@@ -39,17 +39,7 @@ window.addEventListener('ready', () => {
         $('#users--role-chooser').value = info.role
         content.querySelector('.isAdmin-input input[type=checkbox]').checked = info.isAdmin
 
-        content.querySelector('.class-input').style.display = 'none'
-        content.querySelector('.children-input').style.display = 'none'
-
-        if (info.role == 'student') {
-            content.querySelector('.class-input').removeAttribute('style')
-            if (info.role == 'student' && info.class != undefined) content.querySelector('.class-input span').innerText = info.class.prettyName
-            else content.querySelector('.class-input span').innerText = '[{(noClassSelected)}]'
-        } else if (info.role == 'parent') {
-            content.querySelector('.children-input').removeAttribute('style')
-            if (info.childrenIDs) content.querySelector('.children-input iframe').contentWindow.select(info.childrenIDs)
-        }
+        users_updateBottom(info)
         
         content.querySelector('button.submit').setAttribute('userID', info.userID)
     })
@@ -84,7 +74,23 @@ window.addEventListener('ready', () => {
             })
             .catch(e => qError({ goBack: false }))
     }
+    users_updateBottom = info => {
+        const content = $('.content#users .actual-content')
+        content.querySelector('.class-input').style.display = 'none'
+        content.querySelector('.children-input').style.display = 'none'
 
+        if (info.role == 'student') {
+            content.querySelector('.class-input').removeAttribute('style')
+            if (info.role == 'student' && info.class != undefined) content.querySelector('.class-input span').innerText = info.class.prettyName
+            else content.querySelector('.class-input span').innerText = '[{(noClassSelected)}]'
+        } else if (info.role == 'parent') {
+            content.querySelector('.children-input').removeAttribute('style')
+            content.querySelector('.children-input iframe').contentWindow.select([])
+            if (info.childrenIDs) content.querySelector('.children-input iframe').contentWindow.select(info.childrenIDs)
+        }
+    }
+
+    // CLASSES
     $('#classes--class-list').addEventListener('select', e => {
         if (!e.detail.classInfo) return
         const info = JSON.parse(decodeURI(e.detail.classInfo))
@@ -105,10 +111,7 @@ window.addEventListener('ready', () => {
             prettyName: content.querySelector('.prettyName-input input').value,
             classID
         }
-
         sendData.students = content.querySelector('.students-input iframe').contentWindow.getSelected()
-
-console.log(sendData)
 
         fetch('/manager/classes/edit', {
             method: 'POST',

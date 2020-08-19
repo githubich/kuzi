@@ -13,23 +13,17 @@
                 const ul = $('ul#user-container')
                 ul.querySelectorAll('li').forEach(user => {
                     user.removeAttribute('style')
+                    user.removeAttribute('hidden')
                     const theirClassID = user.children[0].getAttribute('classID')
-                    if (theirClassID && theirClassID != classID) user.style.display = 'none'
+                    if (theirClassID && theirClassID != classID) {
+                        user.style.display = 'none'
+                        user.setAttribute('hidden', 'true')
+                    }
                     user.children[0].checked = false
                     if (theirClassID == classID) user.children[0].checked = true
                 })
             }
             getSelected = () => [ ...$$('li input:checked') ].map(child => child = child.getAttribute('userID'))
-            window.addEventListener('load', () => {
-                const search = $('#search')
-                search.addEventListener('input', () => {
-                    const ul = $('ul#user-container')
-                    ul.querySelectorAll('li').forEach(user => {
-                        user.removeAttribute('style')
-                        if (!user.querySelector('label').innerText.toLowerCase().includes(search.value.toLowerCase())) user.style.display = 'none'
-                    })
-                })
-            })
             parent.addEventListener('ready', () => {
                 if (parent.userInfo.isAdmin === true) fetch('/manager/users/list', { method: 'POST' }).then(res => res.json())
                     .then(users => {
@@ -37,6 +31,16 @@
                         users.forEach(user => {
                             const classID = (user.class && user.class.classID ? user.class.classID : '')
                             if (user.role == 'student') $('#user-container').innerHTML += getTemplate('user', { name: user.prettyName, id: user.userID, classID: classID })
+                        })
+                        const search = $('#search')
+                        search.addEventListener('input', () => {
+                            const ul = $('ul#user-container')
+                            ul.querySelectorAll('li').forEach(user => {
+                                if (user.getAttribute('hidden') != 'true') {
+                                    user.removeAttribute('style')
+                                    if (!user.querySelector('label').innerText.toLowerCase().includes(search.value.toLowerCase())) user.style.display = 'none'
+                                }
+                            })
                         })
                     })
             })

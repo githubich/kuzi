@@ -20,7 +20,8 @@ body { position: relative; }
 aside { border: solid 1px var(--bg-alt); }
 iframe { border: none; }
 
-#users--students-list { margin: 10px 0 0 0; }
+#users--students-list,
+#classes-students-list { margin: 10px 0 0 0; }
 
 .content#classes .students-input { margin: 20px 0 0 0; }
 
@@ -77,7 +78,9 @@ iframe { border: none; }
     aside { padding: 0 20px 0 0; border-width: 0 1px 0 0; width: 20vw; }
     iframe { width: 100%; }
 
-    .content#users .info-container ~ div, iframe, .content#classes .students-input { height: 100%; }
+    .content#users .info-container ~ div,
+    iframe,
+    .content#classes .students-input { height: 100%; }
 }
 @media (max-width: 600px) {
     .tabs { display: block; }
