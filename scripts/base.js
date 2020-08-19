@@ -115,6 +115,12 @@ window.addEventListener('load', () => {
     dropdownVisible = false
     more = $("#more")
     moreVisible = false
+    window.addEventListener('click', e => {
+        if (!dropdownVisible && !moreVisible) return console.log('hey')
+        if (!e.path && !e.composedPath) return console.warn("[Kuzi] Your browser doesn't support event.path or event.composedPath, the dropdown will stay open")
+        if (dropdownVisible && ((e.path && !e.path.includes(dropdown)) || (e.composedPath && !e.composedPath().includes(dropdown)))) toggleDropdown()
+        if (moreVisible && ((e.path && !e.path.includes(more)) || (e.composedPath && !e.composedPath().includes(more)))) toggleMore()
+    })
     if (localStorage.getItem('last-user-info')) updateUserInfo(JSON.parse(localStorage.getItem('last-user-info')), true)
     if (localStorage.getItem('theme') == 'dark') $('#theme + label').innerText = '[{(darkMode)}]'
     else $('#theme + label').innerText = '[{(lightMode)}]'
@@ -141,10 +147,6 @@ window.addEventListener('load', () => {
             localStorage.setItem('last-user-info', JSON.stringify(userInfo))
         })
         .catch(e => location = '/')
-})
-window.addEventListener('click', e => {
-    if (dropdownVisible && !e.path.includes(dropdown)) toggleDropdown()
-    if (moreVisible && !e.path.includes(more)) toggleMore()
 })
 window.addEventListener('keydown', e => {
     if (e.key == "Enter") {

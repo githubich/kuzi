@@ -58,6 +58,7 @@ window.addEventListener('ready', () => {
         $('#manager').removeAttribute('style'); $('#period-container').remove()
         myStudents = {}
         updateStudents = () => {
+            if (!myStudents) return;
             $$('.student-chooser').forEach(studentChooser => {
                 studentChooser.innerHTML = ''
                 myStudents.students.forEach(student => studentChooser.innerHTML += getTemplate('student-chooser-option', { studentID: student.userID, name: student.prettyName, classID: student.class.classID }))
