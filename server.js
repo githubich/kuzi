@@ -45,12 +45,14 @@ app.get('/users/:id', (req, res) => {
 	else res.respond('', 'users/noone.png', 'image/png', 200)
 })
 app.get('/resources/download/:uuid', (req, res) => {
-	let file = importJSON('upload/resources/index.json').find(e => e.uuid == req.params.uuid)
+	const file = importJSON('upload/resources/index.json').find(e => e.uuid == req.params.uuid)
 	if (req.userInfo.userID == file.ownerID || req.userInfo.class.classID == file.classID) res.download(`upload/resources/${file.name}`, file.display.name)
 	else return res.sendError(403)
 })
 app.get('/new-test.html', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.sendError(403)
+	const now = new Date()
+	const then = new Date(now.getTime() + 604800000)
 	let scheduling = importJSON('scheduling.json')
 	let tests = importJSON('tests.json')
 	let i = 0
@@ -58,17 +60,17 @@ app.get('/new-test.html', (req, res) => {
 		if (connection.teacherID != req.userInfo.userID) scheduling.splice(i, 1)
 		i++
 	})
-	let schedule = scheduling[0]
-	let testID = v4()
+	const { subjectID, classID } = scheduling[0]
+	const testID = v4()
 	tests.push({
         name: `Test Template ${testID}`,
-        subjectID: schedule.subjectID,
-		classID: schedule.classID,
+        subjectID,
+		classID,
 		ownerID: req.userInfo.userID,
         testID,
         periodID: 3,
-        startTime: { year: 2020, month: 7, day: 22, hours: 0, minutes: 0 },
-        dueTime: { year: 2020, month: 7, day: 31, hours: 23, minutes: 59 },
+        startTime: { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate(), hours: 0, minutes: 0 },
+        dueTime: { year: then.getFullYear(), month: then.getMonth() + 1, day: then.getDate(), hours: 23, minutes: 59 },
         visible: false,
         questions: [
             {
@@ -134,7 +136,7 @@ app.post('/user/login', (req, res) => {
 	importJSON('users.json').forEach(user => {
 		if (user.username == req.body.username && user.password == req.body.password) {
 			let activeCookies = importJSON('active-cookies.json')
-			let newSession = v4()
+			const newSession = v4()
 			activeCookies.push({ cookie: newSession, expireTime: Date.now() + 3600000, userID: user.userID })
 			saveJSON('active-cookies.json', activeCookies)
 			res.respond(JSON.stringify({ session: newSession }), '', 'application/json', 200)
