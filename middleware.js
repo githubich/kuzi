@@ -3,8 +3,16 @@ const { readFileSync, existsSync } = require('fs')
 const { extname } = require('path')
 const { extensionToMime } = require('./utils')
 const locales = importLocale()
-module.exports = function kuziMiddleware(req, res, next) {
+function log(req, r, next) {
     console.log(`[Kuzi|${req.connection.remoteAddress.replace('::ffff:','')}|${(new Date()).getHours()}:${(new Date()).getMinutes()}:${(new Date()).getSeconds()}] ${req.method} ${req.url}`)
+    next()
+}
+function cookies(req, r, next) {
+    req.cookies = {}
+    if (req.headers.cookie) req.headers.cookie.split('; ').forEach(cookie => req.cookies[cookie.split('=')[0]] = cookie.split('=')[1])
+    next()
+}
+function main(req, res, next) {    
     res.respond = (content, file, mime, statusCode) => {
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
@@ -21,6 +29,7 @@ module.exports = function kuziMiddleware(req, res, next) {
         else if (req.accepts('json')) res.json({ status: 404, statusCode: 404, code: 404, ok: false }).status(404)
         else res.sendStatus(404)
     }
+    
     if (req.url.includes("?")) { req.fullUrl = req.url.split()[0]; req.url = req.url.split("?")[0] }
     if (req.url == '/') return res.redirect(308, '/login.html')
     if (req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html')) return next()
@@ -35,14 +44,7 @@ module.exports = function kuziMiddleware(req, res, next) {
     let modified = false
 
     req.userInfo = {}
-    if (req.headers.cookie) {
-        let cookies = {}
-        req.headers.cookie.split('; ').forEach(cookie => {
-            eval(`cookies.${cookie.split('=')[0]} = '${cookie.split('=')[1]}'`)
-        })
-        req.cookies = cookies
-    } else req.cookies = {}
-    if (req.headers.cookie) {
+    if (req.cookies != {}) {
         activeCookies.forEach(cookie => {
             if (cookie.cookie == req.cookies.session) {
                 userIDfromCookie = cookie.userID
@@ -55,7 +57,7 @@ module.exports = function kuziMiddleware(req, res, next) {
         req.userInfo.class = {}
         req.userInfo.currentSubject = {}
         if (req.userInfo.role == "student") req.userInfo.class = classes.find(e => e.students.includes(req.userInfo.userID))
-        else if (req.userInfo.role == "parent" && req.userInfo.childrenIDs != undefined && req.userInfo.childrenIDs != []) {
+        else if (req.userInfo.role == "parent" && req.userInfo.childrenIDs) {
             req.userInfo.children = []
             req.userInfo.childrenIDs.forEach(childID => {
                 let child = users.find(e => e.userID == childID)
@@ -96,11 +98,11 @@ module.exports = function kuziMiddleware(req, res, next) {
             if (cookie.expireTime <= Date.now()) {
                 activeCookies.splice(i, 1)
                 modified = true
-            }
-            i++
+            } else i++
         })
         if (modified) saveJSON('active-cookies.json', activeCookies)
     }
     
     next()
 }
+module.exports = { main, cookies, log }

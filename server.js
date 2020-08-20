@@ -11,26 +11,25 @@ const { v4 } = require('uuid')
 const { extname } = require('path')
 const { readFileSync, existsSync, unlinkSync, writeFileSync, mkdirSync, readdirSync, lstatSync } = require('fs')
 const { importJSON, saveJSON, calcMark, sortByPrettyName, createNotification } = require('./utils')
+const middleware = require('./middleware')
 const {
 	port = 80, language = 'en',
-	disableAnnouncements = false, disableMarks = false,/* disableNews = false,*/ disableMotivationalQuotes = false, disableTests = false, disableResources = false
+	disableAnnouncements = false, disableMarks = false, disableMotivationalQuotes = false, disableTests = false, disableResources = false
 } = existsSync('settings.json') ? importJSON('settings.json') : {}
 const headless = [ 'login.html', 'mark-graph.html' ]
 const forbidden = [ 'base.html', '403.html', '404.html', 'CONTRIBUTING.md', 'README.md', '.gitignore' ]
 
 app.use(express.json())
 app.use(require('express-fileupload')())
-app.use(require('./middleware'))
+app.use(middleware.log)
+app.use(middleware.cookies)
+app.use(middleware.main)
 
-const folders = ['notifications', 'test-progress', 'upload'/*, 'upload/messages'*/, 'upload/resources' ]
-folders.forEach(f => {
-	if (!existsSync(`${f}/`)) mkdirSync(f)
-})
+const folders = ['notifications', 'test-progress', 'upload', 'upload/resources' ]
+folders.forEach(f => { if (!existsSync(`${f}/`)) mkdirSync(f) })
 
-const files = ['active-cookies.json', 'events.json', 'marks.json', 'tests.json'/*, 'upload/messages/index.json'*/, 'upload/resources/index.json']
-files.forEach(f => {
-	if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([]))
-})
+const files = ['active-cookies.json', 'events.json', 'marks.json', 'tests.json', 'upload/resources/index.json']
+files.forEach(f => { if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([])) })
 
 
 
