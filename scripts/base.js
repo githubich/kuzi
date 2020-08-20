@@ -115,6 +115,15 @@ window.addEventListener('load', () => {
     dropdownVisible = false
     more = $("#more")
     moreVisible = false
+    fetch('/user/getInfo', { method: 'POST' }).then(res => res.json())
+        .then(res => {
+            userInfo = res.userInfo
+            if (!userInfo.userID) location = '/'
+            updateUserInfo(userInfo, false)
+            window.dispatchEvent(new Event('ready'))
+            localStorage.setItem('last-user-info', JSON.stringify(userInfo))
+        })
+        .catch(e => location = '/')
     window.addEventListener('click', e => {
         if (!dropdownVisible && !moreVisible) return;
         if (!e.path && !e.composedPath) return console.warn("[Kuzi] Your browser doesn't support event.path or event.composedPath, the dropdown will stay open")
@@ -138,15 +147,6 @@ window.addEventListener('load', () => {
             el.contentDocument.documentElement.setAttribute('theme', localStorage.getItem('theme'))
         })
     })
-    fetch('/user/getInfo', { method: 'POST' }).then(res => res.json())
-        .then(res => {
-            userInfo = res.userInfo
-            if (!userInfo.userID) location = '/'
-            updateUserInfo(userInfo, false)
-            window.dispatchEvent(new Event('ready'))
-            localStorage.setItem('last-user-info', JSON.stringify(userInfo))
-        })
-        .catch(e => location = '/')
 })
 window.addEventListener('keydown', e => {
     if (e.key == "Enter") {
@@ -181,3 +181,11 @@ window.addEventListener('load', () => $$('input[type=date].no-year').forEach(el 
     el.max = `${now.getFullYear()}-12-31`;
     el.setAttribute('onload', '')
 }))
+function features__summary_update() {
+    $$('summary').forEach(summary => {
+        if (summary.children[0].nodeName != 'I' && !summary.children[0].classList.contains('details-arrow')) {
+            summary.insertBefore(createElement({ type: 'i', classes: [ 'fas', 'fa-triangle', 'details-arrow' ] }), summary.children[0])
+        }
+    })
+}
+features__summary_update()

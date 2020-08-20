@@ -54,13 +54,5 @@
             "3",
             "4"
         ]
-    },
-    {
-        "username": "new.user",
-        "password": "kuzi",
-        "prettyName": "New User",
-        "userID": "f1732bb7-9074-402b-a8d2-051ee73a4c89",
-        "role": "teacher",
-        "isAdmin": true
     }
 ]

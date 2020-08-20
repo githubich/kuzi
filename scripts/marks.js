@@ -127,6 +127,7 @@ window.addEventListener('ready', () => {
                                 if (subjectChooser.getAttribute('value')) subjectChooser.value = subjectChooser.getAttribute('value')
                             })
                         })
+                        features__summary_update()
                     })
             })
             .catch(e => qError({ message: e, goBack: true }))

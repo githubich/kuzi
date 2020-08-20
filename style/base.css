@@ -1,3 +1,26 @@
+summary::-webkit-details-marker,
+details::-webkit-details-marker {
+    display: none;  
+}
+details summary { display: flex }
+details summary .fas.fa-triangle.details-arrow {
+    height: 11.5px;
+	width: 11.5px;
+	font-size: 10px;
+    margin: auto .6em auto 0;
+    transform: rotate(90deg);
+    transition-duration: .1s;
+}
+details[open] summary .fas.fa-triangle.details-arrow {
+    transform: rotate(180deg);
+}
+details summary .fas.fa-triangle.details-arrow::before {
+    position: relative;
+    top: 1px;
+}
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
 @import url('https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css');
 @keyframes crop { 0% { clip-path: polygon(0 0, 0 0, 100% 0, 100% 0) } 100% { clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0) } }
@@ -149,12 +172,6 @@ button i, .picture-label i { font-size: 15px; }
 .hint { font-size: 14px; margin: 0 !important; font-style: normal; display: inline-block; }
 .hint i { margin-right: .3em; }
 .password-modal--input { min-width: 100%; }
-@supports (backdrop-filter: blur()) or (-webkit-backdrop-filter: blur()) {
-    .blurry-bg { background-color: var(--bg-semi-alpha); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-}
-@supports (not (backdrop-filter: blur())) or (not (-webkit-backdrop-filter: blur())) {
-    .blurry-bg { background-color: var(--bg-nearly-opaque); }
-}
 input, select { border-radius: 0; }
 input[type=text], input[type=password], input[type=date], input[type=number] { width: 100%; }
 input[type=text], input[type=password], input[type=date], input[type=time], input[type=number], textarea, select {
@@ -177,6 +194,46 @@ header.icons-only .header-action:not(.selected) span:nth-child(2) { display: non
 .empty-page { text-align: center; width: 100vw; }
 .empty-page i { font-size: 70px; }
 .empty-page p { padding: 0 20px; font-size: 1.3em; }
+
+.toggle {
+    display: inline-block;
+    position: relative;
+    width: var(--l-width); height: var(--l-height);
+    --l-margin: 3px;
+    --l-border: 1px;
+    --l-size: 45px;
+    --l-width: calc(var(--l-size) + (var(--l-margin) * 2));
+    --l-height: calc(var(--l-size) / 2);
+    --l-animation-duration: .125s;
+}
+.toggle input { opacity: 0; height: 0; width: 0; margin: 0; }
+.toggle input + span {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: solid var(--l-border) var(--bg-alt);
+    border-radius: 99px;
+    transition: var(--l-animation-duration) all ease-in-out;
+}
+.toggle input + span::before {
+    content: '';
+    border: none;
+    position: absolute; --l-horizontal-pos: calc(var(--l-margin));
+    top: var(--l-horizontal-pos); bottom: var(--l-horizontal-pos); left: var(--l-horizontal-pos);
+    --l-slider-size: calc(((var(--l-width) - (var(--l-margin) * 6)) / 2) - (var(--l-border) * 2));
+    width: var(--l-slider-size);
+    background-color: var(--bg-alt);
+    border-radius: 99px;
+    transition: var(--l-animation-duration) all;
+}
+.toggle input:checked + span { background-color: var(--accent); border-color: var(--accent); }
+.toggle input:checked + span::before { transform: translateX(calc(var(--l-width) - (var(--l-margin) * 2) - (var(--l-border) * 2) - var(--l-slider-size))); background-color: #fff; }
+
+@supports (backdrop-filter: blur()) or (-webkit-backdrop-filter: blur()) {
+    .blurry-bg { background-color: var(--bg-semi-alpha); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+}
+@supports (not (backdrop-filter: blur())) or (not (-webkit-backdrop-filter: blur())) {
+    .blurry-bg { background-color: var(--bg-nearly-opaque); }
+}
 
 @media (min-width: 601px) {
 	a.close:hover::after {

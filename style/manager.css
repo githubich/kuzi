@@ -1,5 +1,4 @@
 body, main, #root, #manager { display: flex; flex-direction: column; }
-
 body { position: relative; }
 
 .tabs { display: flex; width: 100%; }
@@ -24,43 +23,6 @@ iframe { border: none; }
 #classes-students-list { margin: 10px 0 0 0; }
 
 .content#classes .students-input { margin: 20px 0 0 0; }
-
-.toggle {
-    display: inline-block;
-    position: relative;
-    width: var(--l-width);
-    height: var(--l-height);
-    --l-margin: 3px;
-    --l-border: 1px;
-    --l-size: 45px;
-    --l-width: calc(var(--l-size) + (var(--l-margin) * 2));
-    --l-height: calc(var(--l-size) / 2);
-    --l-animation-duration: .125s;
-}
-.toggle input { opacity: 0; height: 0; width: 0; margin: 0; }
-.toggle input + span {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    border: solid var(--l-border) var(--bg-alt);
-    border-radius: 99px;
-    transition: var(--l-animation-duration) all ease-in-out;
-}
-.toggle input + span::before {
-    content: '';
-    border: none;
-    position: absolute;
-    --l-horizontal-pos: calc(var(--l-margin));
-    top: var(--l-horizontal-pos);
-    bottom: var(--l-horizontal-pos);
-    left: var(--l-horizontal-pos);
-    --l-slider-size: calc(((var(--l-width) - (var(--l-margin) * 6)) / 2) - (var(--l-border) * 2));
-    width: var(--l-slider-size);
-    background-color: var(--bg-alt);
-    border-radius: 99px;
-    transition: var(--l-animation-duration) all;
-}
-.toggle input:checked + span { background-color: var(--accent); border-color: var(--accent); }
-.toggle input:checked + span::before { transform: translateX(calc(var(--l-width) - (var(--l-margin) * 2) - (var(--l-border) * 2) - var(--l-slider-size))); background-color: #fff; }
 
 @media (min-width: 601px) {
     html, body, main, #root, #manager { overflow: hidden; }
