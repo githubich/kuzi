@@ -175,12 +175,6 @@ function minMaxInput(el) {
     if (value < min) el.value = min
     else if (value > max) el.value = max
 }
-window.addEventListener('load', () => $$('input[type=date].no-year').forEach(el => {
-    let now = new Date()
-    el.min = `${now.getFullYear()}-01-01`;
-    el.max = `${now.getFullYear()}-12-31`;
-    el.setAttribute('onload', '')
-}))
 function features__summary_update() {
     $$('summary').forEach(summary => {
         if (summary.children[0].nodeName != 'I' && !summary.children[0].classList.contains('details-arrow')) {
@@ -188,4 +182,13 @@ function features__summary_update() {
         }
     })
 }
-features__summary_update()
+window.addEventListener('load', () => {
+    $$('input[type=date].no-year').forEach(el => {
+        let now = new Date()
+        el.min = `${now.getFullYear()}-01-01`;
+        el.max = `${now.getFullYear()}-12-31`;
+        el.setAttribute('onload', '')
+    })
+    //
+    features__summary_update()
+})

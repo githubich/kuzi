@@ -13,7 +13,7 @@ function rerender() {
 }
 function editQuestion(i) {
     i = parseInt(i)
-    let question = testData.questions[i]
+    const question = testData.questions[i]
     $('#question-type').value = question.type
     if (question.type == "single-choice") $('#question-value').value = question.value
     $('#edit-question-modal').setAttribute('i', i)
@@ -28,7 +28,7 @@ function editQuestionSave(i) {
         let correct = null
         let j = 0
         let invalid = false
-        let type = $('#question-type').value
+        const type = $('#question-type').value
         if (type == "single-choice") {
             $$('li.single-choice:not(.new-option) input[type=text]').forEach(el => {
                 if (el.value) answers.push(el.value)
@@ -151,11 +151,9 @@ function editTest() {
     toggleModal('edit-test')
 }
 function editTestSave() {
-    if ($('#test-name').value && $('#test-start-date').value &&
-        $('#test-start-time').value && $('#test-due-date').value &&
+    if ($('#test-name').value && $('#test-start-date').value && $('#test-start-time').value && $('#test-due-date').value &&
         $('#test-due-time').value && $('#edit-test-modal li.class input[type=radio]:checked') &&
-        $('#edit-test-modal #subject-chooser').value &&
-        $('#edit-test-modal #period-chooser').value) {
+        $('#edit-test-modal #subject-chooser').value && $('#edit-test-modal #period-chooser').value) {
 
         testData.name = $('#test-name').value
         testData.periodID = parseInt($('#edit-test-modal #period-chooser').value)
@@ -214,13 +212,7 @@ function addFunctionality() {
         this.previousElementSibling.checked = true
     }))
     $$('#edit-question-modal li > input[type=text]').forEach(el => el.addEventListener('blur', function() {
-        if (!this.parentElement.classList.contains('new-option') && this.value == "") this.parentElement.remove()
-    }))
-    $$('input[type=number]').forEach(e => e.addEventListener('input', () => {
-        let min = parseInt(e.getAttribute('min'))
-        let max = parseInt(e.getAttribute('max'))
-        if (e.value < min) e.value = min
-        if (e.value > max) e.value = max
+        if (!this.parentElement.classList.contains('new-option') && !this.value) this.parentElement.remove()
     }))
     $$('.question .move-question-up').forEach(el => {
         try {
@@ -229,29 +221,31 @@ function addFunctionality() {
         el.addEventListener('click', moveUp)
     })
     $$('.question .move-question-down').forEach(el => {
-        try {
-            el.removeEventListener('click', moveDown)
-        } catch {}
+        try { el.removeEventListener('click', moveDown) } catch {}
         el.addEventListener('click', moveDown)
     })
-    $$('input[type=number]').forEach(e => e.addEventListener('input', () => {
-        let min = parseInt(e.getAttribute('min'))
-        let max = parseInt(e.getAttribute('max'))
-        if (e.value < min) e.value = min
-        if (e.value > max) e.value = max
-    }))
+    $$('input[type=number]').forEach(e => e.addEventListener('input', () => minMaxInput(e)))
 }
 function save() {
-    $('footer').style = ''
+    $('footer').removeAttribute('style')
     $('main').style.marginBottom = "42px"
     $('footer').innerHTML = `<div><div class="spinner"></div>[{(saving)}]...</div>`
-    fetch('/teachers/tests/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(testData) }).then(res => res.json())
+    fetch('/teachers/tests/edit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testData)
+    }).then(res => res.json())
         .then(res => {
             if (res.message = 'ok') $('footer').innerHTML = `<div><i class="fad fa-check-circle"></i>[{(saved)}]</div>`
             else $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`
             setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 3000)
         })
-        .catch(e => { $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`; setTimeout(() => { $('footer').style.display = 'none'; $('main').style.marginBottom = "0"}, 3000) })
+        .catch(e => {
+            $('footer').innerHTML = `<div><i class="fad fa-times-circle"></i>[{(error.unknown)}]</div>`
+            setTimeout(() => {
+                $('footer').style.display = 'none'
+                $('main').style.marginBottom = 0
+            }, 3000)
+        })
 }
 autoSave = () => setTimeout(() => { save(); autoSave() }, 10000)
 function newQuestion() {
@@ -281,19 +275,24 @@ function newQuestion() {
     editQuestion($('#question-container').children[$('#question-container').children.length - 1].getAttribute('i'))
 }
 function moveUp(event) {
-    let q = event.path[2]
+    const q = event.path[2]
     if (q != q.parentElement.children[0]) {
         q.parentElement.insertBefore(q, q.previousElementSibling)
-        let i = parseInt(q.getAttribute('i'))
-        let a = testData.questions[i]
+        const i = parseInt(q.getAttribute('i'))
+        const a = testData.questions[i]
         testData.questions[i] = testData.questions[i - 1]
         testData.questions[i - 1] = a
         rerender()
     }
 }
 function moveDown(event) {
-    let q = event.path[2]
+    const q = event.path[2]
     if (q.nextElementSibling) q.nextElementSibling.querySelector('.move-question-up').click()
+}
+function deleteQuestion(questionE) {
+    testData.questions.splice(parseInt(questionE.getAttribute('i')), 1)
+    questionE.remove()
+    rerender()
 }
 window.addEventListener('load', () => {
     setPageTitle("clipboard-check", `[{(loading)}]`)
@@ -308,13 +307,16 @@ window.addEventListener('ready', () => {
     footer.style.display = 'none'
     $('main').style.marginBottom = 0
 
-    fetch('/teachers/tests/get', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: $parseURLArgs().ID }) }).then(res => res.json())
+    fetch('/teachers/tests/get', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ID: $parseURLArgs().ID })
+    }).then(res => res.json())
         .then(res => {
             testData = res
-            setPageTitle("clipboard-check", `[{(editTest)}] (${testData.name})`)
+            setPageTitle("clipboard-check", `[{(editTest)}] (${res.name})`)
             let i = 0
-            let qContainer = $('#question-container')
-            testData.questions.forEach(q => {
+            const qContainer = $('#question-container')
+            res.questions.forEach(q => {
                 let qE = document.createElement('div')
                 qContainer.appendChild(qE)
                 let type = ''
@@ -328,7 +330,7 @@ window.addEventListener('ready', () => {
                             <p class="question-type">${type}</p>
                         </div>
                         <div class="question-controls">
-                            <i title="[{(delete)}]" class="fad delete-question fa-trash" onclick="testData.questions.splice(this.parentElement.parentElement.getAttribute('i'), 1); this.parentElement.parentElement.remove(); rerender()"></i>
+                            <i title="[{(delete)}]" class="fad delete-question fa-trash" onclick="deleteQuestion(this.parentElement.parentElement)"></i>
                             <i title="[{(moveUp)}]" class="fas move-question move-question-up fa-chevron-up"></i>
                             <i title="[{(edit)}]" class="fad edit-question fa-edit" onclick="editQuestion(this.parentElement.parentElement.getAttribute('i'))"></i>
                             <i title="[{(moveDown)}]" class="fas move-question move-question-down fa-chevron-down"></i>
@@ -345,8 +347,7 @@ window.addEventListener('ready', () => {
 window.addEventListener('online', save)
 window.addEventListener('toggle-modal-edit-test', () => {
     if ($('#edit-test-modal').style.display == 'none') return
-    fetch('/teachers/getInfo', { method: "POST" })
-        .then(res => res.json()
+    fetch('/teachers/getInfo', { method: "POST" }).then(res => res.json()
         .then(res => {
             data = res
             let myClasses = $('#my-classes')
@@ -361,8 +362,7 @@ window.addEventListener('toggle-modal-edit-test', () => {
             $('#subject-chooser').value = testData.subjectID
         }))
         .catch(e => qError({ message: e, goBack: true }))
-    fetch('/misc/periods/list', { method: "POST" })
-        .then(res => res.json()
+    fetch('/misc/periods/list', { method: "POST" }).then(res => res.json()
         .then(res => {
             let periodChooser = $('#period-chooser')
             periodChooser.innerHTML = ''

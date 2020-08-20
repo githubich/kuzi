@@ -1,18 +1,15 @@
 function deleteTest(element, ID) {
-    qAlert({ message: '[{(areYouSure)}]', mode: 'question', buttons: { ok: { text: '[{(yes)}]' }, cancel: { text: '[{(no)}]' } } })
-        .then(a => {
-            if (a) {
-                element.parentElement.parentElement.parentElement.remove()
-                fetch('/teachers/tests/delete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ID: ID })
-                })
-                    .then(() => {
-                        if ($('#test-container').children.length == 0) $('#test-container').innerHTML = getTemplate('empty-page')
-                    })
-            }
-        })
+    qAreYouSure().then(a => {
+        if (a) {
+            fetch('/teachers/tests/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ID: ID })
+            })
+            element.parentElement.parentElement.parentElement.remove()
+            if ($('#test-container').children.length == 0) $('#test-container').innerHTML = getTemplate('empty-page')
+        }
+    })
 }
 function testSort(a, b) {
     let statusA = 0
@@ -70,10 +67,13 @@ window.addEventListener('ready', () => {
                             <a title="[{(perform)}]" class="perform-test students-only" href="/perform-test.html?ID=${test.testID}"><i class="fad fa-play"></i></a>
                             <a title="[{(viewSubmissions)}]" ${(() => { if (test.submissions <= 0) return 'style="display: none;"'; return ''})()} class="view-test-submissions teachers-only" href="/test-submissions.html?ID=${test.testID}"><i class="fad fa-tasks"></i></a>
                             <a title="[{(edit)}]" class="edit-test teachers-only" href="/edit-test.html?ID=${test.testID}"><i class="fad fa-edit"></i></a>
-                            <a title="[{(delete)}]" class="delete-test teachers-only" onclick="deleteTest(this, ${test.testID})"><i class="fad fa-trash"></i></a></p>
+                            <a title="[{(delete)}]" class="delete-test teachers-only" onclick="deleteTest(this, '${test.testID}')"><i class="fad fa-trash"></i></a></p>
                         <div class="visibility teachers-only">
-                            <input type="checkbox" id="visibility-${test.testID}" ${(() => { if (test.visible === true) return 'checked'; return '' })()} oninput="this.disabled = true; fetch('/teachers/tests/setVisibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: ${test.testID}, set: this.checked }) }).then(res => { this.disabled = false })">
-                            <label for="visibility-${test.testID}">Visible</label>
+                            <label class="toggle" for="visibility-${test.testID}">
+                                <input type="checkbox" id="visibility-${test.testID}" ${(() => { if (test.visible === true) return 'checked'; return '' })()} oninput="this.disabled = true; fetch('/teachers/tests/setVisibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: ${test.testID}, set: this.checked }) }).then(res => { this.disabled = false })">
+                                <span class="slider"></span>
+                            </label>
+                            <label class="label" for="visibility-${test.testID}">Visible</label>
                         </div>
                     </div>
                 `

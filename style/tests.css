@@ -15,8 +15,8 @@ main p { margin: 0; }
 .test .content > :not(:nth-last-child(1)) { margin-bottom: 2.5px; }
 .test .visibility { display: flex; margin: 5px 0 0 0; }
 .test .visibility > * { margin: auto 0; }
-.test .visibility label { padding-left: .3em; width: 100%; }
-.controls { margin: auto 0 0 0; padding: 10px 0 0 0; }
+.test .visibility label.label { padding-left: .3em; flex: 1 1 auto; }
+.controls { margin: auto 0 0 0; padding: 12.5px 0 0 0; }
 .controls a:not(:nth-last-child(1)) { margin-right: .5em; }
 .student .test .submissions { display: none; }
 
