@@ -679,12 +679,12 @@ app.post('/teachers/resources/upload', (req, res) => {
 	req.body = JSON.parse(req.body.data)
 	if (!req.files || !req.files.file || !req.body.classID || !req.body.subjectID) return res.sendError(500)
 	let file = req.files.file
-	let uuid = newUUID()
-	let fileName = `${uuid}${file.name.slice(req.files.file.name.indexOf('.'), file.name.length)}`
+	let uuid = v4()
+	let name = `${uuid}${file.name.slice(req.files.file.name.lastIndexOf('.'), file.name.length)}`
 	let index = importJSON('upload/resources/index.json')
 	index.push({
-		uuid: uuid,
-		name: fileName,
+		uuid,
+		name,
 		ownerID: req.userInfo.userID,
 		classID: req.body.classID,
 		subjectID: req.body.subjectID,
