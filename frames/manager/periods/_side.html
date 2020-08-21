@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" oncontextmenu="event.preventDefault()">
+    <head>
+        <script async="false" src="/scripts/theming.js"></script>
+        <link rel="stylesheet" href="/style/theming.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap">
+        <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+        <script async src="/lib/qDOM.js"></script>
+        <script async src="/lib/qTools.js"></script>
+        <script>
+            window.addEventListener('load', () => {
+                const search = $('#search')
+                search.addEventListener('input', () => {
+                    const ul = $('ul#period-container')
+                    ul.querySelectorAll('li').forEach(period => {
+                        period.removeAttribute('style')
+                        if (!period.querySelector('label').innerText.toLowerCase().includes(search.value.toLowerCase())) period.style.display = 'none'
+                    })
+                })
+            })
+            parent.addEventListener('ready', () => {
+                if (parent.userInfo.isAdmin === true) fetch('/manager/periods/list', { method: 'POST' }).then(res => res.json())
+                    .then(periods => {
+                        $('#period-container').innerHTML = ''
+                        periods.forEach(period => {
+                            console.log(period)
+                            $('#period-container').innerHTML += getTemplate('period', { name: period.periodName, id: period.periodID, periodInfo: encodeURI(JSON.stringify(period)) })
+                        })
+                        $$('#period-container li input[type=radio]').forEach(period => {
+                            period.addEventListener('input', function() {
+                                window.frameElement.dispatchEvent(new CustomEvent('select', {
+                                    detail: { periodInfo: this.getAttribute('periodInfo') }
+                                }))
+                            })
+                        })
+                    })
+            })
+            function newPeriod() {
+                fetch('/manager/periods/new', { method: 'POST' }).then(r => r.json())
+                    .then(res => {
+                        $('#period-container').innerHTML += getTemplate('period', { name: res.prettyName, id: res.periodID, periodInfo: encodeURI(JSON.stringify(res)) })
+                        window.frameElement.dispatchEvent(new CustomEvent('select', { detail: { userInfo: encodeURI(JSON.stringify(res)) } }))
+                        $('#period-container').children[$('#period-container').children.length - 1].querySelector('input[type=radio]').checked = true
+                    })
+            }
+            function deletePeriod() {
+                if (!$('li input:checked')) return;
+                parent.qAreYouSure().then(a => {
+                    if (!a) return;
+                    fetch('/manager/periods/delete', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ periodID: $('li input:checked').getAttribute('periodID') })
+                    }).then(r => r.json())
+                        .then(res => {
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.periods.delete)}]' }).then(a => parent.location.reload())
+                            else parent.qError({ goBack: false })
+                        })
+                        .catch(e => parent.qError({ message: e, goBack: false }))
+                })
+            }
+            function deleteAllPeriods() {
+                parent.qAreYouSure().then(a => {
+                    if (!a) return;
+                    fetch('/manager/periods/deleteAll', { method: 'POST' }).then(r => r.json())
+                        .then(res => {
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.periods.deleteAll)}]' }).then(a => parent.location.reload())
+                            else parent.qError({ goBack: false })
+                        })
+                        .catch(e => parent.qError({ message: e, goBack: false }))
+                })
+            }
+        </script>
+        <style>
+            ::-webkit-scrollbar { width: 7.5px; height: 7.5px; }
+            ::-webkit-scrollbar-track { background: var(--bg-shade1); border-radius: 3.25px; }
+            ::-webkit-scrollbar-thumb { background: var(--bg-shade2); border-radius: 3.25px; }
+            ::-webkit-scrollbar-thumb:hover { background: var(--bg-shade3); }
+            ::-webkit-scrollbar-thumb:active { background: var(--bg-shade4); }
+
+            * { box-sizing: border-box; user-select: none; outline: none; }
+            body {
+                background-color: transparent;
+                color: var(--bg-alt);
+                max-height: 100vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+            body, #search { font-family: 'Open Sans', Arial, Helvetica, sans-serif; }
+            body, ul, li, h3 { padding: 0; margin: 0; }
+            ul { overflow: auto; height: 100%; margin: 12.5px 0 0 0; }
+            li { display: flex; }
+            input[type=radio] { display: none; }
+            input + label { padding: 7.5px; width: 100%; cursor: pointer; }
+            input:checked + label { background-color: var(--accent); color: #fff; }
+            ul, li { list-style: none; }
+            header * { display: inline-block; }
+            h3 { font-weight: normal; }
+            header .icons {
+                float: right;
+                position: relative; top: 2px;
+                display: grid; gap: 7.5px; grid-template-columns: repeat(3, 1fr);
+            }
+            #search-box {
+                display: flex;
+                flex-direction: row;
+                padding: 5px 10px;
+                border: solid var(--bg-alt); border-width: 0 0 1px 0;
+                cursor: text;
+            }
+            #search-box > * { margin-top: auto; margin-bottom: auto; }
+            #search {
+                margin-left: 10px;
+                border: none; padding: 0;
+                font-size: 16px;
+                color: var(--bg-alt);
+            }
+            #search-box, #search { width: 100%; background-color: transparent; }
+            [onclick] { cursor: pointer; }
+        </style>
+    </head>
+    <body>
+        <div id="templates">
+            <template id="period">
+                <li>
+                    <input type="radio" name="period-selector" periodInfo="%periodInfo%" periodID="%id%" id="period-%id%" style="display: none;">
+                    <label for="period-%id%">%name%</label>
+                </li>
+            </template>
+        </div>
+        <header>
+            <h3 id="header-text">[{(periods)}]</h3>
+            <div class="icons">
+                <a class="header-icon new-user" onclick="newPeriod()">
+                    <i class="fad fa-plus" title="[{(new)}]"></i>
+                </a>
+                <a class="header-icon delete-selected-user" onclick="deletePeriod()">
+                    <i class="fad fa-trash" title="[{(deleteSelected)}]"></i>
+                </a>
+                <a class="header-icon delete-all-users" onclick="deleteAllPeriods()">
+                    <i class="fad fa-dumpster" title="[{(deleteAll)}]"></i>
+                </a>
+            </div>
+            <div id="search-box" onclick="this.children[1].focus()">
+                <i class="fad fa-search"></i>
+                <input type="search" id="search" autocomplete="off">
+            </div>
+        </header>
+        <ul id="period-container"></ul>
+    </body>
+</html>

@@ -11,7 +11,7 @@ window.addEventListener('ready', () => {
 
     // USERS
     $('#users--user-list').addEventListener('select', e => {
-        if (!e.detail.userInfo) return
+        if (!e.detail.userInfo) throw Error('No userInfo was recieved')
         const info = JSON.parse(decodeURI(e.detail.userInfo))
 
         const content = $('.content#users .actual-content')
@@ -92,7 +92,7 @@ window.addEventListener('ready', () => {
 
     // CLASSES
     $('#classes--class-list').addEventListener('select', e => {
-        if (!e.detail.classInfo) return
+        if (!e.detail.classInfo) throw Error('No classInfo was recieved')
         const info = JSON.parse(decodeURI(e.detail.classInfo))
 
         const content = $('.content#classes .actual-content')
@@ -119,7 +119,38 @@ window.addEventListener('ready', () => {
             body: JSON.stringify(sendData)
         }).then(r => r.json())
             .then(r => {
-                if (r.message = 'ok') qSuccess({ message: "[{(success.manager.user.edit)}]" }).then(a => location.reload())
+                if (r.message = 'ok') qSuccess({ message: "[{(success.manager.class.edit)}]" }).then(a => location.reload())
+                else qError({ goBack: false })
+            })
+            .catch(e => qError({ goBack: false }))
+    }
+
+    $('#subjects--subject-list').addEventListener('select', e => {
+        if (!e.detail.subjectInfo) throw Error('No subjectInfo was recieved')
+        const info = JSON.parse(decodeURI(e.detail.subjectInfo))
+
+        const content = $('.content#subjects .actual-content')
+        content.removeAttribute('style')
+
+        content.querySelector('.prettyName-input input').value = info.prettyName
+        
+        content.querySelector('button.submit').setAttribute('subjectID', info.subjectID)
+    })
+    subjects_submit = subjectID => {
+        if (!subjectID) throw Error('No subjectID specified')
+        const content = $('.content#subjects .actual-content')
+        let sendData = {
+            prettyName: content.querySelector('.prettyName-input input').value,
+            subjectID
+        }
+
+        fetch('/manager/subjects/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sendData)
+        }).then(r => r.json())
+            .then(r => {
+                if (r.message = 'ok') qSuccess({ message: "[{(success.manager.subject.edit)}]" }).then(a => location.reload())
                 else qError({ goBack: false })
             })
             .catch(e => qError({ goBack: false }))

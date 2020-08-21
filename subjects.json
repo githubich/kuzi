@@ -1,7 +1,7 @@
 [
     {
-        "subjectID": 1,
-        "prettyName": "Catalan"
+        "prettyName": "Catalan",
+        "subjectID": "1"
     },
     {
         "subjectID": 2,

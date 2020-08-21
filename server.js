@@ -677,11 +677,11 @@ app.post('/teachers/getInfo', (req, res) => {
 app.post('/teachers/resources/upload', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.sendError(403)
 	req.body = JSON.parse(req.body.data)
-	if (!req.files || !req.files.file || !req.body.classID || !req.body.subjectID) return res.sendError(500)
-	let file = req.files.file
-	let uuid = v4()
-	let name = `${uuid}${file.name.slice(req.files.file.name.lastIndexOf('.'), file.name.length)}`
-	let index = importJSON('upload/resources/index.json')
+	if (!req.files || !req.files.file || !req.body || !req.body.classID || !req.body.subjectID) return res.sendError(500)
+	const file = req.files.file
+	const uuid = v4()
+	const name = `${uuid}${file.name.slice(req.files.file.name.lastIndexOf('.'), file.name.length)}`
+	const index = importJSON('upload/resources/index.json')
 	index.push({
 		uuid,
 		name,
@@ -1013,7 +1013,7 @@ app.post('/manager/users/edit', (req, res) => {
 	let users = importJSON('users.json')
 	const userIndex = users.findIndex(e => e.userID == req.body.userID)
 
-	if (userIndex === -1) res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+	if (userIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
 
 	users[userIndex] = req.body
 	saveJSON('users.json', users)
@@ -1074,7 +1074,7 @@ app.post('/manager/classes/edit', (req, res) => {
 
 	let classes = importJSON('classes.json')
 	const classIndex = classes.findIndex(e => e.classID == req.body.classID)
-	if (classIndex === -1) res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+	if (classIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
 
 	classes[classIndex] = req.body
 	saveJSON('classes.json', classes)
@@ -1100,7 +1100,6 @@ app.post('/manager/classes/delete', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	
 	let classes = importJSON('classes.json')
-	console.log(req.body.classID)
 	const classIndex = classes.findIndex(e => e.classID == req.body.classID)
 	if (classIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
 
@@ -1112,6 +1111,100 @@ app.post('/manager/classes/delete', (req, res) => {
 app.post('/manager/classes/deleteAll', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	saveJSON('classes.json', [])
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/subjects/list', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	res.respond(JSON.stringify(importJSON('subjects.json')), '', '', 200)
+})
+app.post('/manager/subjects/edit', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let subjects = importJSON('subjects.json')
+	const subjectIndex = subjects.findIndex(e => e.subjectID == req.body.subjectID)
+	if (subjectIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	subjects[subjectIndex] = req.body
+	saveJSON('subjects.json', subjects)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/subjects/new', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let subjects = importJSON('subjects.json')
+	let newSubjectID = v4()
+	let newSubject = {
+        prettyName: "New Subject",
+        subjectID: newSubjectID
+	}
+
+	subjects.push(newSubject)
+	saveJSON('subjects.json', subjects)
+	res.respond(JSON.stringify(newSubject), '', 'application/json', 200)
+})
+app.post('/manager/subjects/delete', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	
+	let subjects = importJSON('subjects.json')
+	const subjectIndex = subjects.findIndex(e => e.subjectID == req.body.subjectID)
+	if (subjectIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	subjects.splice(subjectIndex, 1)
+	saveJSON('subjects.json', subjects)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/subjects/deleteAll', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	saveJSON('subjects.json', [])
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/periods/list', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	res.respond(JSON.stringify(importJSON('periods.json')), '', '', 200)
+})
+app.post('/manager/periods/edit', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let periods = importJSON('periods.json')
+	const periodIndex = periods.findIndex(e => e.periodID == req.body.periodID)
+	if (periodIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	periods[periodIndex] = req.body
+	saveJSON('periods.json', periods)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/periods/new', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let periods = importJSON('periods.json')
+	let newPeriodID = v4()
+	let newPeriod = {
+        prettyName: "New Period",
+        periodID: newPeriodID
+	}
+
+	periods.push(newPeriod)
+	saveJSON('periods.json', periods)
+	res.respond(JSON.stringify(newPeriod), '', 'application/json', 200)
+})
+app.post('/manager/periods/delete', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	
+	let periods = importJSON('periods.json')
+	const periodIndex = periods.findIndex(e => e.periodID == req.body.periodID)
+	if (periodIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	periods.splice(periodIndex, 1)
+	saveJSON('periods.json', periods)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/periods/deleteAll', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	saveJSON('periods.json', [])
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
 

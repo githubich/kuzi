@@ -10,12 +10,17 @@ For Debian & Ubuntu & their derivatives: `sudo apt install nodejs npm`
 For macOS 10.10+: [Click here](https://nodejs.org/en/download/package-manager/#macos)  
 For Windows 7+ or Windows Server 2008+: [Click here](https://nodejs.org/en/download/package-manager/#windows). In Windows, remove `sudo` in the commands shown below
 
-### Get Kuzi Server on your device
+### Get Kuzi on your device
 #### Method 1. Using the latest release (recommended)
 Go to the [releases page](https://github.com/ezarcel/kuzi/releases/latest), download the zip file named `Kuzi_<version number>.zip` & unzip it
 
 #### Method 2. Cloning the repo (aka latest & buggiest version)
-[Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you haven't already & run `git clone https://github.com/ezarcel/kuzi.git` in a terminal/command prompt window
+Via Web Browser:
+- Click [here](https://github.com/ezarcel/kuzi/archive/edge.zip)
+
+Via Terminal:
+- [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you haven't already
+- Run `git clone https://github.com/ezarcel/kuzi.git` in a terminal/command prompt window
 
 ### Install the dependencies
 Install all of this project's dependencies with `npm i`
@@ -26,7 +31,7 @@ There are some pre-made users, but if you want you can add yours [here](#create-
 ### Set the language & other settings
 Open `settings.json` & change the values you consider. There are 3 available languages: English (en), Catalan (ca) & Spanish (es)
 
-### Recommended step for linux users
+### For linux users (recommended, but optional)
 ***Run these commands as root*** (`sudo su`)***, not as sudo***
 ```bash
 echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-unprivileged-ports.conf
@@ -38,77 +43,9 @@ This allows all users to run any server in any port they want, since usually por
 Run `npm start`, open `http://localhost/` on a web browser or click [here](http://localhost/) & log in (Username: `admin.teacher`, Password: `kuzi`). Using HTTPS is up to you
 
 ## Set up
-### Create users
-The file `users.json` contains the users. For example:
-```json
-[
-    {
-        "username": "admin.teacher",
-        "password": "kuzi",
-        "prettyName": "Admin Teacher",
-        "userID": 1,
-        "role": "teacher",
-        "isAdmin": true
-    },
-    ...
-]
-```
-
-### Create classes
-The file `classes.json` contains the classes. For example:
-```json
-[
-    {
-        "classID": 1,
-        "prettyName": "1st",
-        "students": [ 3, 4 ]
-    },
-    ...
-]
-```
-
-### Create the subjects
-The file `subjects.json` contains the subjects. For example:
-```json
-[
-    {
-        "subjectID": 1,
-        "prettyName": "Catalan"
-    },
-    ...
-]
-```
-
-### Create the schedule
-The file `scheduling.json` contains the scheduling. For example:
-```json
-[
-    {
-        "subjectID": 1,
-        "classID": 1,
-        "teacherID": 1,
-        "time": {
-            "weekDay": 1,
-            "hours": 9,
-            "minutes": 0,
-            "duration": {
-                "hours": 1,
-                "minutes": 0
-            }
-        }
-    },
-    ...
-]
-```
-In this example, Catalan would be taught by Admin Teacher in the class of 1st on Monday at 9 AM for 1 hour
-
-### Notes
-* I know that [this section](#set-up) can be hard to follow, I'll try my best to improve this procedure
-
-About users, classes, scheduling & subjects:
-* You can create as many as you wish
-* Be sure not to repeat the IDs
-* It's recomended to start with ID = 0
+### Create users, classes, subjects, the schedule & periods
+Log in as an admin users and go to More > Manager or click [here](http://localhost/manager.html), then select the tab according to whatever you want to create/modify/delete & then follow the onscreen instructions  
+IDs for everything are generated as UUIDs v4 by [uuid@8.3.0](https://www.npmjs.com/package/uuid)
 
 ### Contributing & following the progress
 First, read the [contribution guide](https://github.com/ezarcel/kuzi/blob/edge/CONTRIBUTING.md#readme)
