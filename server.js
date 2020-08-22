@@ -1168,6 +1168,7 @@ app.post('/manager/periods/edit', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 
 	let periods = importJSON('periods.json')
+	console.log(periods, req.body)
 	const periodIndex = periods.findIndex(e => e.periodID == req.body.periodID)
 	if (periodIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
 

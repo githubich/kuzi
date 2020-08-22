@@ -4,6 +4,72 @@ function changeTab(tab) {
     tab.classList.add('selected')
     $$('.content').forEach(content => content.style.display = 'none')
     $(`.content#${tab.getAttribute('value')}`).removeAttribute('style')
+    if (tab.getAttribute('value') == 'scheduling') {
+        createSchedule()
+        schedulingVisible = true
+    } else schedulingVisible = false
+}
+function logicalSort(a, b) {
+    if (a > b) return 1
+    else if (a < b) return -1
+    return 0
+}
+function createSchedule(rootElement) {
+    const table = rootElement.querySelector('table')
+    const subjectsContainer = rootElement.querySelector('#subjects-container')
+    table.innerHTML = ''
+    subjectsContainer.innerHTML = ''
+    let subjects = []
+    let weekdays = []
+    let hours = []
+    let k = 0
+    const weekDaysNames = [ "[{(monday)}]", "[{(tuesday)}]", "[{(wednesday)}]", "[{(thursday)}]", "[{(friday)}]", "[{(saturday)}]", "[{(sunday)}]" ]
+    r.forEach(c => {
+        if (subjects.findIndex(e => e == c.subject.subjectID) == -1) subjects.push(c.subject.subjectID)
+        if (weekdays.findIndex(e => e == c.time.weekDay) == -1) weekdays.push(c.time.weekDay)
+        if (hours.findIndex(e => e == c.time.hours + 1) == -1) {
+            if (c.time.minutes != 0 || c.time.duration.hours > 1 || (c.time.duration.hours == 1 && c.time.duration.minutes > 0)) hours.push(c.time.hours + 1)
+        }
+        if (hours.findIndex(e => e == c.time.hours) == -1) {
+            if (c.time.minutes != 0 || c.time.duration.hours > 1 || (c.time.duration.hours == 1 && c.time.duration.minutes > 0)) hours.push(c.time.hours, c.time.hours + 1)
+            else hours.push(c.time.hours)
+        }
+    })
+    hours.sort(logicalSort)
+    weekdays.sort(logicalSort)
+    let trTh = document.createElement('tr')
+    table.appendChild(trTh)
+    trTh.innerHTML += `<td>&nbsp;</td>`
+    for (i = weekdays[0]; i < (weekdays[weekdays.length - 1] + 1); i++) {
+        trTh.innerHTML += `<td>${weekDaysNames[i - 1]}</td>`
+    }
+    for (i = hours[0]; i < (hours[hours.length - 1] + 1); i++) {
+        let tr = document.createElement('tr')
+        table.appendChild(tr)
+        tr.innerHTML += `<td>${i}:00</td>`
+        for (j = weekdays[0]; j < (weekdays[weekdays.length - 1] + 1); j++) {
+            tr.innerHTML += `<td>&nbsp;</td>`
+        }
+    }
+    r.forEach(c => {
+        let element = document.createElement('div')
+        subjectsContainer.appendChild(element)
+        element.classList.add('subject')
+        element.setAttribute('onclick', `updateDetails(${k}); toggleModal('details')`)
+        let prettyMinutes = c.time.minutes
+        let prettyMinutes2 = c.time.minutes + c.time.duration.minutes
+        if (prettyMinutes < 10) prettyMinutes = `0${prettyMinutes}`
+        if (prettyMinutes2 < 10) prettyMinutes2 = `0${prettyMinutes2}`
+        element.innerHTML = `<div class="contents"><p>${c.subject.prettyName}</p></div>`
+        
+        element.style.top = table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2})`).getBoundingClientRect().top + (table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2})`).offsetHeight * c.time.minutes / 60) + window.scrollY + "px"
+        element.style.left = table.querySelector(`tr:nth-child(2) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`).getBoundingClientRect().left + "px"
+
+        element.style.height = (table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2})`).offsetHeight * (c.time.duration.hours + ( c.time.duration.minutes / 60))) + "px"
+        element.style.width = (table.querySelector(`tr:nth-child(2) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`).offsetWidth) + "px"
+    
+        k++
+    })
 }
 window.addEventListener('load', () => setPageTitle("users-cog", "[{(manager)}]"))
 window.addEventListener('ready', () => {
@@ -125,6 +191,7 @@ window.addEventListener('ready', () => {
             .catch(e => qError({ goBack: false }))
     }
 
+    // SUBJECTS
     $('#subjects--subject-list').addEventListener('select', e => {
         if (!e.detail.subjectInfo) throw Error('No subjectInfo was recieved')
         const info = JSON.parse(decodeURI(e.detail.subjectInfo))
@@ -151,6 +218,58 @@ window.addEventListener('ready', () => {
         }).then(r => r.json())
             .then(r => {
                 if (r.message = 'ok') qSuccess({ message: "[{(success.manager.subject.edit)}]" }).then(a => location.reload())
+                else qError({ goBack: false })
+            })
+            .catch(e => qError({ goBack: false }))
+    }
+
+    // SCHEDULING
+    
+
+    // PERIODS
+    $('#periods--period-list').addEventListener('select', e => {
+        if (!e.detail.periodInfo) throw Error('No periodInfo was recieved')
+        const info = JSON.parse(decodeURI(e.detail.periodInfo))
+
+        const content = $('.content#periods .actual-content')
+        content.removeAttribute('style')
+
+        content.querySelector('.prettyName-input input').value = info.periodName
+
+        let { day: sDay, month: sMonth } = info.startDate
+        let { day: eDay, month: eMonth } = info.endDate
+        if (sDay < 10) sDay = `0${sDay}`
+        if (sMonth < 10) sMonth = `0${sMonth}`
+        if (eDay < 10) eDay = `0${eDay}`
+        if (eMonth < 10) eMonth = `0${eMonth}`
+        content.querySelector('.startDate-input input').value = `${(new Date()).getFullYear()}-${sMonth}-${sDay}`
+        content.querySelector('.endDate-input input').value = `${(new Date()).getFullYear()}-${eMonth}-${eDay}`
+        
+        content.querySelector('button.submit').setAttribute('periodID', info.periodID)
+    })
+    periods_submit = periodID => {
+        if (!periodID) throw Error('No periodID specified')
+        const content = $('.content#periods .actual-content')
+        let sendData = {
+            periodName: content.querySelector('.prettyName-input input').value,
+            periodID,
+            startDate: {
+                day: parseInt(content.querySelector('.startDate-input input').value.split('-')[2]),
+                month: parseInt(content.querySelector('.startDate-input input').value.split('-')[1])
+            },
+            endDate: {
+                day: parseInt(content.querySelector('.endDate-input input').value.split('-')[2]),
+                month: parseInt(content.querySelector('.endDate-input input').value.split('-')[1])
+            },
+        }
+
+        fetch('/manager/periods/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sendData)
+        }).then(r => r.json())
+            .then(r => {
+                if (r.message = 'ok') qSuccess({ message: "[{(success.manager.period.edit)}]" }).then(a => location.reload())
                 else qError({ goBack: false })
             })
             .catch(e => qError({ goBack: false }))

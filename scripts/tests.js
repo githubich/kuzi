@@ -70,7 +70,7 @@ window.addEventListener('ready', () => {
                             <a title="[{(delete)}]" class="delete-test teachers-only" onclick="deleteTest(this, '${test.testID}')"><i class="fad fa-trash"></i></a></p>
                         <div class="visibility teachers-only">
                             <label class="toggle" for="visibility-${test.testID}">
-                                <input type="checkbox" id="visibility-${test.testID}" ${(() => { if (test.visible === true) return 'checked'; return '' })()} oninput="this.disabled = true; fetch('/teachers/tests/setVisibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: ${test.testID}, set: this.checked }) }).then(res => { this.disabled = false })">
+                                <input type="checkbox" id="visibility-${test.testID}" ${(() => { if (test.visible === true) return 'checked'; return '' })()} oninput="this.disabled = true; fetch('/teachers/tests/setVisibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ID: '${test.testID}', set: this.checked }) }).then(res => { this.disabled = false })">
                                 <span class="slider"></span>
                             </label>
                             <label class="label" for="visibility-${test.testID}">Visible</label>

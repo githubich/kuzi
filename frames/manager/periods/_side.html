@@ -23,7 +23,6 @@
                     .then(periods => {
                         $('#period-container').innerHTML = ''
                         periods.forEach(period => {
-                            console.log(period)
                             $('#period-container').innerHTML += getTemplate('period', { name: period.periodName, id: period.periodID, periodInfo: encodeURI(JSON.stringify(period)) })
                         })
                         $$('#period-container li input[type=radio]').forEach(period => {

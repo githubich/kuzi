@@ -1,5 +1,6 @@
 <title>[{(manager)}] - Kuzi</title>
 <link rel="stylesheet" href="/style/manager.css">
+<link rel="stylesheet" href="/style/my-schedule.css">
 <script src="/scripts/manager.js"></script>
 
 <div id="manager">
@@ -105,7 +106,15 @@
             <button class="icon-container submit" onclick="subjects_submit(this.getAttribute('subjectID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
         </div>
     </div>
-    <div class="content" id="scheduling" style="display: none;"></div>
+    <div class="content" id="scheduling" style="display: none;">
+        <aside>
+            <iframe id="scheduling--user-list" src="/frames/manager/users/_side.html"></iframe>
+        </aside>
+        <div id="schedule-container">
+            <table id="schedule"></table>
+            <div id="subjects-container"></div>
+        </div>
+    </div>
     <div class="content" id="periods" style="display: none;">
         <aside>
             <iframe id="periods--period-list" src="/frames/manager/periods/_side.html"></iframe>
@@ -118,15 +127,15 @@
             </div>
             <div class="info-container">
                 <div class="startDate-input">
-                    <p class="hint"><i class="fad fa-calendar-day"></i>[{(name)}]</p>
-                    <input type="text">
+                    <p class="hint"><i class="fad fa-calendar-day"></i>[{(startTime)}]</p>
+                    <input type="date" class="no-year">
                 </div>
                 <div class="endDate-input">
-                    <p class="hint"><i class="fad fa-calendar-day"></i>[{(name)}]</p>
-                    <input type="text">
+                    <p class="hint"><i class="fad fa-calendar-day"></i>[{(endTime)}]</p>
+                    <input type="date" class="no-year">
                 </div>
             </div>
-            <button class="icon-container submit" onclick="subjects_submit(this.getAttribute('subjectID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
+            <button class="icon-container submit" onclick="periods_submit(this.getAttribute('periodID'))"><i class="fad fa-paper-plane icon"></i>Submit</button>
         </div>
     </div>
 </div>

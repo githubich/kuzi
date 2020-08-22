@@ -9,7 +9,8 @@ body { position: relative; }
 .tab div { margin: auto; }
 .content { background-color: var(--bg-shade1); padding: 20px; border-radius: 0 0 10px 10px; }
 .info-container { display: grid; gap: 20px; }
-.content#users .info-container ~ div { margin-top: 20px; }
+.content#users .info-container ~ div,
+.content#periods .info-container { margin-top: 20px; }
 .content-title { margin-bottom: 20px; }
 
 #users .password-input > div { display: flex; }
@@ -43,6 +44,8 @@ iframe { border: none; }
     .content#users .info-container ~ div,
     iframe,
     .content#classes .students-input { height: 100%; }
+
+    .content#periods .info-container { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
     .tabs { display: block; }

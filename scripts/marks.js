@@ -42,7 +42,7 @@ window.addEventListener('ready', () => {
                             markE.appendChild(markEContent)
                             if (mark.testID == undefined || mark.finished === true) markEContent.innerHTML = `${mark.mark}%`
                             else if (mark.canBePerformed === true) markEContent.innerHTML = `<a href="/perform-test.html?ID=${mark.testID}"><i class="fad fa-play"></i>Perform Test</a>`
-                            if (mark.definitive === false) markEContent.innerHTML += `<i class="fad fa-info-circle mark-not-definitive" title="[{(thisMarkIsntDefinitive)}]"></i>`
+                            if (mark.definitive === false && !mark.canBePerformed) markEContent.innerHTML += `<i class="fad fa-info-circle mark-not-definitive" title="[{(thisMarkIsntDefinitive)}]"></i>`
                         })
                     })
                 })

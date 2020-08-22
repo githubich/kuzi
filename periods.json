@@ -24,15 +24,15 @@
         }
     },
     {
-        "periodID": 3,
         "periodName": "3rd Trimester",
+        "periodID": "3",
         "startDate": {
-            "day": 12,
-            "month": 4
+            "day": 25,
+            "month": 5
         },
         "endDate": {
             "day": 21,
-            "month": 8
+            "month": 6
         }
     }
 ]
