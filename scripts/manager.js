@@ -1,13 +1,18 @@
-function changeTab(tab) {
+/*function changeTab(tab) {
     if (!tab || $('.tab.selected') == tab) return
-    $('.tab.selected').classList.remove('selected')
+    if ($('.tab.selected')) $('.tab.selected').classList.remove('selected')
     tab.classList.add('selected')
     $$('.content').forEach(content => content.style.display = 'none')
     $(`.content#${tab.getAttribute('value')}`).removeAttribute('style')
-    if (tab.getAttribute('value') == 'scheduling') {
-        createSchedule()
-        schedulingVisible = true
-    } else schedulingVisible = false
+    history.pushState('','',`?tab=${tab.getAttribute('value')}`)
+}*/
+function changeTab(tabName) {
+    if (!tabName || !$(`.content#${tabName}`) || !$(`.tab[value="${tabName}"]`)) return;
+    if ($('.tab.selected')) $('.tab.selected').classList.remove('selected')
+    $(`.tab[value="${tabName}"]`).classList.add('selected')
+    $$('.content').forEach(content => content.style.display = 'none')
+    $(`.content#${tabName}`).removeAttribute('style')
+    history.pushState('','',`?tab=${tabName}`)
 }
 function logicalSort(a, b) {
     if (a > b) return 1
@@ -274,4 +279,10 @@ window.addEventListener('ready', () => {
             })
             .catch(e => qError({ goBack: false }))
     }
+
+    $$('.tab').forEach(tab => tab.classList.remove('selected'))
+    $$('.content').forEach(content => content.style.display = 'none')
+    if ($parseURLArgs() && $parseURLArgs().tab && $(`.tab[value="${$parseURLArgs().tab}"]`) && $(`.content#${$parseURLArgs().tab}`)) changeTab($parseURLArgs().tab)
+    else changeTab('users')
+    $('main').classList.add('loaded')
 })

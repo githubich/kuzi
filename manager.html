@@ -5,23 +5,23 @@
 
 <div id="manager">
     <div class="tabs">
-        <a class="tab selected" value="users" onclick="changeTab(this)">
+        <a class="tab" value="users" onclick="changeTab(this.getAttribute('value'))">
             <div><i class="fad fa-users"></i><span>[{(users)}]</span></div>
         </a>
-        <a class="tab" value="classes" onclick="changeTab(this)">
+        <a class="tab" value="classes" onclick="changeTab(this.getAttribute('value'))">
             <div><i class="fad fa-th-large"></i><span>[{(classes)}]</span></div>
         </a>
-        <a class="tab" value="subjects" onclick="changeTab(this)">
+        <a class="tab" value="subjects" onclick="changeTab(this.getAttribute('value'))">
             <div><i class="fad fa-calendar-check"></i><span>[{(subjects)}]</span></div>
         </a>
-        <a class="tab" value="scheduling" onclick="changeTab(this)">
-            <div><i class="fad fa-calendar-week"></i><span>[{(scheduling)}]</span></div>
+        <a class="tab" value="scheduling" onclick="changeTab(this.getAttribute('value'))">
+            <div><i class="fad fa-calendar-week"></i><span>[{(schedule)}]</span></div>
         </a>
-        <a class="tab" value="periods" onclick="changeTab(this)">
+        <a class="tab" value="periods" onclick="changeTab(this.getAttribute('value'))">
             <div><i class="fad fa-calendar-alt"></i><span>[{(periods)}]</span></div>
         </a>
     </div>
-    <div class="content" id="users">
+    <div class="content" id="users" style="display: none;">
         <aside>
             <iframe id="users--user-list" src="/frames/manager/users/_side.html"></iframe>
         </aside>
@@ -108,7 +108,7 @@
     </div>
     <div class="content" id="scheduling" style="display: none;">
         <aside>
-            <iframe id="scheduling--user-list" src="/frames/manager/users/_side.html"></iframe>
+            <iframe id="scheduling--teacher-list" src="/frames/manager/schedule/_side.html"></iframe>
         </aside>
         <div id="schedule-container">
             <table id="schedule"></table>

@@ -1,5 +1,6 @@
 [
     {
+        "connectionID": 0,
         "subjectID": 1,
         "classID": 1,
         "teacherID": 1,
@@ -14,6 +15,7 @@
         }
     },
     {
+        "connectionID": 1,
         "subjectID": 2,
         "classID": 2,
         "teacherID": 1,

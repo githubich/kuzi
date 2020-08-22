@@ -1,10 +1,14 @@
-const { importJSON, saveJSON, importLocale } = require('./utils')
+const { importJSON, saveJSON, importLocale, extensionToMime } = require('./utils')
 const { readFileSync, existsSync } = require('fs')
 const { extname } = require('path')
-const { extensionToMime } = require('./utils')
 const locales = importLocale()
 function log(req, r, next) {
-    console.log(`[Kuzi|${req.connection.remoteAddress.replace('::ffff:','')}|${(new Date()).getHours()}:${(new Date()).getMinutes()}:${(new Date()).getSeconds()}] ${req.method} ${req.url}`)
+    req.ipAddress = req.connection.remoteAddress.replace('::ffff:','')
+    const now = new Date()
+    const hours = now.getHours() < 10 ? `0${now.getHours().toString()}` : now.getHours()
+    const minutes = now.getMinutes() < 10 ? `0${now.getMinutes().toString()}` : now.getMinutes()
+    const seconds = now.getSeconds() < 10 ? `0${now.getSeconds().toString()}` : now.getSeconds()
+    console.log(`[Kuzi|${req.ipAddress}|${hours}:${minutes}:${seconds}] ${req.method} ${req.url}`)
     next()
 }
 function cookies(req, r, next) {
@@ -12,7 +16,7 @@ function cookies(req, r, next) {
     if (req.headers.cookie) req.headers.cookie.split('; ').forEach(cookie => req.cookies[cookie.split('=')[0]] = cookie.split('=')[1])
     next()
 }
-function main(req, res, next) {    
+function main(req, res, next) {
     res.respond = (content, file, mime, statusCode) => {
         if (!mime && file) mime = extensionToMime(file)
         if (!mime && content) mime = 'text/html'
@@ -105,4 +109,4 @@ function main(req, res, next) {
     
     next()
 }
-module.exports = { main, cookies, log }
+module.exports = { log, cookies, main }

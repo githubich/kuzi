@@ -1,6 +1,8 @@
 body, main, #root, #manager { display: flex; flex-direction: column; }
 body { position: relative; }
 
+main:not(.loaded) { display: none }
+
 .tabs { display: flex; width: 100%; }
 .tab { display: inline-flex; background-color: var(--bg-shade2); padding: 20px; width: 100%; }
 .tab:nth-child(1) { border-radius: 10px 0 0 0; }

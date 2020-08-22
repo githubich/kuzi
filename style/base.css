@@ -55,6 +55,10 @@ header, footer {
     z-index: 99;
 }
 header, footer, .dropdown-link { display: inline-flex; }
+#icon {
+    height: 40px;width: 40px;
+    background-position: center; background-size: contain; background-image: url(http://localhost/imgs/webp/favicon.big.webp);
+}
 .center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
 #dropdown, #more {
     z-index: 999;
