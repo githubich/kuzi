@@ -1,3 +1,5 @@
+@keyframes rotate { 0% { transform: rotateZ(0); } 100% { transform: rotateZ(180deg); } }
+
 body, main, #root, #manager { display: flex; flex-direction: column; }
 body { position: relative; }
 
@@ -22,20 +24,35 @@ main:not(.loaded) { display: none }
 aside { border: solid 1px var(--bg-alt); }
 iframe { border: none; }
 
-#users--students-list,
-#classes-students-list { margin: 10px 0 0 0; }
-
 .content#classes .students-input { margin: 20px 0 0 0; }
 
+.loading-container { position: relative; height: 100%; width: 100%; }
+.loading {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.loading > * { margin: 0 auto; }
+.loading > p { margin: 12.5px auto 0 auto; }
+.spinner {
+    animation: rotate linear .5s infinite;
+    height: 45px; width: 45px;
+	border-radius: 99px;
+    display: inline-block;
+    border: 2px solid;
+    border-color: var(--bg-alt) #0000;
+}
+
 @media (min-width: 601px) {
-    html, body, main, #root, #manager { overflow: hidden; }
-    html, body, main, #root, #manager, .content { height: 100%; }
+    html, body, main, #root, #manager { overflow: hidden; height: 100%; }
+    .content { height: 100%; }
     .tab:nth-last-child(1) { border-radius: 0 10px 0 0; }
     
     .content { display: grid; grid-template-columns: auto 1fr; overflow: auto; }
     .content#users .info-container { grid-template-columns: repeat(3, 1fr); }
     .content#users .info-container .isAdmin-input { display: flex; flex-direction: column; }
     .content#users .info-container .isAdmin-input .toggle { margin: auto 0 0 0; }
+    .content#periods .info-container { grid-template-columns: repeat(2, 1fr); }
     .actual-content { padding: 0 20px; display: flex; flex-direction: column; }
     .actual-content > button { margin-top: auto; margin-bottom: 0; }
 
@@ -44,10 +61,10 @@ iframe { border: none; }
     iframe { width: 100%; }
 
     .content#users .info-container ~ div,
-    iframe,
-    .content#classes .students-input { height: 100%; }
+    .content#classes .students-input,
+    iframe { height: 100%; }
 
-    .content#periods .info-container { grid-template-columns: repeat(2, 1fr); }
+    .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 }
 @media (max-width: 600px) {
     .tabs { display: block; }
@@ -61,3 +78,18 @@ iframe { border: none; }
     aside iframe { height: 100% }
     aside, aside iframe { width: 100%; max-height: 50vh; }
 }
+
+/* my-schedule.css */
+table * { width: max-content; white-space: nowrap; }
+table { border-collapse: collapse; }
+td { text-align: center; padding: 15px 10px; border: solid 1px var(--bg-alt); }
+.subject { position: absolute; background-color: var(--bg-alt-alpha); display: flex; text-align: center; }
+.subject .contents { margin: auto; height: min-content; }
+.subject p { color: var(--bg); margin: 0; }
+
+#details-modal.modal p { margin: 0; }
+#details-modal.modal > *:not(:nth-last-child(1)) { margin: 0 0 10px 0; }
+
+#schedule-container { overflow-x: auto; position: relative; }
+
+#schedule-container, #schedule-container table { width: 100%; }

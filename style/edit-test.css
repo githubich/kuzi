@@ -10,7 +10,14 @@ footer { display: flex; }
 footer * { margin: auto 0; }
 footer > div > :nth-child(1) { margin: auto 0.3em auto 0; }
 footer .spinner { position: relative; top: 2px; }
-.spinner { animation: rotate linear .5s infinite; height: 16px; width: 16px; border-radius: 8px; display: inline-block; border: 2px solid; border-color: var(--bg-alt) #0000; }
+.spinner {
+    animation: rotate linear .5s infinite;
+    height: 16px; width: 16px;
+    border-radius: 8px;
+    display: inline-block;
+    border: 2px solid;
+    border-color: var(--bg-alt) #0000;
+}
 .modal:not(#thanks-modal):not(#qAlert) > div > :not(:nth-last-child(1)) { margin: 0 0 20px 0; }
 .question-answer { padding: 0; margin: 0; }
 .question-answer li { display: flex; }

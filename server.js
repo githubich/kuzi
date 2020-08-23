@@ -1158,6 +1158,27 @@ app.post('/manager/subjects/deleteAll', (req, res) => {
 	saveJSON('subjects.json', [])
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
 })
+app.post('/manager/scheduling/get', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	if (!req.body.teacherID) return res.sendError(400)
+
+	const classes = importJSON('classes.json')
+	let scheduling = importJSON('scheduling.json').filter(e => e.teacherID == req.body.teacherID)
+	const subjects = importJSON('subjects.json')
+	const users = importJSON('users.json')
+	
+	scheduling.map(i => {
+		i.class = classes.find(j => j.classID == i.classID)
+		i.subject = subjects.find(j => j.subjectID == i.subjectID)
+		i.teacher = users.find(j => j.userID == i.teacherID)
+		delete i.classID
+		delete i.subjectID
+		delete i.teacherID
+		return i
+	})
+
+	res.respond(JSON.stringify(scheduling), '', 'application/json', 200)
+})
 app.post('/manager/periods/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	res.respond(JSON.stringify(importJSON('periods.json')), '', '', 200)

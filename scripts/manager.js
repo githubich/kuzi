@@ -1,11 +1,3 @@
-/*function changeTab(tab) {
-    if (!tab || $('.tab.selected') == tab) return
-    if ($('.tab.selected')) $('.tab.selected').classList.remove('selected')
-    tab.classList.add('selected')
-    $$('.content').forEach(content => content.style.display = 'none')
-    $(`.content#${tab.getAttribute('value')}`).removeAttribute('style')
-    history.pushState('','',`?tab=${tab.getAttribute('value')}`)
-}*/
 function changeTab(tabName) {
     if (!tabName || !$(`.content#${tabName}`) || !$(`.tab[value="${tabName}"]`)) return;
     if ($('.tab.selected')) $('.tab.selected').classList.remove('selected')
@@ -24,6 +16,7 @@ function createSchedule(rootElement) {
     const subjectsContainer = rootElement.querySelector('#subjects-container')
     table.innerHTML = ''
     subjectsContainer.innerHTML = ''
+    if (r.length == 0) return;
     let subjects = []
     let weekdays = []
     let hours = []
@@ -67,11 +60,12 @@ function createSchedule(rootElement) {
         if (prettyMinutes2 < 10) prettyMinutes2 = `0${prettyMinutes2}`
         element.innerHTML = `<div class="contents"><p>${c.subject.prettyName}</p></div>`
         
-        element.style.top = table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2})`).getBoundingClientRect().top + (table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2})`).offsetHeight * c.time.minutes / 60) + window.scrollY + "px"
-        element.style.left = table.querySelector(`tr:nth-child(2) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`).getBoundingClientRect().left + "px"
+        const cell = table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2}) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`)
+        element.style.top = cell.offsetTop + (cell.offsetHeight * c.time.minutes / 60) + window.scrollY + "px"
+        element.style.left = cell.offsetLeft + "px"
 
-        element.style.height = (table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2})`).offsetHeight * (c.time.duration.hours + ( c.time.duration.minutes / 60))) + "px"
-        element.style.width = (table.querySelector(`tr:nth-child(2) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`).offsetWidth) + "px"
+        element.style.height = (cell.offsetHeight * (c.time.duration.hours + ( c.time.duration.minutes / 60))) + "px"
+        element.style.width = `${cell.offsetWidth}px`
     
         k++
     })
@@ -229,7 +223,33 @@ window.addEventListener('ready', () => {
     }
 
     // SCHEDULING
-    
+    $('#scheduling--teacher-list').addEventListener('select', e => {
+        if (!e.detail.userID) throw Error('No userID was recieved')
+        const { userID: teacherID } = e.detail
+
+        const content = $('.content#scheduling .actual-content')
+        content.removeAttribute('style')
+
+        content.querySelector('#schedule-container').style.display = 'none'
+        content.querySelector('.loading-container').removeAttribute('style')
+
+        fetch('/manager/scheduling/get', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ teacherID })
+        }).then(r => r.json())
+            .then(r => {
+                window.r = r
+                content.querySelector('.loading-container').style.display = 'none'
+                content.querySelector('#schedule-container').removeAttribute('style')
+                createSchedule(content.querySelector('#schedule-container'))
+            })
+    })
+    window.addEventListener('resize', () => {
+        if (getComputedStyle($('.content#scheduling')).display != 'none' &&
+            getComputedStyle($('.content#scheduling #schedule-container')).display != 'none') {
+            createSchedule($('.content#scheduling #schedule-container'))
+        }
+    })
 
     // PERIODS
     $('#periods--period-list').addEventListener('select', e => {
