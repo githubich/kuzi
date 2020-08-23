@@ -235,7 +235,7 @@ header.icons-only .header-action:not(.selected) span:nth-child(2) { display: non
 @supports (backdrop-filter: blur()) or (-webkit-backdrop-filter: blur()) {
     .blurry-bg { background-color: var(--bg-semi-alpha); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 }
-@supports (not (backdrop-filter: blur())) or (not (-webkit-backdrop-filter: blur())) {
+@supports (not (backdrop-filter: blur())) and (not (-webkit-backdrop-filter: blur())) {
     .blurry-bg { background-color: var(--bg-nearly-opaque); }
 }
 

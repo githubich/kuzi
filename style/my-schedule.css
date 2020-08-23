@@ -1,7 +1,7 @@
 table, table * { width: max-content; white-space: nowrap; }
 table { border-collapse: collapse; width: 70vw !important; }
 td { text-align: center; padding: 15px 10px; border: solid 1px var(--bg-alt); }
-.subject { position: absolute; background-color: var(--bg-alt-alpha); display: flex; text-align: center; }
+.subject { position: absolute; background-color: var(--bg-alt-shade4); display: flex; text-align: center; }
 .subject .contents { margin: auto; height: min-content; }
 .subject p { color: var(--bg); margin: 0; }
 

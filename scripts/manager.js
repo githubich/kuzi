@@ -16,7 +16,7 @@ function createSchedule(rootElement) {
     const subjectsContainer = rootElement.querySelector('#subjects-container')
     table.innerHTML = ''
     subjectsContainer.innerHTML = ''
-    if (r.length == 0) return;
+    if (!window.r || window.r.length == 0) return;
     let subjects = []
     let weekdays = []
     let hours = []
@@ -53,7 +53,7 @@ function createSchedule(rootElement) {
         let element = document.createElement('div')
         subjectsContainer.appendChild(element)
         element.classList.add('subject')
-        element.setAttribute('onclick', `updateDetails(${k}); toggleModal('details')`)
+        element.setAttribute('onclick', `scheduling_updateModal("${c.connectionID}"); toggleModal('scheduling-edit')`)
         let prettyMinutes = c.time.minutes
         let prettyMinutes2 = c.time.minutes + c.time.duration.minutes
         if (prettyMinutes < 10) prettyMinutes = `0${prettyMinutes}`
@@ -61,7 +61,7 @@ function createSchedule(rootElement) {
         element.innerHTML = `<div class="contents"><p>${c.subject.prettyName}</p></div>`
         
         const cell = table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2}) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`)
-        element.style.top = cell.offsetTop + (cell.offsetHeight * c.time.minutes / 60) + window.scrollY + "px"
+        element.style.top = cell.offsetTop + (cell.offsetHeight * c.time.minutes / 60) + "px"
         element.style.left = cell.offsetLeft + "px"
 
         element.style.height = (cell.offsetHeight * (c.time.duration.hours + ( c.time.duration.minutes / 60))) + "px"
@@ -70,7 +70,14 @@ function createSchedule(rootElement) {
         k++
     })
 }
-window.addEventListener('load', () => setPageTitle("users-cog", "[{(manager)}]"))
+window.addEventListener('load', () => {
+    setPageTitle("users-cog", "[{(manager)}]")
+    $$('.tab').forEach(tab => tab.classList.remove('selected'))
+    $$('.content').forEach(content => content.style.display = 'none')
+    if ($parseURLArgs() && $parseURLArgs().tab && $(`.tab[value="${$parseURLArgs().tab}"]`) && $(`.content#${$parseURLArgs().tab}`)) changeTab($parseURLArgs().tab)
+    else changeTab('users')
+    $('main').classList.add('loaded')
+})
 window.addEventListener('ready', () => {
     if (!userInfo.isAdmin) return qError({ message: "[{(error.notAllowed)}]", goBack: true })
 
@@ -223,14 +230,11 @@ window.addEventListener('ready', () => {
     }
 
     // SCHEDULING
-    $('#scheduling--teacher-list').addEventListener('select', e => {
-        if (!e.detail.userID) throw Error('No userID was recieved')
-        const { userID: teacherID } = e.detail
-
+    scheduling_update = () => {
+        const teacherID = window.schedule_teacherID
         const content = $('.content#scheduling .actual-content')
-        content.removeAttribute('style')
-
         content.querySelector('#schedule-container').style.display = 'none'
+        content.querySelector('.actions').style.display = 'none'
         content.querySelector('.loading-container').removeAttribute('style')
 
         fetch('/manager/scheduling/get', {
@@ -239,17 +243,94 @@ window.addEventListener('ready', () => {
         }).then(r => r.json())
             .then(r => {
                 window.r = r
-                content.querySelector('.loading-container').style.display = 'none'
                 content.querySelector('#schedule-container').removeAttribute('style')
+                content.querySelector('.actions').removeAttribute('style')
+                content.querySelector('.loading-container').style.display = 'none'
                 createSchedule(content.querySelector('#schedule-container'))
             })
+    }
+    $('#scheduling--teacher-list').addEventListener('select', e => {
+        if (!e.detail.userID) throw Error('No userID was recieved')
+        const { userID: teacherID } = e.detail
+
+        window.schedule_teacherID = teacherID
+
+        const content = $('.content#scheduling .actual-content')
+        content.removeAttribute('style')
+
+        scheduling_update()
     })
     window.addEventListener('resize', () => {
         if (getComputedStyle($('.content#scheduling')).display != 'none' &&
             getComputedStyle($('.content#scheduling #schedule-container')).display != 'none') {
-            createSchedule($('.content#scheduling #schedule-container'))
+            if (window.r) createSchedule($('.content#scheduling #schedule-container'))
         }
     })
+    window.addEventListener('toggle-modal-scheduling-edit', () => {
+        if ($('.modal.blurry-bg#scheduling-edit-modal').style.display != 'block') return;
+        fetch('/manager/classes/list', { method: 'POST' }).then(res => res.json())
+            .then(res => {
+                $$('.class-chooser').forEach(classChooser => {
+                    classChooser.innerHTML = ''
+                    res.forEach(clas => {
+                        classChooser.innerHTML += getTemplate('class-subject', { id: clas.classID, name: clas.prettyName })
+                    })
+                })
+            })
+        fetch('/manager/subjects/list', { method: 'POST' }).then(res => res.json())
+            .then(res => {
+                $$('.subject-chooser').forEach(subjectChooser => {
+                    subjectChooser.innerHTML = ''
+                    res.forEach(subject => {
+                        subjectChooser.innerHTML += getTemplate('class-subject', { id: subject.subjectID, name: subject.prettyName })
+                    })
+                })
+            })
+    })
+    scheduling_new = () => {
+        const teacherID = window.schedule_teacherID
+        fetch('/manager/scheduling/new', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ teacherID })
+        }).then(r => scheduling_update())
+    }
+    scheduling_updateModal = id => {
+        if (!id) throw Error('No ID specified')
+        const info = r.find(e => e.connectionID == id)
+        if (!info) throw Error('Invalid ID')
+        console.log(info)
+        const modal = $('.modal.blurry-bg#scheduling-edit-modal')
+
+        modal.querySelector('button.submit').setAttribute('connectionID', id)
+    }
+    scheduling_submitEdit = id => {
+        const modal = $('.modal.blurry-bg#scheduling-edit-modal')
+
+        const sHours = parseInt(modal.querySelector('.start-input input').value.split(':')[0])
+        const sMinutes = parseInt(modal.querySelector('.start-input input').value.split(':')[1])
+        const dHours = parseInt(modal.querySelector('.end-input input').value.split(':')[0]) - sHours
+        const dMinutes = parseInt(modal.querySelector('.end-input input').value.split(':')[1]) - sMinutes
+
+        let sendData = {
+            connectionID: id,
+            subjectID: modal.querySelector('.subject-chooser').value,
+            classID: modal.querySelector('.class-chooser').value,
+            teacherID: window.schedule_teacherID,
+            time: {
+                weekDay: parseInt(modal.querySelector('.weekDay-chooser').value),
+                hours: sHours,
+                minutes: sMinutes,
+                duration: {
+                    hours: dHours,
+                    minutes: dMinutes
+                }
+            }
+        }
+        if (dHours < 0 || dMinutes < 0 || (dHours == 0 && dMinutes == 0) ||
+            !sendData.connectionID || !sendData.subjectID || !sendData.classID || !sendData.teacherID ||
+            sendData.time.weekDay == undefined && sendData.time.hours == undefined || sendData.time.minutes == undefined ||
+            sendData.time.duration.hours == undefined || sendData.time.duration.minutes == undefined) return qError({ message: '[{(error.invalidInput)}]' })
+    }
 
     // PERIODS
     $('#periods--period-list').addEventListener('select', e => {
@@ -299,10 +380,4 @@ window.addEventListener('ready', () => {
             })
             .catch(e => qError({ goBack: false }))
     }
-
-    $$('.tab').forEach(tab => tab.classList.remove('selected'))
-    $$('.content').forEach(content => content.style.display = 'none')
-    if ($parseURLArgs() && $parseURLArgs().tab && $(`.tab[value="${$parseURLArgs().tab}"]`) && $(`.content#${$parseURLArgs().tab}`)) changeTab($parseURLArgs().tab)
-    else changeTab('users')
-    $('main').classList.add('loaded')
 })

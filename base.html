@@ -74,11 +74,9 @@
 			</ul>
 		</div>
 		<div id="hamburger-menu-modal" class="modal blurry-bg">
-			<a class="close" onclick="toggleModal('hamburger-menu')"><i class="fas fa-times"></i></a>
 			<ul class="hamburger--actions center"></ul>
 		</div>
 		<div id="picture-modal" class="modal blurry-bg">
-			<a class="close" onclick="toggleModal('picture')"><i class="fas fa-times"></i></a>
 			<div class="center">
 				<h1 class="main-title"><i class="fad fa-portrait"></i>[{(changePicture)}]</h1>
 					<input max-size=500000 type="file" class="picture-input" accept=".png,.jpg,.jpeg,.webp" oninput='$(".picture-file-name").innerText = this.files[0].name'>
@@ -88,7 +86,6 @@
 			</div>
 		</div>
 		<div id="password-modal" class="modal blurry-bg">
-			<a class="close" onclick="toggleModal('password')"><i class="fas fa-times"></i></a>
 			<div class="center">
 				<h1 class="main-title"><i class="fad fa-key"></i>[{(changePassword)}]</h1>
 				<p class="hint"><i class="fad fa-key"></i>[{(oldPassword)}]</p>
@@ -101,7 +98,6 @@
 			</div>
 		</div>
 		<div id="thanks-modal" class="modal blurry-bg">
-			<a class="close" onclick="toggleModal('thanks')"><i class="fas fa-times"></i></a>
 			<div class="center">
 				<img class="big-logo" src="/imgs/webp/favicon.big.webp" alt="base.logoalt">
 				<p>Kuzi [{(global.version)}], by ezarcel<br>

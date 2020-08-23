@@ -54,6 +54,7 @@
 body { background: var(--bg); }
 :not(input):not(textarea):not(button):not(a):not(a *) { color: var(--bg-alt); }
 a, a * { color: var(--accent); text-decoration: none; }
-[theme=dark] input[type=date]::-webkit-calendar-picker-indicator {
+[theme=dark] input[type=date]::-webkit-calendar-picker-indicator,
+[theme=dark] input[type=time]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }

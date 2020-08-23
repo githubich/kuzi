@@ -147,6 +147,14 @@ window.addEventListener('load', () => {
             el.contentDocument.documentElement.setAttribute('theme', localStorage.getItem('theme'))
         })
     })
+    $$('.modal').forEach(modal => {
+        modal.innerHTML = `
+            <a class="close" onclick="toggleModal(this.closest('.modal').id.slice(0, this.closest('.modal').id.lastIndexOf('-')))">
+                <i class="fas fa-times"></i>
+            </a>
+            ${modal.innerHTML}
+        `
+    })
 })
 window.addEventListener('keydown', e => {
     if (e.key == "Enter") {

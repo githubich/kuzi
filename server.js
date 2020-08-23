@@ -1166,7 +1166,7 @@ app.post('/manager/scheduling/get', (req, res) => {
 	let scheduling = importJSON('scheduling.json').filter(e => e.teacherID == req.body.teacherID)
 	const subjects = importJSON('subjects.json')
 	const users = importJSON('users.json')
-	
+
 	scheduling.map(i => {
 		i.class = classes.find(j => j.classID == i.classID)
 		i.subject = subjects.find(j => j.subjectID == i.subjectID)
@@ -1178,6 +1178,31 @@ app.post('/manager/scheduling/get', (req, res) => {
 	})
 
 	res.respond(JSON.stringify(scheduling), '', 'application/json', 200)
+})
+app.post('/manager/scheduling/new', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	if (!req.body.teacherID) return res.sendError(400)
+
+	let scheduling = importJSON('scheduling.json')
+	const newConnection = {
+        connectionID: v4(),
+        subjectID: importJSON('subjects.json')[0].subjectID,
+        classID: importJSON('classes.json')[0].classID,
+        teacherID: req.body.teacherID,
+        time: {
+            weekDay: 1,
+            hours: 8,
+            minutes: 0,
+            duration: {
+                hours: 1,
+                minutes: 0
+            }
+        }
+    }
+	scheduling.push(newConnection)
+	saveJSON('scheduling.json', scheduling)
+
+	res.respond(JSON.stringify(newConnection), '', 'application/json', 200)
 })
 app.post('/manager/periods/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
