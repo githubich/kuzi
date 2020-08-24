@@ -61,8 +61,8 @@ window.addEventListener('ready', () => {
                         <p class="subjectAndClass">[{(subject)}]: ${(() => { if (userInfo.role == "teacher") return `${test.subject.prettyName} | [{(class)}]: ${test.class.prettyName}`; return test.subject.prettyName})()}</p>
                         <p class="question-count">[{(questionCount)}]: ${test.questions.length}</p>
                         <p class="submissions">[{(submissions)}]: ${test.submissions}</p>
-                        <p class="start">[{(startTime)}]: ${startHours}:${startMinutes} ${test.startTime.day}/${test.startTime.month}/${test.startTime.year}</p>
-                        <p class="due">[{(dueTime)}]: ${dueHours}:${dueMinutes} ${test.dueTime.day}/${test.dueTime.month}/${test.dueTime.year}</p>
+                        <p class="start">[{(startDate)}]: ${startHours}:${startMinutes} ${test.startTime.day}/${test.startTime.month}/${test.startTime.year}</p>
+                        <p class="due">[{(endDate)}]: ${dueHours}:${dueMinutes} ${test.dueTime.day}/${test.dueTime.month}/${test.dueTime.year}</p>
                         <p class="controls">
                             <a title="[{(perform)}]" class="perform-test students-only" href="/perform-test.html?ID=${test.testID}"><i class="fad fa-play"></i></a>
                             <a title="[{(viewSubmissions)}]" ${(() => { if (test.submissions <= 0) return 'style="display: none;"'; return ''})()} class="view-test-submissions teachers-only" href="/test-submissions.html?ID=${test.testID}"><i class="fad fa-tasks"></i></a>

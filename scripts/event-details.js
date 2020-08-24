@@ -4,7 +4,7 @@ function deleteEvent() {
             fetch('/misc/events/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ eventID: parseInt($parseURLArgs().ID) })
+                body: JSON.stringify({ eventID: $parseURLArgs().ID })
             }).then(res => res.json())
                 .then(res => {
                     if (res.message == 'ok') qSuccess({ message: "[{(success.event.delete)}]" }).then(() => history.back())
@@ -19,7 +19,7 @@ function editEvent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            eventID: parseInt($parseURLArgs().ID),
+            eventID: $parseURLArgs().ID,
             name: $('#edit input.name').value,
             description: $('#edit textarea.description').value,
             date: $('#edit input.date').value
@@ -39,7 +39,7 @@ window.addEventListener('ready', () => {
     fetch('/misc/events/details', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventID: parseInt($parseURLArgs().ID) })
+        body: JSON.stringify({ eventID: $parseURLArgs().ID })
     }).then(res => res.json())
         .then(res => {
             if (res.message == 'not allowed') qError({ message: "[{(error.notAllowed)}]", goBack: true })

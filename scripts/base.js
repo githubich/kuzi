@@ -147,7 +147,7 @@ window.addEventListener('load', () => {
             el.contentDocument.documentElement.setAttribute('theme', localStorage.getItem('theme'))
         })
     })
-    $$('.modal').forEach(modal => {
+    $$('.modal:not(#qAlert)').forEach(modal => {
         modal.innerHTML = `
             <a class="close" onclick="toggleModal(this.closest('.modal').id.slice(0, this.closest('.modal').id.lastIndexOf('-')))">
                 <i class="fas fa-times"></i>
@@ -164,16 +164,18 @@ window.addEventListener('keydown', e => {
         else if (document.activeElement == $('.password-modal--input.password-modal--newPassword2')) $('#password-submit').click()
     } else if (e.key == "Escape") {
         e.preventDefault()
-        $$('.modal').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
+        if ($('#qAlert').style.display == 'none') $$('.modal:not(#qAlert)').forEach(modal => { if (modal.style.display == "block") modal.querySelector('.close').click() })
     }
 })
 
 // SIZE DETECTOR
-window.addEventListener('resize', () => {
+window.addEventListener('load', () => sizeDetector())
+window.addEventListener('resize', () => sizeDetector())
+function sizeDetector() {
     const lastAction = $('header .header--actions .header-action:nth-last-child(1)')
     $('header').classList.remove('icons-only')
     if (window.innerWidth <= (lastAction.offsetLeft + lastAction.offsetWidth)) $('header').classList.add('icons-only')
-})
+}
 
 // ELEMENT FEATURES
 function minMaxInput(el) {

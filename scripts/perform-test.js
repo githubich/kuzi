@@ -109,7 +109,7 @@ function save(final) {
         body: JSON.stringify({ progress: answers, finish: final, ID: $parseURLArgs().ID })
     }).then(res => res.json())
         .then(res => {
-            if (final && res.message == 'ok') qAlert({ message: '[{(success.tests.submit)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(a => history.back())
+            if (final && res.message == 'ok') qAlert({ message: '[{(success.test.submit)}]', mode: 'success', buttons: { cancel: { invisible: true } } }).then(a => history.back())
         })
 }
 window.addEventListener('load', () => {

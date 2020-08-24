@@ -528,7 +528,7 @@ app.post('/parents/marks/graph', (req, res) => {
 app.post('/teachers/marks/create', (req, res) => {
 	if (req.userInfo.role != "teacher") return res.sendError(403)
 	let marks = importJSON('marks.json')
-	req.body.markID = marks.length
+	req.body.markID = v4()
 	req.body.ownerID = req.userInfo.userID
 	marks.push(req.body)
 	saveJSON('marks.json', marks)
@@ -681,8 +681,7 @@ app.post('/teachers/resources/upload', (req, res) => {
 	const name = `${uuid}${file.name.slice(req.files.file.name.lastIndexOf('.'), file.name.length)}`
 	const index = importJSON('upload/resources/index.json')
 	index.push({
-		uuid,
-		name,
+		uuid, name,
 		ownerID: req.userInfo.userID,
 		classID: req.body.classID,
 		subjectID: req.body.subjectID,
@@ -821,7 +820,7 @@ app.post('/teachers/tests/listSubmissions', (req, res) => {
 	let users = importJSON('users.json')
 	readdirSync('test-progress').forEach(student => {
 		if (readdirSync(`test-progress/${student}`).includes(`${req.body.testID}.json`) && importJSON(`test-progress/${student}/${req.body.testID}.json`).finished)
-		submissions.push({ student: users.find(e => e.userID == parseInt(student)), mark: calcMark(parseInt(req.body.testID), parseInt(student)), start: importJSON(`test-progress/${student}/${req.body.testID}.json`).start, end: importJSON(`test-progress/${student}/${req.body.testID}.json`).end })
+		submissions.push({ student: users.find(e => e.userID == student), mark: calcMark(req.body.testID, student), start: importJSON(`test-progress/${student}/${req.body.testID}.json`).start, end: importJSON(`test-progress/${student}/${req.body.testID}.json`).end })
 	})
 	res.respond(JSON.stringify(submissions), '', 'application/json', 200)
 })
@@ -872,12 +871,10 @@ app.post('/misc/notifications/discard', (req, res) => {
 
 app.post('/misc/events/create', (req, res) => {
 	let events = importJSON('events.json')
-	req.body.owner = req.userInfo.userID
+	req.body.ownerID = req.userInfo.userID
+	req.body.eventID = v4()
 	if (req.userInfo.role == "student") delete req.body.visibleTo
 	else delete req.body.teacherMode
-	if (events == []) req.body.eventID = 0
-	else if (events[events.length - 1]) req.body.eventID = events[events.length - 1].eventID + 1
-	else req.body.eventID = 0
 	events.push(req.body)
 	saveJSON('events.json', events)
 	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -891,10 +888,11 @@ app.post('/misc/events/get', (req, res) => {
 	events.forEach(event => {
 		let eventDate = new Date(`${event.date.year}-${event.date.month}-${event.date.day}`)
 		eventDate.setHours(23); eventDate.setMinutes(59); eventDate.setSeconds(59); eventDate.setMilliseconds(999)
-		if (now.getTime() <= eventDate.getTime() && (event.owner == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1) || (event.visibleTo && event.visibleTo.findIndex(user => user == req.cookies.selectedChild) != -1))) {
+		if (now.getTime() <= eventDate.getTime() && (event.ownerID == req.userInfo.userID || (event.visibleTo && event.visibleTo.findIndex(user => user == req.userInfo.userID) != -1) || (event.visibleTo && event.visibleTo.findIndex(user => user == req.cookies.selectedChild) != -1))) {
 			found = false
 			i = 0
-			event.owner = importJSON('users.json').find(user => user.userID == event.owner)
+			event.owner = importJSON('users.json').find(user => user.userID == event.ownerID)
+			delete event.ownerID
 			delete event.owner.password
 			if (event.visibleTo) {
 				event.visibleTo.forEach(u => {
@@ -924,7 +922,8 @@ app.post('/misc/events/get', (req, res) => {
 app.post('/misc/events/details', (req, res) => {
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
 	if (!event) res.sendError(403)
-	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
+	event.owner = importJSON('users.json').find(user => user.userID == event.ownerID)
+	delete event.ownerID
 	delete event.owner.password
 	if (event.visibleTo) {
 		let i = 0
@@ -939,8 +938,7 @@ app.post('/misc/events/details', (req, res) => {
 })
 app.post('/misc/events/delete', (req, res) => {
 	let event = importJSON('events.json').find(event => event.eventID == req.body.eventID)
-	event.owner = importJSON('users.json').find(user => user.userID == event.owner)
-	if (req.userInfo.userID == event.owner.userID) {
+	if (req.userInfo.userID == event.ownerID) {
 		let events = importJSON('events.json')
 		events.splice(events.findIndex(eventF => event.eventID == eventF.eventID), 1)
 		saveJSON('events.json', events)
@@ -950,7 +948,7 @@ app.post('/misc/events/delete', (req, res) => {
 app.post('/misc/events/edit', (req, res) => {
 	let events = importJSON('events.json')
 	let eventIndex = events.findIndex(event => event.eventID == req.body.eventID)
-	if (req.userInfo.userID == events[eventIndex].owner) {
+	if (req.userInfo.userID == events[eventIndex].ownerID) {
 		events[eventIndex].name = req.body.name
 		events[eventIndex].description = req.body.description
 		events[eventIndex].date.year = parseInt(req.body.date.split('-')[0])
@@ -962,7 +960,7 @@ app.post('/misc/events/edit', (req, res) => {
 })
 
 app.post('/misc/schedule/get', (req, res) => {
-	if (req.userInfo.role == "parent") req.userInfo = req.userInfo.children.find(e => e.userID == parseInt(req.body.studentID))
+	if (req.userInfo.role == "parent") req.userInfo = req.userInfo.children.find(e => e.userID == req.body.studentID)
 
 	let classes = importJSON('classes.json')
 	let scheduling = importJSON('scheduling.json')
@@ -989,19 +987,12 @@ app.post('/misc/schedule/get', (req, res) => {
 })
 
 // MANAGER STUFF
-app.post('/manager/template', (req, res) => {
-	if (!req.userInfo.isAdmin) res.sendError(403)
-	
-	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
-})
 app.post('/manager/users/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	const classes = importJSON('classes.json')
 	let users = importJSON('users.json')
 	users.map(user => {
-		if (user.role == 'student') {
-			classes.forEach(clas => { if (clas.students.includes(user.userID) || clas.students.includes(parseInt(user.userID))) user.class = clas })
-		}
+		if (user.role == 'student') classes.forEach(clas => { if (clas.students.includes(user.userID) || clas.students.includes(user.userID)) user.class = clas })
 	})
 	res.respond(JSON.stringify(users), '', '', 200)
 })
@@ -1179,6 +1170,18 @@ app.post('/manager/scheduling/get', (req, res) => {
 
 	res.respond(JSON.stringify(scheduling), '', 'application/json', 200)
 })
+app.post('/manager/scheduling/edit', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+
+	let scheduling = importJSON('scheduling.json')
+	const schedulingIndex = scheduling.findIndex(e => e.connectionID == req.body.connectionID)
+	if (schedulingIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	scheduling[schedulingIndex] = req.body
+	saveJSON('scheduling.json', scheduling)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
 app.post('/manager/scheduling/new', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	if (!req.body.teacherID) return res.sendError(400)
@@ -1204,6 +1207,23 @@ app.post('/manager/scheduling/new', (req, res) => {
 
 	res.respond(JSON.stringify(newConnection), '', 'application/json', 200)
 })
+app.post('/manager/scheduling/delete', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	
+	let scheduling = importJSON('scheduling.json')
+	const schedulingIndex = scheduling.findIndex(e => e.connectionID == req.body.connectionID)
+	if (schedulingIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
+
+	scheduling.splice(schedulingIndex, 1)
+	saveJSON('scheduling.json', scheduling)
+
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
+app.post('/manager/scheduling/deleteAll', (req, res) => {
+	if (!req.userInfo.isAdmin) res.sendError(403)
+	saveJSON('scheduling.json', [])
+	res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
+})
 app.post('/manager/periods/list', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 	res.respond(JSON.stringify(importJSON('periods.json')), '', '', 200)
@@ -1212,7 +1232,6 @@ app.post('/manager/periods/edit', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 
 	let periods = importJSON('periods.json')
-	console.log(periods, req.body)
 	const periodIndex = periods.findIndex(e => e.periodID == req.body.periodID)
 	if (periodIndex === -1) return res.respond(JSON.stringify({ message: 'bad request' }), '', '', 400)
 

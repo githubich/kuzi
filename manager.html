@@ -196,8 +196,13 @@
                 </select>
             </div>
         </div>
-        <button class="submit icon-container" onclick="scheduling_submitEdit(this.getAttribute('connectionID'))">
-            <i class="fad fa-paper-plane icon"></i>[{(submit)}]
-        </button>
+        <div class="buttons">
+            <button class="submit icon-container" onclick="scheduling_submitEdit(this.getAttribute('connectionID'))">
+                <i class="fad fa-paper-plane icon"></i>[{(submit)}]
+            </button>
+            <button class="delete icon-container" onclick="scheduling_delete(this.getAttribute('connectionID'))">
+                <i class="fad fa-trash icon"></i>[{(delete)}]
+            </button>
+        </div>
     </div>
 </div>

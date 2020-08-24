@@ -49,8 +49,9 @@ iframe { border: none; }
     display: grid;
     gap: 20px;
 }
-#scheduling-edit-modal .submit { margin-top: 20px; }
 #scheduling-edit-modal input { width: 100%; }
+#scheduling-edit-modal .buttons { display: grid; gap: 20px; grid-template-columns: repeat(2, 1fr); margin-top: 20px; }
+#scheduling-edit-modal .buttons button { margin: 0; width: 100%; }
 
 @media (min-width: 601px) {
     html, body, main, #root, #manager { overflow: hidden; height: 100%; }
@@ -93,7 +94,7 @@ iframe { border: none; }
 /* my-schedule.css */
 table * { width: max-content; white-space: nowrap; }
 table { border-collapse: collapse; }
-td { text-align: center; padding: 15px 10px; border: solid 1px var(--bg-alt); }
+td { text-align: center; padding: 10px; border: solid 1px var(--bg-alt); }
 .subject { position: absolute; background-color: var(--bg-alt-nearly-opaque); display: flex; text-align: center; }
 .subject .contents { margin: auto; height: min-content; }
 .subject p { color: var(--bg); margin: 0; }
@@ -101,6 +102,5 @@ td { text-align: center; padding: 15px 10px; border: solid 1px var(--bg-alt); }
 #details-modal.modal p { margin: 0; }
 #details-modal.modal > *:not(:nth-last-child(1)) { margin: 0 0 10px 0; }
 
-#schedule-container { overflow-x: auto; position: relative; }
-
+#schedule-container { position: relative; }
 #schedule-container, #schedule-container table { width: 100%; }

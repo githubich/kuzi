@@ -4,7 +4,7 @@ function changeTab(tabName) {
     $(`.tab[value="${tabName}"]`).classList.add('selected')
     $$('.content').forEach(content => content.style.display = 'none')
     $(`.content#${tabName}`).removeAttribute('style')
-    history.pushState('','',`?tab=${tabName}`)
+    history.replaceState('','',`?tab=${tabName}`)
 }
 function logicalSort(a, b) {
     if (a > b) return 1
@@ -20,17 +20,13 @@ function createSchedule(rootElement) {
     let subjects = []
     let weekdays = []
     let hours = []
-    let k = 0
     const weekDaysNames = [ "[{(monday)}]", "[{(tuesday)}]", "[{(wednesday)}]", "[{(thursday)}]", "[{(friday)}]", "[{(saturday)}]", "[{(sunday)}]" ]
     r.forEach(c => {
         if (subjects.findIndex(e => e == c.subject.subjectID) == -1) subjects.push(c.subject.subjectID)
         if (weekdays.findIndex(e => e == c.time.weekDay) == -1) weekdays.push(c.time.weekDay)
-        if (hours.findIndex(e => e == c.time.hours + 1) == -1) {
-            if (c.time.minutes != 0 || c.time.duration.hours > 1 || (c.time.duration.hours == 1 && c.time.duration.minutes > 0)) hours.push(c.time.hours + 1)
-        }
-        if (hours.findIndex(e => e == c.time.hours) == -1) {
-            if (c.time.minutes != 0 || c.time.duration.hours > 1 || (c.time.duration.hours == 1 && c.time.duration.minutes > 0)) hours.push(c.time.hours, c.time.hours + 1)
-            else hours.push(c.time.hours)
+        const iCount = (c.time.duration.hours == 0) ? 1 : c.time.duration.hours
+        for (i = c.time.hours; i < (c.time.hours + iCount); i++) {
+            if (!hours.includes(i)) hours.push(i)
         }
     })
     hours.sort(logicalSort)
@@ -53,12 +49,12 @@ function createSchedule(rootElement) {
         let element = document.createElement('div')
         subjectsContainer.appendChild(element)
         element.classList.add('subject')
-        element.setAttribute('onclick', `scheduling_updateModal("${c.connectionID}"); toggleModal('scheduling-edit')`)
+        element.setAttribute('onclick', `scheduling_updateModal("${c.connectionID}")`)
         let prettyMinutes = c.time.minutes
         let prettyMinutes2 = c.time.minutes + c.time.duration.minutes
         if (prettyMinutes < 10) prettyMinutes = `0${prettyMinutes}`
         if (prettyMinutes2 < 10) prettyMinutes2 = `0${prettyMinutes2}`
-        element.innerHTML = `<div class="contents"><p>${c.subject.prettyName}</p></div>`
+        element.innerHTML = `<div class="contents"><p>${c.subject.prettyName} (${c.class.prettyName})</p></div>`
         
         const cell = table.querySelector(`tr:nth-child(${c.time.hours - hours[0] + 2}) td:nth-child(${c.time.weekDay - weekdays[0] + 2})`)
         element.style.top = cell.offsetTop + (cell.offsetHeight * c.time.minutes / 60) + "px"
@@ -66,8 +62,6 @@ function createSchedule(rootElement) {
 
         element.style.height = (cell.offsetHeight * (c.time.duration.hours + ( c.time.duration.minutes / 60))) + "px"
         element.style.width = `${cell.offsetWidth}px`
-    
-        k++
     })
 }
 window.addEventListener('load', () => {
@@ -79,7 +73,7 @@ window.addEventListener('load', () => {
     $('main').classList.add('loaded')
 })
 window.addEventListener('ready', () => {
-    if (!userInfo.isAdmin) return qError({ message: "[{(error.notAllowed)}]", goBack: true })
+    if (!userInfo.isAdmin) return qError({ message: "[{(error.notAllowed)}]", goBack: true }).then(a => history.back())
 
     // USERS
     $('#users--user-list').addEventListener('select', e => {
@@ -266,27 +260,6 @@ window.addEventListener('ready', () => {
             if (window.r) createSchedule($('.content#scheduling #schedule-container'))
         }
     })
-    window.addEventListener('toggle-modal-scheduling-edit', () => {
-        if ($('.modal.blurry-bg#scheduling-edit-modal').style.display != 'block') return;
-        fetch('/manager/classes/list', { method: 'POST' }).then(res => res.json())
-            .then(res => {
-                $$('.class-chooser').forEach(classChooser => {
-                    classChooser.innerHTML = ''
-                    res.forEach(clas => {
-                        classChooser.innerHTML += getTemplate('class-subject', { id: clas.classID, name: clas.prettyName })
-                    })
-                })
-            })
-        fetch('/manager/subjects/list', { method: 'POST' }).then(res => res.json())
-            .then(res => {
-                $$('.subject-chooser').forEach(subjectChooser => {
-                    subjectChooser.innerHTML = ''
-                    res.forEach(subject => {
-                        subjectChooser.innerHTML += getTemplate('class-subject', { id: subject.subjectID, name: subject.prettyName })
-                    })
-                })
-            })
-    })
     scheduling_new = () => {
         const teacherID = window.schedule_teacherID
         fetch('/manager/scheduling/new', {
@@ -298,10 +271,51 @@ window.addEventListener('ready', () => {
         if (!id) throw Error('No ID specified')
         const info = r.find(e => e.connectionID == id)
         if (!info) throw Error('Invalid ID')
-        console.log(info)
         const modal = $('.modal.blurry-bg#scheduling-edit-modal')
 
-        modal.querySelector('button.submit').setAttribute('connectionID', id)
+        fetch('/manager/classes/list', { method: 'POST' }).then(res => res.json())
+            .then(res => {
+                $$('.class-chooser').forEach(classChooser => {
+                    classChooser.innerHTML = ''
+                    res.forEach(clas => {
+                        classChooser.innerHTML += getTemplate('class-subject', { id: clas.classID, name: clas.prettyName })
+                    })
+                    
+                })
+                modal.querySelector('.class-chooser').value = info.class.classID
+
+                fetch('/manager/subjects/list', { method: 'POST' }).then(res => res.json())
+                    .then(res => {
+                        $$('.subject-chooser').forEach(subjectChooser => {
+                            subjectChooser.innerHTML = ''
+                            res.forEach(subject => {
+                                subjectChooser.innerHTML += getTemplate('class-subject', { id: subject.subjectID, name: subject.prettyName })
+                            })
+                        })
+                        modal.querySelector('.subject-chooser').value = info.subject.subjectID
+                        toggleModal('scheduling-edit')
+                    })
+            })
+        
+        let { hours: sHours, minutes: sMinutes, duration: { hours: eHours, minutes: eMinutes } } = info.time
+        
+        const endDate = new Date()
+        endDate.setSeconds(0); endDate.setMilliseconds(0); endDate.setHours(sHours + eHours); endDate.setMinutes(sMinutes + eMinutes)
+        eHours = endDate.getHours()
+        eMinutes = endDate.getMinutes()
+
+        sHours = sHours < 10 ? `0${sHours}` : sHours
+        sMinutes = sMinutes < 10 ? `0${sMinutes}` : sMinutes
+        eHours = eHours < 10 ? `0${eHours}` : eHours
+        eMinutes = eMinutes < 10 ? `0${eMinutes}` : eMinutes
+
+        modal.querySelector('.start-input input').value = `${sHours}:${sMinutes}`
+        modal.querySelector('.end-input input').value = `${eHours}:${eMinutes}`
+        modal.querySelector('.weekDay-chooser').value = info.time.weekDay
+
+        modal.querySelectorAll('button').forEach(button => {
+            button.setAttribute('connectionID', id)
+        })
     }
     scheduling_submitEdit = id => {
         const modal = $('.modal.blurry-bg#scheduling-edit-modal')
@@ -330,6 +344,43 @@ window.addEventListener('ready', () => {
             !sendData.connectionID || !sendData.subjectID || !sendData.classID || !sendData.teacherID ||
             sendData.time.weekDay == undefined && sendData.time.hours == undefined || sendData.time.minutes == undefined ||
             sendData.time.duration.hours == undefined || sendData.time.duration.minutes == undefined) return qError({ message: '[{(error.invalidInput)}]' })
+        
+        fetch('/manager/scheduling/edit', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sendData)
+        }).then(r => r.json())
+            .then(res => {
+                if (res.message = 'ok') qSuccess({ message: "[{(success.manager.scheduling.edit)}]" })
+                else qError()
+                scheduling_update()
+                toggleModal('scheduling-edit')
+            })
+    }
+    scheduling_delete = connectionID => {
+        qAreYouSure().then(a => {
+            if (a) fetch('/manager/scheduling/delete', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ teacherID: window.schedule_teacherID, connectionID })
+            }).then(r => r.json())
+                .then(res => {
+                    if (res.message = 'ok') qSuccess({ message: "[{(success.manager.scheduling.delete)}]" })
+                    scheduling_update()
+                })
+                .catch(e => qError({ message: e, goBack: false }))
+        })
+    }
+    scheduling_deleteAll = () => {
+        qAreYouSure().then(a => {
+            if (a) fetch('/manager/scheduling/deleteAll', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ teacherID: window.schedule_teacherID })
+            }).then(r => r.json())
+                .then(res => {
+                    if (res.message = 'ok') qSuccess({ message: "[{(success.manager.scheduling.deleteAll)}]" })
+                    scheduling_update()
+                })
+                .catch(e => qError({ message: e, goBack: false }))
+        })
     }
 
     // PERIODS

@@ -31,8 +31,9 @@ calcMark = (testID, studentID) => {
 	let progress = importJSON(`test-progress/${studentID}/${testID}.json`)
 	let answers = progress.progress || undefined
 	let test = importJSON('tests.json').find(e => e.testID == testID)
+	if (answers == undefined || test == undefined) return
 	let corrections = test.questions
-	if (answers == undefined || corrections == undefined || test == undefined) return
+	if (corrections == undefined) return
 
 	let canBePerformed = ((new Date(`${test.startTime.year}-${test.startTime.month}-${test.startTime.day} ${test.startTime.hours}:${test.startTime.minutes}`)).getTime() <= (new Date()).getTime() && (new Date()).getTime() <= (new Date(`${test.dueTime.year}-${test.dueTime.month}-${test.dueTime.day} ${test.dueTime.hours}:${test.dueTime.minutes}`)).getTime())
 	let definitive = true

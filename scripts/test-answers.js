@@ -4,12 +4,7 @@ function markOpenAnswer(questionI, correct) {
     let testID = $parseURLArgs().testID
     let studentID = $parseURLArgs().studentID
     fetch('/teachers/tests/setOpenAnswerAs', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            testID: parseInt(testID),
-            studentID: parseInt(studentID),
-            questionI: parseInt(questionI),
-            correct: correct
-        })
+        body: JSON.stringify({ testID, studentID, questionI, correct })
     })
 }
 window.addEventListener('load', () => {

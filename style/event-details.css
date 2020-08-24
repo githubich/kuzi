@@ -4,9 +4,12 @@ main p:not(:nth-last-child(1)) { margin: 0 0 10px 0; }
 main button { margin: 0; display: inline-block; }
 main button:not(:nth-last-child(1)) { margin: 0 5px 0 0 ; }
 
-#edit input { width: 0; }
+#edit .details { display: grid; gap: 20px; }
 #edit > *:not(:nth-last-child(1)) { margin: 0 0 20px 0; }
 
+@media (min-width: 601px) {
+    #edit .details { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 600px) {
     #edit input, #edit textarea { width: 100%; }
     .owner-only { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
