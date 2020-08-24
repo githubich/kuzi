@@ -26,9 +26,10 @@ app.use(mw.main)
 
 const folders = ['notifications', 'test-progress', 'upload', 'upload/resources' ]
 folders.forEach(f => { if (!existsSync(`${f}/`)) mkdirSync(f) })
-const files = ['active-cookies.json', 'events.json', 'marks.json', 'tests.json', 'upload/resources/index.json']
+const files = ['active-cookies.json', 'classes.json', 'events.json', 'marks.json', 'periods.json', 'scheduling.json', 'subjects.json', 'tests.json', 'upload/resources/index.json']
 files.forEach(f => { if (!existsSync(f) || readFileSync(f) == "") writeFileSync(f, JSON.stringify([])) })
 if (!existsSync('users.json') || readFileSync('users.json') == "") writeFileSync('users.json', JSON.stringify([{ username: "admin", password: "kuzi", prettyName: "Admin", userID: v4(), role: "teacher", isAdmin: true }]))
+
 
 
 /////////////
@@ -52,21 +53,19 @@ app.get('/new-test.html', (req, res) => {
 	const now = new Date()
 	const then = new Date(now.getTime() + 604800000)
 	const scheduling = importJSON('scheduling.json')
-	const { subjectID, classID } = scheduling[0]
-	let tests = importJSON('tests.json')
-	const testID = v4()
 	let i = 0
 	scheduling.forEach(connection => {
 		if (connection.teacherID != req.userInfo.userID) scheduling.splice(i, 1)
-		i++
+		else i++
 	})
+	const { subjectID, classID } = scheduling[0]
+	let tests = importJSON('tests.json')
+	const testID = v4()
 	
 	tests.push({
         name: `Test Template ${testID}`,
-        subjectID,
-		classID,
+        subjectID, classID, testID,
 		ownerID: req.userInfo.userID,
-        testID,
         periodID: 3,
         startTime: { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate(), hours: 0, minutes: 0 },
         dueTime: { year: then.getFullYear(), month: then.getMonth() + 1, day: then.getDate(), hours: 23, minutes: 59 },
@@ -172,14 +171,13 @@ app.post('/user/changePicture', (req, res) => {
 app.post('/user/changePassword', (req, res) => {
 	let users = importJSON('users.json')
 	let changed = false
-	let i = 0
-	users.forEach(user => {
+	users.map(user => {
 		if (user.userID == req.body.userID && user.password == req.body.oldPassword) {
 			changed = true
 			userID = userKey.userID
-			users[i].password = req.body.newPassword
+			user.password = req.body.newPassword
 		}
-		i++
+		return user
 	})
 	if (changed) {
 		res.respond(JSON.stringify({ message: 'ok' }), '', 'application/json', 200)
@@ -190,11 +188,11 @@ app.post('/user/changePassword', (req, res) => {
 // Students
 app.post('/students/marks/get', (req, res) => {
 	if (req.userInfo.role != "student") return res.sendError(403)
-	let exists = false
-	let marks = importJSON('marks.json')
+	const exists = false
+	const marks = importJSON('marks.json')
 	let resContent = importJSON('periods.json')
-	let subjects = importJSON('subjects.json')
-	let tests = importJSON('tests.json')
+	const subjects = importJSON('subjects.json')
+	const tests = importJSON('tests.json')
 	let i = 0
 	let j = 0
 	resContent.forEach(a => {
@@ -243,9 +241,9 @@ app.post('/students/marks/get', (req, res) => {
 app.post('/students/marks/graph', (req, res) => {
 	if (req.userInfo.role != "student") return res.sendError(403)
 	let exists = false
-	let marks = importJSON('marks.json')
+	const marks = importJSON('marks.json')
 	let resContent = []
-	let subjects = importJSON('subjects.json')
+	const subjects = importJSON('subjects.json')
 	let i = 0
 	let usefulSubjects = []
 
@@ -271,21 +269,19 @@ app.post('/students/marks/graph', (req, res) => {
 		})
 		i++
 	})
-	i = 0
-	resContent.forEach(subjectResContent => {
+	resContent.map(subjectResContent => {
 		subjects.forEach(subjectJSON => {
-			if (subjectJSON.subjectID == subjectResContent.subjectID) resContent[i].subjectName = subjectJSON.prettyName
+			if (subjectJSON.subjectID == subjectResContent.subjectID) subjectResContent.subjectName = subjectJSON.prettyName
 		})
-		i++
 	})
 	res.respond(JSON.stringify(resContent), '', 'application/json', 200)
 })
 
 app.post('/students/resources/get', (req, res) => {
-	let classes = importJSON('classes.json')
-	let subjects = importJSON('subjects.json')
+	const classes = importJSON('classes.json')
+	const subjects = importJSON('subjects.json')
 	let i = 0
-	let index = importJSON('upload/resources/index.json')
+	const index = importJSON('upload/resources/index.json')
 	let theirFiles = []
 	index.forEach(file => {
 		let exists = false
@@ -1243,11 +1239,15 @@ app.post('/manager/periods/edit', (req, res) => {
 app.post('/manager/periods/new', (req, res) => {
 	if (!req.userInfo.isAdmin) res.sendError(403)
 
+	const now = new Date()
+	const then = new Date(now.getTime() + 604800000)
 	let periods = importJSON('periods.json')
-	let newPeriodID = v4()
-	let newPeriod = {
-        prettyName: "New Period",
-        periodID: newPeriodID
+	const newPeriodID = v4()
+	const newPeriod = {
+        periodName: "New Period",
+		periodID: newPeriodID,
+		startDate: { day: now.getDate(), month: now.getMonth() },
+        endDate: { day: then.getDate(), month: then.getMonth() }
 	}
 
 	periods.push(newPeriod)

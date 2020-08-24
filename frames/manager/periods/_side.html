@@ -37,8 +37,8 @@
             function newPeriod() {
                 fetch('/manager/periods/new', { method: 'POST' }).then(r => r.json())
                     .then(res => {
-                        $('#period-container').innerHTML += getTemplate('period', { name: res.prettyName, id: res.periodID, periodInfo: encodeURI(JSON.stringify(res)) })
-                        window.frameElement.dispatchEvent(new CustomEvent('select', { detail: { userInfo: encodeURI(JSON.stringify(res)) } }))
+                        $('#period-container').innerHTML += getTemplate('period', { name: res.periodName, id: res.periodID, periodInfo: encodeURI(JSON.stringify(res)) })
+                        window.frameElement.dispatchEvent(new CustomEvent('select', { detail: { periodInfo: encodeURI(JSON.stringify(res)) } }))
                         $('#period-container').children[$('#period-container').children.length - 1].querySelector('input[type=radio]').checked = true
                     })
             }

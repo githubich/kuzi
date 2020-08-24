@@ -20,5 +20,6 @@ function send() {
                 if (session != undefined) { document.cookie=`session=${session}`; window.location = "/dashboard.html" }
                 else qError({ message: "[{(error.badUsernameOrPassword)}]", goBack: false }).then( $('#kuzi-password').value = "" )
             })
+            .catch(e => qError({ message: "[{(error.badUsernameOrPassword)}]" }))
     } else alert("[{(error.invalidInput)}]")
 }
