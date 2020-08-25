@@ -1,7 +1,7 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
 importJSON = location => {
 	if (!existsSync(location) || readFileSync(location) == '') {
-		console.warn(`[Kuzi|Warning] ${location} is empty/is empty, writing default content`)
+		console.warn(`[Kuzi|Warning] ${location} is empty/doesn't exist, writing default content`)
 		writeFileSync(location, JSON.stringify([]))
 		return importJSON(location)
 	}
