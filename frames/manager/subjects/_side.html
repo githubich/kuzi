@@ -51,7 +51,7 @@
                         body: JSON.stringify({ subjectID: $('li input:checked').getAttribute('subjectID') })
                     }).then(r => r.json())
                         .then(res => {
-                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.subjects.delete)}]' }).then(a => parent.location.reload())
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.subject.delete)}]' }).then(a => parent.location.reload())
                             else parent.qError({ goBack: false })
                         })
                         .catch(e => parent.qError({ message: e, goBack: false }))
@@ -62,7 +62,7 @@
                     if (!a) return;
                     fetch('/manager/subjects/deleteAll', { method: 'POST' }).then(r => r.json())
                         .then(res => {
-                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.subjects.deleteAll)}]' }).then(a => parent.location.reload())
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.subject.deleteAll)}]' }).then(a => parent.location.reload())
                             else parent.qError({ goBack: false })
                         })
                         .catch(e => parent.qError({ message: e, goBack: false }))

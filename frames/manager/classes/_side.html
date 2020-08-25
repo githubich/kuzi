@@ -53,7 +53,7 @@
                         body: JSON.stringify({ classID: $('li input:checked').getAttribute('classID') })
                     }).then(r => r.json())
                         .then(res => {
-                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.classes.delete)}]' }).then(a => parent.location.reload())
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.class.delete)}]' }).then(a => parent.location.reload())
                             else parent.qError({ goBack: false })
                         })
                         .catch(e => parent.qError({ message: e, goBack: false }))
@@ -64,7 +64,7 @@
                     if (!a) return;
                     fetch('/manager/classes/deleteAll', { method: 'POST' }).then(r => r.json())
                         .then(res => {
-                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.classes.deleteAll)}]' }).then(a => parent.location.reload())
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.class.deleteAll)}]' }).then(a => parent.location.reload())
                             else parent.qError({ goBack: false })
                         })
                         .catch(e => parent.qError({ message: e, goBack: false }))

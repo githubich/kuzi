@@ -51,7 +51,7 @@
                         body: JSON.stringify({ periodID: $('li input:checked').getAttribute('periodID') })
                     }).then(r => r.json())
                         .then(res => {
-                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.periods.delete)}]' }).then(a => parent.location.reload())
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.period.delete)}]' }).then(a => parent.location.reload())
                             else parent.qError({ goBack: false })
                         })
                         .catch(e => parent.qError({ message: e, goBack: false }))
@@ -62,7 +62,7 @@
                     if (!a) return;
                     fetch('/manager/periods/deleteAll', { method: 'POST' }).then(r => r.json())
                         .then(res => {
-                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.periods.deleteAll)}]' }).then(a => parent.location.reload())
+                            if (res.message = 'ok') parent.qSuccess({ message: '[{(success.manager.period.deleteAll)}]' }).then(a => parent.location.reload())
                             else parent.qError({ goBack: false })
                         })
                         .catch(e => parent.qError({ message: e, goBack: false }))
