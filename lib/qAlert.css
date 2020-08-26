@@ -9,14 +9,19 @@
 }
 #qAlert i.qAlert { display: none; }
 #qAlert.error * { --qAlert-accent: #f44; }
+#qAlert.error button { color: #000 !important; }
 #qAlert.error .qAlert.fa-exclamation-circle { display: block !important; }
 #qAlert.warn * { --qAlert-accent: #fc0; }
+#qAlert.warn button { color: #000 !important; }
 #qAlert.warn .qAlert.fa-exclamation-triangle { display: block !important; }
 #qAlert.question * { --qAlert-accent: #aaa; }
+#qAlert.question button { color: #fff !important; }
 #qAlert.question .qAlert.fa-question-circle { display: block !important; }
 #qAlert.info * { --qAlert-accent: #44f; }
+#qAlert.info button { color: #fff !important; }
 #qAlert.info .qAlert.fa-info-circle { display: block !important; }
 #qAlert.ok * { --qAlert-accent: #4f4; }
+#qAlert.ok button { color: #000 !important; }
 #qAlert.ok .qAlert.fa-check-circle { display: block !important; }
 .qAlert-inner button {
     display: inline-block;
@@ -28,6 +33,6 @@
     cursor: pointer;
     color: #fff !important;
 }
-#qAlert .qAlert-inner > i { font-size: 55px; color: var(--qAlert-accent); }
+#qAlert .qAlert-inner > i { font-size: 55px; color: var(--qAlert-accent) !important; }
 #qAlert .text-input { margin: 0 0 12px 0; text-align: left; }
 #qAlert .text-input .hint { margin: 12px 0 24px 0; }

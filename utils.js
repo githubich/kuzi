@@ -1,4 +1,5 @@
 const { readFileSync, writeFileSync, existsSync } = require('fs')
+const { v4 } = require('uuid')
 importJSON = location => {
 	if (!existsSync(location) || readFileSync(location) == '') {
 		console.warn(`[Kuzi|Warning] ${location} is empty/doesn't exist, writing default content`)
@@ -20,10 +21,11 @@ extensionToMime = ext => {
 	else return 'text/html'
 }
 importLocale = () => {
-	let { language = 'en' } = existsSync('settings.json') ? importJSON('settings.json') : {}
-	let localizationStrings = importJSON('localization.json')[language]
-	let version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
+	const { language = 'en' } = existsSync('settings.json') ? importJSON('settings.json') : {}
+	const localizationStrings = importJSON('localization.json')[language]
+	const version = `GIT-${require('child_process').execSync('git rev-parse HEAD').toString('utf-8').slice(0,7)}`
 	console.log(`[Kuzi] Using Kuzi ${version}`)
+	console.log(`[Kuzi] Language: ${language}`)
 	return [`global.version|${version}`, ...localizationStrings]
 }
 calcMark = (testID, studentID) => {
@@ -61,18 +63,22 @@ sortByPrettyName = (a, b) => {
 	else if (a.prettyName.toLowerCase() < b.prettyName.toLowerCase()) return -1
 	return 0
 }
-createNotification = ({ message, description, userID, forParentsToo, actions = undefined }) => {
-	let timeStamp = (new Date()).getTime()
-	let notifications = importJSON(`notifications/${userID}.json`)
-	let notification = { message: message, description: description, timeStamp: timeStamp }
-	if (notifications[notifications.length - 1]) notification.notificationID = notifications[notifications.length - 1].notificationID + 1
-	else notification.notificationID = 0
+sortByTimeStamp = (a, b) => {
+	if (a.timeStamp > b.timeStamp) return 1
+	else if (a.timeStamp < b.timeStamp) return -1
+	return 0
+}
+createNotification = ({ message = null, description = null, userID = null, forParentsToo = false, actions = null }) => {
+	if (!message || !userID) return;
+	const timeStamp = Date.now()
+	const notifications = importJSON(`notifications/${userID}.json`)
+	const notification = { message, description, timeStamp, notificationID: v4() }
 	if (actions) notification.actions = actions
 	saveJSON(`notifications/${userID}.json`, [ ...notifications, notification ])
 
-	if (forParentsToo === true) {
+	if (forParentsToo) {
 		let parents = []
-		let users = importJSON('users.json')
+		const users = importJSON('users.json')
 		users.forEach(user => {
 			if (user.role == 'parent' && user.childrenIDs.includes(userID)) parents.push(user.userID)
 		})
@@ -84,4 +90,4 @@ createNotification = ({ message, description, userID, forParentsToo, actions = u
 		})
 	}
 }
-module.exports = { importJSON, saveJSON, extensionToMime, importLocale, calcMark, sortByPrettyName, createNotification }
+module.exports = { importJSON, saveJSON, extensionToMime, importLocale, calcMark, sortByPrettyName, sortByTimeStamp, createNotification }
