@@ -36,7 +36,7 @@ function main(req, res, next) {
     
     if (req.url.includes("?")) { req.fullUrl = req.url.split()[0]; req.url = req.url.split("?")[0] }
     if (req.url == '/') return res.redirect(308, '/login.html')
-    if (req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html')) return next()
+    if (req.url == '/login.html' || (req.method == 'GET' && extname(req.url) != '.html' && req.url.slice(0, 11) != '/resources/')) return next()
     
     let activeCookies = importJSON('active-cookies.json')
     let classes = importJSON('classes.json')
@@ -51,6 +51,7 @@ function main(req, res, next) {
     if (req.cookies != {}) {
         activeCookies.forEach(cookie => {
             if (cookie.cookie == req.cookies.session) {
+                if (cookie.expireTime < Date.now()) return next()
                 userIDfromCookie = cookie.userID
                 if (req.method == "POST") { cookie.expireTime = Date.now() + 3600000; modified = true }
             }

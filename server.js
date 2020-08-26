@@ -45,6 +45,7 @@ app.get('/users/:id', (req, res) => {
 })
 app.get('/resources/download/:uuid', (req, res) => {
 	const file = importJSON('upload/resources/index.json').find(e => e.uuid == req.params.uuid)
+	console.log(req.cookies, req.userInfo)
 	if (req.userInfo.userID == file.ownerID || req.userInfo.class.classID == file.classID) res.download(`upload/resources/${file.name}`, file.display.name)
 	else return res.sendError(403)
 })
@@ -687,7 +688,7 @@ app.post('/teachers/resources/upload', (req, res) => {
 		}
 	})
 	saveJSON('upload/resources/index.json', index)
-	file.mv(`upload/resources/${fileName}`)
+	file.mv(`upload/resources/${name}`)
 	res.respond({ message: 'ok' }, '', 'application/json', 200)
 })
 app.post('/teachers/resources/get', (req, res) => {

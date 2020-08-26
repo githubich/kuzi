@@ -180,7 +180,20 @@
         "december|December",
         
         "darkMode|Dark mode",
-        "lightMode|Light mode"
+        "lightMode|Light mode",
+
+        "file.size|Size",
+        "file.type|Type",
+        "file.type.word|Word Document",
+        "file.type.powerpoint|PowerPoint Presentation",
+        "file.type.excel|Excel Spreadsheet",
+        "file.type.pdf|PDF",
+        "file.type.image|Image",
+        "file.type.video|Video",
+        "file.type.audio|Audio",
+        "file.type.archive|Archive",
+        "file.type.code|Code",
+        "file.type.text|Text"
     ],
     "es": [
         "langcode|es",
@@ -365,7 +378,20 @@
         "december|Diciembre",
         
         "darkMode|Modo oscuro",
-        "lightMode|Modo claro"
+        "lightMode|Modo claro",
+
+        "file.size|Tamaño",
+        "file.type|Tipo",
+        "file.type.word|Documento de Word",
+        "file.type.powerpoint|Presentación de PowerPoint",
+        "file.type.excel|Hoja de cálculo de Excel",
+        "file.type.pdf|PDF",
+        "file.type.image|Imagen",
+        "file.type.video|Vídeo",
+        "file.type.audio|Audio",
+        "file.type.archive|Archivo comprimido",
+        "file.type.code|Código",
+        "file.type.text|Texto"
     ],
     
     "ca": [
@@ -551,6 +577,19 @@
         "december|Decembre",
         
         "darkMode|Mode fosc",
-        "lightMode|Mode clar"
+        "lightMode|Mode clar",
+
+        "file.size|Mida",
+        "file.type|Tipus",
+        "file.type.word|Document de Word",
+        "file.type.powerpoint|Presentació de PowerPoint",
+        "file.type.excel|Full de càlcul de Excel",
+        "file.type.pdf|PDF",
+        "file.type.image|Imatge",
+        "file.type.video|Video",
+        "file.type.audio|Audio",
+        "file.type.archive|Arxiu comprimit",
+        "file.type.code|Codi",
+        "file.type.text|Text"
     ]
 }
